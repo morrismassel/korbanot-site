@@ -332,7 +332,7 @@ export default function KorbanotCalculator() {
   const perCapitaCommunal  = communalTotal/ASSUMED_POPULATION;
 
   const catalogTotal    = useMemo(()=>CATALOG.reduce((s,c)=>s+(counts[c.id]||0)*offeringTotal(c,P),0),[counts,P]);
-  const catalogSelected = useMemo(()=>Object.values(counts).reduce((a,b)=>a+((b as number)||0),0),[counts]);
+  const catalogSelected = useMemo(()=>Object.values(counts).reduce<number>((a,b)=>a+((b as number)||0),0),[counts]);
   const filtered        = CATALOG.filter(s=>s.group===activeGroup);
 
   const lbl = {fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.5rem"};
