@@ -337,6 +337,16 @@ export default function korbanosCalculator() {
   const nisPerUsd    = usdPerNis>0?(1/usdPerNis).toFixed(2):"–";
   const P            = useMemo(()=>buildPrices(shiurId,usdPerNis),[shiurId,usdPerNis]);
 
+  // Dynamic rationale for shiur-sensitive items
+  const getRationale=(item)=>{
+    if(item.id==="chatzi_shekel"){
+      const shekelG=(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier).toFixed(1);
+      const chatziG=(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1);
+      return `Mandatory annual contribution of every adult Jewish male, used to fund all communal korbanos. Fixed at exactly half a shekel hakodesh — ${chatziG} grams of silver per ${shiur.labelShort} (shekel = ${shekelG}g = 320 barley grains; Rambam Hilchos Shekalim 1:2). Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. No one gives more or less — the wealthy and the poor are equal. Price updates with live silver spot price.`;
+    }
+    return item.rationale;
+  };
+
   const setTravel      = (k,v)=>{
     setTravelCfg(c=>({...c,[k]:Math.max(0,v)}));
     if(k==="flightCost"||k==="nightlyRate") setTravelUserEdited(e=>({...e,[k]:true}));
@@ -760,13 +770,13 @@ export default function korbanosCalculator() {
                             {isRegalimLock&&catEntry&&<span style={{fontSize:"0.85rem",color:"#7a5030",fontStyle:"italic"}}>{catEntry.subtitle}</span>}
                           </div>
                           {isLife||isChatziFixed
-                            ? <div style={{marginTop:"0.5rem",fontSize:"0.95rem",color:"#e8d4a0",lineHeight:1.7}}>{item.rationale}</div>
+                            ? <div style={{marginTop:"0.5rem",fontSize:"0.95rem",color:"#e8d4a0",lineHeight:1.7}}>{getRationale(item)}</div>
                             : <>
                                 <div style={{display:"flex",gap:"0.75rem",marginTop:"0.4rem",flexWrap:"wrap"}}>
                                   <button onClick={()=>setShowRationale(r=>({...r,[item.id]:!r[item.id]}))} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.88rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>{showR?"hide rationale":"why this number?"}</button>
                                   {item.violations&&<button onClick={()=>setShowExamples(e=>({...e,[item.id]:!e[item.id]}))} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.88rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>{showEx?"hide examples":"sample violations"}</button>}
                                 </div>
-                                {showR&&<div className="fi" style={{marginTop:"0.5rem",padding:"0.65rem 0.9rem",background:"rgba(240,192,96,.06)",border:"1px dashed #7a4f20",fontSize:"0.92rem",color:"#d4c090",lineHeight:1.7}}>{item.rationale}</div>}
+                                {showR&&<div className="fi" style={{marginTop:"0.5rem",padding:"0.65rem 0.9rem",background:"rgba(240,192,96,.06)",border:"1px dashed #7a4f20",fontSize:"0.92rem",color:"#d4c090",lineHeight:1.7}}>{getRationale(item)}</div>}
                               </>
                           }
                           {item.violations&&showEx&&(
