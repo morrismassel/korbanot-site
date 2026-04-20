@@ -254,6 +254,7 @@ export default function korbanosCalculator() {
   const [silverStatus,     setSilverStatus]     = useState<"idle"|"loading"|"live"|"error">("idle");
   const [silverInputVal,   setSilverInputVal]   = useState((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));
   const [travelCfg,        setTravelCfg]        = useState(DEFAULT_TRAVEL);
+  const [travelUserEdited, setTravelUserEdited] = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
   const [strictness,       setStrictness]       = useState(2);
   const [financialTier,    setFinancialTier]    = useState("average");
   const [personalQtys,     setPersonalQtys]     = useState({chatas_total:7,asham_talui:3});
@@ -340,7 +341,10 @@ export default function korbanosCalculator() {
   const nisPerUsd    = usdPerNis>0?(1/usdPerNis).toFixed(2):"–";
   const P            = useMemo(()=>buildPrices(shiurId,usdPerNis),[shiurId,usdPerNis]);
 
-  const setTravel      = (k,v)=>setTravelCfg(c=>({...c,[k]:Math.max(0,v)}));
+  const setTravel      = (k,v)=>{
+    setTravelCfg(c=>({...c,[k]:Math.max(0,v)}));
+    if(k==="flightCost"||k==="nightlyRate") setTravelUserEdited(e=>({...e,[k]:true}));
+  };
   const setProfileQty  = (id,n)=>setProfileQtys(q=>({...q,[id]:Math.max(0,Math.min(99,n))}));
   const setCount       = (id,n)=>setCounts(c=>({...c,[id]:Math.max(0,Math.min(365,n))}));
   const setPersonalQty = (id,n)=>setPersonalQtys(q=>({...q,[id]:Math.max(0,Math.min(99,n))}));
@@ -422,7 +426,7 @@ export default function korbanosCalculator() {
     setProfileQtys(Object.fromEntries(ANNUAL_ASSUMPTIONS.map(a=>[a.id,a.defaultQty])));
     setRegalimAttending({pesach:true,shavuot:true,sukkot:true});
     setStrictness(2);setPersonalQtys(STRICTNESS_LEVELS[1].qtys);
-    setFinancialTier("average");setTravelCfg(DEFAULT_TRAVEL);setShiurId("naeh");setIncludeTravel(true);
+    setFinancialTier("average");setTravelCfg(DEFAULT_TRAVEL);setTravelUserEdited({});setShiurId("naeh");setIncludeTravel(true);
     setIncludeTravelTodah(true);setTodahOverride(null);
     setSilverUsdPerGram(SILVER_USD_PER_GRAM_FALLBACK);setSilverInputVal((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));setSilverStatus("idle");
   };
@@ -564,7 +568,16 @@ export default function korbanosCalculator() {
                 <div style={lbl}>Financial Standing</div>
                 <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",marginBottom:"0.6rem"}}>
                   {Object.values(FINANCIAL_TIERS).map(t=>(
-                    <button key={t.id} onClick={()=>setFinancialTier(t.id)} style={{display:"flex",alignItems:"center",gap:"0.5rem",padding:"0.55rem 1rem",background:financialTier===t.id?"rgba(240,192,96,.18)":"transparent",color:financialTier===t.id?"#f0c060":"#c9a45a",border:`1px solid ${financialTier===t.id?"#f0c060":"#5a3a1a"}`,cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
+                    <button key={t.id} onClick={()=>{
+                      setFinancialTier(t.id);
+                      if(t.id==="wealthy"){
+                        if(!travelUserEdited.flightCost) setTravelCfg(c=>({...c,flightCost:5000}));
+                        if(!travelUserEdited.nightlyRate) setTravelCfg(c=>({...c,nightlyRate:1000}));
+                      } else if(t.id!=="wealthy" && financialTier==="wealthy"){
+                        if(!travelUserEdited.flightCost) setTravelCfg(c=>({...c,flightCost:DEFAULT_TRAVEL.flightCost}));
+                        if(!travelUserEdited.nightlyRate) setTravelCfg(c=>({...c,nightlyRate:DEFAULT_TRAVEL.nightlyRate}));
+                      }
+                    }} style={{display:"flex",alignItems:"center",gap:"0.5rem",padding:"0.55rem 1rem",background:financialTier===t.id?"rgba(240,192,96,.18)":"transparent",color:financialTier===t.id?"#f0c060":"#c9a45a",border:`1px solid ${financialTier===t.id?"#f0c060":"#5a3a1a"}`,cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
                       <span style={{fontFamily:"'Cinzel',serif",fontWeight:600}}>{t.label}</span>
                       <span className="hf" style={{fontSize:"1.1rem",color:financialTier===t.id?"#f0c060":"#7a5030"}}>{t.hebrew}</span>
                     </button>
@@ -606,6 +619,14 @@ export default function korbanosCalculator() {
                     </div>
                   ))}
                 </div>
+                {financialTier==="wealthy"&&(
+                  <div style={{marginBottom:"0.75rem",padding:"0.6rem 0.9rem",background:"rgba(240,192,96,.06)",border:"1px solid #7a4f20",borderLeft:"3px solid #f0c060",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
+                    <span style={{color:"#f0ddb0",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.06em"}}>ASHIR DEFAULTS — </span>
+                    Business class flights ($5,000/person) and luxury hotel ($1,000/night) set automatically.{" "}
+                    {(travelUserEdited.flightCost||travelUserEdited.nightlyRate)&&<span style={{color:"#4ec98a"}}>You have overridden one or more values above.</span>}
+                    {(!travelUserEdited.flightCost&&!travelUserEdited.nightlyRate)&&<span style={{color:"#a08050",fontStyle:"italic"}}>Edit above to override.</span>}
+                  </div>
+                )}
               </div>
               <div style={{display:"flex",justifyContent:"flex-end",paddingTop:"1rem",marginTop:"0.75rem",borderTop:"1px solid #5a3a1a"}}>
                 <button onClick={doReset} style={{padding:"0.5rem 1rem",background:"transparent",border:"1px solid #5a3a1a",color:"#8a6030",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.1em"}}>Reset Defaults</button>
