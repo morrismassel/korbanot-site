@@ -291,6 +291,18 @@ export default function korbanosCalculator() {
     setRateStatus("error");
   };
 
+  const fetchSilver=async()=>{
+    setSilverStatus("loading");
+    try{
+      const r=await fetch("https://open.er-api.com/v6/latest/XAG");
+      const d=await r.json();
+      if(d?.rates?.USD){setSilverUsdPerGram(d.rates.USD/31.1035);setSilverStatus("live");return;}
+    }catch(e){}
+    setSilverStatus("error");
+  };
+
+  const silverPerTroyOz = (silverUsdPerGram*31.1035).toFixed(2);
+
   const shiur        = SHIURIM[shiurId];
   const tier         = FINANCIAL_TIERS[financialTier];
   const currentLevel = STRICTNESS_LEVELS[strictness-1];
@@ -452,6 +464,8 @@ export default function korbanosCalculator() {
             <div style={{display:"flex",alignItems:"center",gap:"0.75rem 1.5rem",flexWrap:"wrap",fontSize:"0.9rem",color:"#c9a45a"}}>
               <span><span style={{color:"#8a6030"}}>Rate: </span><span style={{color:"#f0ddb0"}}>$1 = NIS {nisPerUsd}</span>{rateStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{rateStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
               <span style={{color:"#5a3a1a"}}>|</span>
+              <span><span style={{color:"#8a6030"}}>Silver: </span><span style={{color:"#f0ddb0"}}>${silverPerTroyOz}/oz</span>{silverStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{silverStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
+              <span style={{color:"#5a3a1a"}}>|</span>
               <span><span style={{color:"#8a6030"}}>Shiur: </span><span style={{color:"#f0ddb0"}}>{shiur.labelShort}</span>{shiurId!=="naeh"&&<span style={{color:"#b070e0",marginLeft:"0.3rem"}}>x{shiur.multiplier}</span>}</span>
               <span style={{color:"#5a3a1a"}}>|</span>
               <span><span style={{color:"#8a6030"}}>Standing: </span><span style={{color:"#f0ddb0"}}>{tier.label}</span></span>
@@ -476,6 +490,26 @@ export default function korbanosCalculator() {
                   {rateStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
                   {rateStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
                   {rateStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>fetch failed - using manual rate</span>}
+                </div>
+              </div>
+              {/* Silver price */}
+              <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
+                <div style={lbl}>Silver Price (Chatzi Shekel & Pidyon HaBen)</div>
+                <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>Used to price silver-weight obligations. Chatzi shekel = 9.6g (R' Naeh); pidyon haben = 96g.</div>
+                <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
+                  <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>$</span>
+                  <input type="number" step="0.50" min="0.01" value={parseFloat(silverPerTroyOz)} onChange={e=>setSilverUsdPerGram((parseFloat(e.target.value)||33)/31.1035)} style={{width:80,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
+                  <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>/troy oz</span>
+                  <span style={{fontSize:"0.85rem",color:"#7a5030"}}>(= ${silverUsdPerGram.toFixed(4)}/g)</span>
+                  <button onClick={fetchSilver} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>Refresh</button>
+                  {silverStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
+                  {silverStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
+                  {silverStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>fetch failed - using manual rate</span>}
+                </div>
+                <div style={{marginTop:"0.6rem",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
+                  Chatzi shekel: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram))}</strong>
+                  <span style={{margin:"0 0.5rem",color:"#5a3a1a"}}>·</span>
+                  Pidyon haben: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("pidyon_haben",silverUsdPerGram))}</strong>
                 </div>
               </div>
               {/* Financial Standing */}
