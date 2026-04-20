@@ -351,7 +351,6 @@ export default function korbanosCalculator() {
   const todahFromTravel = (!livesInEY && includeTravelTodah) ? regalimCount*2 : 0;
   const todahAuto       = 2 + todahFromTravel;
   const todahTotal      = todahOverride !== null ? todahOverride : todahAuto;
-  const todahTotal      = todahOverride !== null ? todahOverride : todahAuto;
   const resetTodah      = ()=>setTodahOverride(null);
 
   const resolveCatalogId = id=>{
