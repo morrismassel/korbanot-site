@@ -522,54 +522,32 @@ export default function korbanosCalculator() {
           </div>
           {showSettings&&(
             <div className="fi" style={{padding:"1.25rem",borderTop:"1px solid #5a3a1a"}}>
-              {/* Exchange rate */}
+              {/* Location / Eretz Yisroel */}
               <div style={{marginBottom:"1.25rem"}}>
-                <div style={lbl}>USD / NIS Exchange Rate</div>
-                <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>All prices are Jerusalem NIS rates, converted to USD for display.</div>
-                <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
-                  <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>$1 =</span>
-                  <input type="number" step="0.01" min="0.1" value={parseFloat(nisPerUsd)} onChange={e=>setUsdPerNis(1/(parseFloat(e.target.value)||2.96))} style={{width:70,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
-                  <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>NIS</span>
-                  <button onClick={fetchRate} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>Refresh</button>
-                  {rateStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
-                  {rateStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
-                  {rateStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>fetch failed - using manual rate</span>}
-                </div>
-              </div>
-              {/* Silver price */}
-              <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
-                <div style={lbl}>Silver Price (Chatzi Shekel & Pidyon HaBen)</div>
-                <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>Used to price silver-weight obligations. Weight scales with shiur — chatzi shekel = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g ({shiur.labelShort}); pidyon haben = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier*5/2).toFixed(1)}g.</div>
-                <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
-                  <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>$</span>
-                  <input
-                    type="number" step="0.50" min="0.01"
-                    value={silverInputVal}
-                    onChange={e=>{
-                      setSilverInputVal(e.target.value);
-                      const v=parseFloat(e.target.value);
-                      if(!isNaN(v)&&v>0) setSilverUsdPerGram(v/31.1035);
-                    }}
-                    onBlur={e=>{
-                      const v=parseFloat(e.target.value);
-                      if(isNaN(v)||v<=0){setSilverInputVal((silverUsdPerGram*31.1035).toFixed(2));}
-                      else{setSilverInputVal(v.toFixed(2));setSilverUsdPerGram(v/31.1035);}
-                    }}
-                    style={{width:90,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}
-                  />
-                  <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>/troy oz</span>
-                  <span style={{fontSize:"0.85rem",color:"#7a5030"}}>(= ${silverUsdPerGram.toFixed(4)}/g)</span>
-                  <button onClick={fetchSilver} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>Refresh</button>
-                  {silverStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
-                  {silverStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
-                  {silverStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>fetch failed — using manual rate</span>}
-                  {silverStatus==="idle"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>estimated</span>}
-                </div>
-                <div style={{marginTop:"0.6rem",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
-                  Chatzi shekel: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>
-                  <span style={{margin:"0 0.5rem",color:"#5a3a1a"}}>·</span>
-                  Pidyon haben: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("pidyon_haben",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>
-                </div>
+                <div style={lbl}>Location</div>
+                <label style={{display:"flex",alignItems:"center",gap:"0.6rem",cursor:"pointer",fontSize:"0.95rem",color:"#f0ddb0",marginBottom:"0.6rem"}}>
+                  <input type="checkbox" checked={livesInEY} onChange={e=>{setLivesInEY(e.target.checked);if(!e.target.checked) setIsLandowner(false);}} style={{width:16,height:16,accentColor:"#f0c060",cursor:"pointer"}}/>
+                  I live in Eretz Yisroel
+                </label>
+                {livesInEY&&(
+                  <div className="fi">
+                    <div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic",marginBottom:"0.75rem",lineHeight:1.6}}>Travel costs and travel-related todaos removed from your annual total.</div>
+                    <label style={{display:"flex",alignItems:"center",gap:"0.6rem",cursor:"pointer",fontSize:"0.95rem",color:"#f0ddb0",marginBottom:"0.4rem"}}>
+                      <input type="checkbox" checked={isLandowner} onChange={e=>setIsLandowner(e.target.checked)} style={{width:16,height:16,accentColor:"#f0c060",cursor:"pointer"}}/>
+                      I own agricultural land in Eretz Yisroel (obligated in Bikkurim)
+                    </label>
+                    {isLandowner&&(
+                      <div style={{marginTop:"0.4rem",padding:"0.5rem 0.75rem",background:"rgba(192,122,216,.07)",border:"1px solid #7a4090",borderLeft:"3px solid #c07ad8",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
+                        <strong style={{color:"#f0ddb0"}}>Bikkurim set automatically</strong> based on your financial standing:{" "}
+                        {financialTier==="poor"&&"straw basket with produce (~$150)"}
+                        {financialTier==="average"&&"silver basket with produce and decorations (~$450)"}
+                        {financialTier==="wealthy"&&"gold basket kept by the Kohen, doves tied to handles, elaborate produce display (~$1,200)"}
+                        {" "}— <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("bikkurim",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>.{" "}
+                        Change your financial standing above to update.
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               {/* Financial Standing */}
               <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
@@ -606,32 +584,54 @@ export default function korbanosCalculator() {
                 </div>
                 <div style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic",lineHeight:1.6}}>{shiur.notes} <span style={{color:"#7a5030"}}>- {shiur.source}</span></div>
               </div>
-              {/* Eretz Yisroel */}
+              {/* Silver price */}
               <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
-                <div style={lbl}>Location</div>
-                <label style={{display:"flex",alignItems:"center",gap:"0.6rem",cursor:"pointer",fontSize:"0.95rem",color:"#f0ddb0",marginBottom:"0.6rem"}}>
-                  <input type="checkbox" checked={livesInEY} onChange={e=>{setLivesInEY(e.target.checked);if(!e.target.checked) setIsLandowner(false);}} style={{width:16,height:16,accentColor:"#f0c060",cursor:"pointer"}}/>
-                  I live in Eretz Yisroel
-                </label>
-                {livesInEY&&(
-                  <div className="fi">
-                    <div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic",marginBottom:"0.75rem",lineHeight:1.6}}>Travel costs and travel-related todaos removed from your annual total.</div>
-                    <label style={{display:"flex",alignItems:"center",gap:"0.6rem",cursor:"pointer",fontSize:"0.95rem",color:"#f0ddb0",marginBottom:"0.4rem"}}>
-                      <input type="checkbox" checked={isLandowner} onChange={e=>setIsLandowner(e.target.checked)} style={{width:16,height:16,accentColor:"#f0c060",cursor:"pointer"}}/>
-                      I own agricultural land in Eretz Yisroel (obligated in Bikkurim)
-                    </label>
-                    {isLandowner&&(
-                      <div style={{marginTop:"0.4rem",padding:"0.5rem 0.75rem",background:"rgba(192,122,216,.07)",border:"1px solid #7a4090",borderLeft:"3px solid #c07ad8",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
-                        <strong style={{color:"#f0ddb0"}}>Bikkurim set automatically</strong> based on your financial standing:{" "}
-                        {financialTier==="poor"&&"straw basket with produce (~$150)"}
-                        {financialTier==="average"&&"silver basket with produce and decorations (~$450)"}
-                        {financialTier==="wealthy"&&"gold basket kept by the Kohen, doves tied to handles, elaborate produce display (~$1,200)"}
-                        {" "}— <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("bikkurim",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>.{" "}
-                        Change your financial standing above to update.
-                      </div>
-                    )}
-                  </div>
-                )}
+                <div style={lbl}>Silver Price (Chatzi Shekel & Pidyon HaBen)</div>
+                <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>Used to price silver-weight obligations. Weight scales with shiur — chatzi shekel = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g ({shiur.labelShort}); pidyon haben = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier*5/2).toFixed(1)}g.</div>
+                <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
+                  <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>$</span>
+                  <input
+                    type="number" step="0.50" min="0.01"
+                    value={silverInputVal}
+                    onChange={e=>{
+                      setSilverInputVal(e.target.value);
+                      const v=parseFloat(e.target.value);
+                      if(!isNaN(v)&&v>0) setSilverUsdPerGram(v/31.1035);
+                    }}
+                    onBlur={e=>{
+                      const v=parseFloat(e.target.value);
+                      if(isNaN(v)||v<=0){setSilverInputVal((silverUsdPerGram*31.1035).toFixed(2));}
+                      else{setSilverInputVal(v.toFixed(2));setSilverUsdPerGram(v/31.1035);}
+                    }}
+                    style={{width:90,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}
+                  />
+                  <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>/troy oz</span>
+                  <span style={{fontSize:"0.85rem",color:"#7a5030"}}>(= ${silverUsdPerGram.toFixed(4)}/g)</span>
+                  <button onClick={fetchSilver} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>Refresh</button>
+                  {silverStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
+                  {silverStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
+                  {silverStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>fetch failed — using manual rate</span>}
+                  {silverStatus==="idle"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>estimated</span>}
+                </div>
+                <div style={{marginTop:"0.6rem",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
+                  Chatzi shekel: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>
+                  <span style={{margin:"0 0.5rem",color:"#5a3a1a"}}>·</span>
+                  Pidyon haben: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("pidyon_haben",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>
+                </div>
+              </div>
+              {/* Exchange rate */}
+              <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
+                <div style={lbl}>USD / NIS Exchange Rate</div>
+                <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>All prices are Jerusalem NIS rates, converted to USD for display.</div>
+                <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
+                  <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>$1 =</span>
+                  <input type="number" step="0.01" min="0.1" value={parseFloat(nisPerUsd)} onChange={e=>setUsdPerNis(1/(parseFloat(e.target.value)||2.96))} style={{width:70,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
+                  <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>NIS</span>
+                  <button onClick={fetchRate} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>Refresh</button>
+                  {rateStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
+                  {rateStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
+                  {rateStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>fetch failed - using manual rate</span>}
+                </div>
               </div>
               {/* Travel — hidden for EY residents */}
               {!livesInEY&&(
