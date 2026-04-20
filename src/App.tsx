@@ -219,12 +219,14 @@ const TRAVEL_ITEMS = [
 const DEFAULT_TRAVEL = {flightCost:1500,nightlyRate:400,familyMembers:0,pesachNights:4,shavuotNights:0,sukkotNights:4};
 
 // Silver price for chatzi shekel / pidyon haben
-// Shekel hakodesh per R' Naeh = 19.2g → chatzi shekel = 9.6g (Rambam Hilchos Shekalim 1:2)
-// Pidyon haben = 5 shekalim = 96g
-// Silver fallback ~$1.06/gram (≈$33/troy oz, April 2026). Fetched live at runtime.
+// Shekel hakodesh = 320 barley grains. R' Naeh baseline = 19.2g.
+// Other shiurim scale by the same multiplier as flour/oil/wine.
+// R' Naeh 1.0×: chatzi shekel = 9.6g,  pidyon haben = 96g
+// R' Moshe 1.14×: chatzi shekel = 10.9g, pidyon haben = 109.2g
+// Rambam  1.5×:  chatzi shekel = 14.4g, pidyon haben = 144g
+// Chazon Ish 2×: chatzi shekel = 19.2g, pidyon haben = 192g
 const SILVER_USD_PER_GRAM_FALLBACK = 1.06;
-const CHATZI_SHEKEL_GRAMS = 9.6;   // per R' Naeh; Chazon Ish = 12g
-const PIDYON_HABEN_GRAMS  = 96.0;  // 5 shekalim × 19.2g
+const SHEKEL_HAKODESH_NAEH_G = 19.2; // baseline R' Naeh; multiply by shiur.multiplier
 // Bikkurim pricing by financial tier (Mishnah Bikkurim 3:8; Rambam Hilchos Bikkurim 4:15)
 // Poor (Ani): simple wicker/straw basket, basic seven-species fruits only
 // Average: silver basket returned to kohen after use; additional fruits and decorations
@@ -233,9 +235,12 @@ const BIKKURIM_POOR_USD    = 150;   // straw basket + produce
 const BIKKURIM_AVERAGE_USD = 450;   // silver basket (~$200 silver) + produce + decorations
 const BIKKURIM_WEALTHY_USD = 1200;  // gold basket (~$600 gold) + doves + elaborate produce display
 
-function fixedPriceFor(id, silverUsdPerGram=SILVER_USD_PER_GRAM_FALLBACK, financialTier="average"){ 
-  if(id==="chatzi_shekel") return CHATZI_SHEKEL_GRAMS * silverUsdPerGram;
-  if(id==="pidyon_haben")  return PIDYON_HABEN_GRAMS  * silverUsdPerGram;
+function fixedPriceFor(id, silverUsdPerGram=SILVER_USD_PER_GRAM_FALLBACK, financialTier="average", shiurMultiplier=1.0){ 
+  const shekelG   = SHEKEL_HAKODESH_NAEH_G * shiurMultiplier;
+  const chatziG   = shekelG / 2;
+  const pidyonG   = shekelG * 5;
+  if(id==="chatzi_shekel") return chatziG * silverUsdPerGram;
+  if(id==="pidyon_haben")  return pidyonG * silverUsdPerGram;
   if(id==="bikkurim"){
     if(financialTier==="wealthy") return BIKKURIM_WEALTHY_USD;
     if(financialTier==="poor")    return BIKKURIM_POOR_USD;
@@ -359,7 +364,7 @@ export default function korbanosCalculator() {
     return ANNUAL_ASSUMPTIONS.find(a=>a.id===id)?.catalogId;
   };
   const resolveUnitCost=(id,P)=>{
-    if(FIXED_PRICE_IDS.includes(id)) return fixedPriceFor(id, silverUsdPerGram, financialTier);
+    if(FIXED_PRICE_IDS.includes(id)) return fixedPriceFor(id, silverUsdPerGram, financialTier, shiur.multiplier);
     const catId=resolveCatalogId(id);
     const entry=catId?CATALOG.find(c=>c.id===catId):null;
     return entry?offeringTotal(entry,P):0;
@@ -524,7 +529,7 @@ export default function korbanosCalculator() {
               {/* Silver price */}
               <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
                 <div style={lbl}>Silver Price (Chatzi Shekel & Pidyon HaBen)</div>
-                <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>Used to price silver-weight obligations. Chatzi shekel = 9.6g (R' Naeh); pidyon haben = 96g.</div>
+                <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>Used to price silver-weight obligations. Weight scales with shiur — chatzi shekel = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g ({shiur.labelShort}); pidyon haben = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier*5/2).toFixed(1)}g.</div>
                 <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
                   <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>$</span>
                   <input
@@ -551,9 +556,9 @@ export default function korbanosCalculator() {
                   {silverStatus==="idle"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>estimated</span>}
                 </div>
                 <div style={{marginTop:"0.6rem",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
-                  Chatzi shekel: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram))}</strong>
+                  Chatzi shekel: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>
                   <span style={{margin:"0 0.5rem",color:"#5a3a1a"}}>·</span>
-                  Pidyon haben: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("pidyon_haben",silverUsdPerGram))}</strong>
+                  Pidyon haben: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("pidyon_haben",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>
                 </div>
               </div>
               {/* Financial Standing */}
@@ -611,7 +616,7 @@ export default function korbanosCalculator() {
                         {financialTier==="poor"&&"straw basket with produce (~$150)"}
                         {financialTier==="average"&&"silver basket with produce and decorations (~$450)"}
                         {financialTier==="wealthy"&&"gold basket kept by the Kohen, doves tied to handles, elaborate produce display (~$1,200)"}
-                        {" "}— <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("bikkurim",silverUsdPerGram,financialTier))}</strong>.{" "}
+                        {" "}— <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("bikkurim",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>.{" "}
                         Change your financial standing above to update.
                       </div>
                     )}
@@ -874,7 +879,7 @@ export default function korbanosCalculator() {
             <div style={{marginBottom:"1.5rem",padding:"1.25rem",background:"rgba(240,192,96,.06)",border:"1px solid #7a4f20",borderLeft:"4px solid #f0c060"}}>
               <div style={{fontSize:"1rem",color:"#f0c060",fontFamily:"'Cinzel',serif",letterSpacing:"0.08em",marginBottom:"0.75rem",fontWeight:700}}>The Chatzi Shekel Pool</div>
               <p style={{fontSize:"1rem",color:"#e8d4a0",lineHeight:1.8,margin:"0 0 0.75rem"}}>Every adult Jewish male contributed exactly half a shekel annually — no more, no less. These funds paid for every communal korban: the tamid, all musaf offerings, the Yom Kippur service, the Shtei HaLechem, and more. The wealthy and the poor were equal before the altar.</p>
-              <p style={{fontSize:"0.95rem",color:"#c9a45a",fontStyle:"italic",lineHeight:1.7,margin:0}}>Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. Half a shekel hakodesh = 9.6g silver (per R' Naeh; shekel = 19.2g = 320 barley grains) = <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram))}</strong> at current silver prices (~${silverUsdPerGram.toFixed(2)}/gram{silverStatus==="live"?<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>:<span style={{color:"#c9a45a",marginLeft:"0.3rem"}}>est.</span>}).</p>
+              <p style={{fontSize:"0.95rem",color:"#c9a45a",fontStyle:"italic",lineHeight:1.7,margin:0}}>Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. Half a shekel hakodesh = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g silver ({shiur.labelShort}; shekel = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier).toFixed(1)}g = 320 barley grains) = <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier))}</strong> at current silver prices (~${silverUsdPerGram.toFixed(2)}/gram{silverStatus==="live"?<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>:<span style={{color:"#c9a45a",marginLeft:"0.3rem"}}>est.</span>}).</p>
             </div>
 
             {/* Summary cards */}
@@ -882,8 +887,8 @@ export default function korbanosCalculator() {
               {[
                 {label:"Total Annual Communal Cost",value:fmt(communalTotal),sub:"all public korbanos combined",color:"#f0c060"},
                 {label:"Per Capita Cost",value:fmt(perCapitaCommunal),sub:`assuming ${(ASSUMED_POPULATION/1000).toFixed(0)}k adult males`,color:"#4ec98a"},
-                {label:"Actual Chatzi Shekel",value:fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram)),sub:`9.6g silver • R' Naeh • ${silverStatus==="live"?"live price":"est. price"}`,color:"#c07ad8"},
-                {label:"Subsidy per Person",value:fmt(Math.max(0,fixedPriceFor("chatzi_shekel",silverUsdPerGram)-perCapitaCommunal)),sub:"chatzi shekel minus per-capita cost",color:"#5aabdf"},
+                {label:"Actual Chatzi Shekel",value:fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)),sub:`${(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g silver • ${shiur.labelShort} • ${silverStatus==="live"?"live price":"est. price"}`,color:"#c07ad8"},
+                {label:"Subsidy per Person",value:fmt(Math.max(0,fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)-perCapitaCommunal)),sub:"chatzi shekel minus per-capita cost",color:"#5aabdf"},
               ].map(({label,value,sub,color})=>(
                 <div key={label} style={{padding:"1.1rem 1.25rem",background:"rgba(24,12,4,.8)",border:`1px solid ${color}44`,borderTop:`3px solid ${color}`}}>
                   <div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.4rem"}}>{label}</div>
