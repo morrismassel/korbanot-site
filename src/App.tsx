@@ -83,7 +83,7 @@ const CATALOG = [
   {id:"reiyah_ram",group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה - אַיִל",name:"Olas Re'iyah - Ram (Wealthy)",subtitle:"Premium olas re'iyah for the wealthy",source:"Devarim 16:16",description:"A ram as the olas re'iyah, as brought by those of means.",components:[{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1}]},
   {id:"chagigah_bull",group:"Individual Offerings",hebrew:"חֲגִיגָה - פַּר",name:"Chagigah - Bull (Wealthy)",subtitle:"Premium chagigah for the wealthy",source:"Devarim 16:16; Chagigah 1:1",description:"A bull as the chagigah, as brought by those of means.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1}]},
   {id:"yoledet",group:"Individual Offerings",hebrew:"יוֹלֶדֶת",name:"Yoledet - After Childbirth",subtitle:"Purification offering of a new mother",source:"Vayikra 12:6-8",description:"A yearling male lamb as olah + a bird as chatas, after the days of purification.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 bird (chatas)",key:"bird",count:1}]},
-  {id:"nazir",group:"Individual Offerings",hebrew:"נָזִיר",name:"Korbanos Nazir - End of Nazirite Vow",subtitle:"At the completion of the vow",source:"Bamidbar 6:13-20",description:"1 male lamb (olah), 1 ewe-lamb (chatas), 1 ram (shelamim), basket of matzos.",components:[{label:"1 male lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 ewe-lamb (chatas)",key:"lamb",count:1},{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1},{label:"Basket of matzos (~6 issaron)",key:"issaron_flour",count:6},{label:"Oil (~2 log)",key:"log_oil",count:2}]},
+  {id:"nazir",group:"Individual Offerings",hebrew:"נָזִיר",name:"Korbanot Nazir - End of Nazirite Vow",subtitle:"At the completion of the vow",source:"Bamidbar 6:13-20",description:"1 male lamb (olah), 1 ewe-lamb (chatas), 1 ram (shelamim), basket of matzos.",components:[{label:"1 male lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 ewe-lamb (chatas)",key:"lamb",count:1},{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1},{label:"Basket of matzos (~6 issaron)",key:"issaron_flour",count:6},{label:"Oil (~2 log)",key:"log_oil",count:2}]},
 ];
 const GROUPS = ["Daily & Weekly","Pilgrimage Festivals","Individual Offerings"];
 
@@ -155,14 +155,14 @@ const ANNUAL_ASSUMPTIONS = [
   {id:"pesach_korban", cat:CAT.FIXED,    label:"Korban Pesach",            hebrew:"קָרְבַּן פֶּסַח",      catalogId:"pesach",           defaultQty:1, rationale:"Obligatory. Failure without valid exemption carries kareis."},
   {id:"reiyah",        cat:CAT.FIXED,    label:"Olas Re'iyah x regalim",   hebrew:"עוֹלַת רְאִיָּה",      catalogId:"reiyah",           defaultQty:3, rationale:"Obligatory on Pesach, Shavuos, and Sukkos. Animal type varies by financial standing."},
   {id:"chagigah",      cat:CAT.FIXED,    label:"Chagigah x regalim",       hebrew:"חֲגִיגָה",            catalogId:"chagigah",         defaultQty:3, rationale:"Obligatory on Pesach, Shavuos, and Sukkos. Animal type varies by financial standing."},
-  {id:"chatzi_shekel", cat:CAT.FIXED,    label:"Chatzi Shekel",            hebrew:"מַחֲצִית הַשֶּׁקֶל",   catalogId:null,               defaultQty:1, rationale:"Mandatory annual contribution of every adult Jewish male, used to fund all communal korbanos. Fixed at exactly half a shekel of the kodesh — 10 grams of silver. Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. No one gives more or less — the wealthy and the poor are equal."},
+  {id:"chatzi_shekel", cat:CAT.FIXED,    label:"Chatzi Shekel",            hebrew:"מַחֲצִית הַשֶּׁקֶל",   catalogId:null,               defaultQty:1, rationale:"Mandatory annual contribution of every adult Jewish male, used to fund all communal korbanot. Fixed at exactly half a shekel of the kodesh — 10 grams of silver. Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. No one gives more or less — the wealthy and the poor are equal."},
   {id:"chatas_total",  cat:CAT.PERSONAL, label:"Chataos",                  hebrew:"חַטָּאוֹת",            catalogId:"chatat_individual",defaultQty:7, rationale:"Total inadvertent violations of kareis prohibitions: Shabbos melachos, eruv failures, arayos, and basar b'chalav. Set by the scrutiny slider; adjust freely.", violations:V.chatas_total},
   {id:"asham_talui",   cat:CAT.PERSONAL, label:"Asham Toluy",              hebrew:"אָשָׁם תָּלוּי",       catalogId:"asham",            defaultQty:3, rationale:"Brought when genuinely unsure whether a kareis violation occurred.", violations:V.asham_talui},
   {id:"todah",         cat:CAT.TODAH,    label:"Korban Todah",             hebrew:"תּוֹדָה",              catalogId:"todah",            defaultQty:3, rationale:"Each aliyah l'regel round-trip generates 2 todah obligations. Plus a baseline of 2 for illness and other travel. Scales automatically with regalim attendance."},
-  {id:"yoledet",       cat:CAT.LIFE,     label:"Yoledet",                  hebrew:"יוֹלֶדֶת",             catalogId:"yoledet",          defaultQty:0, rationale:"Brought by a woman after childbirth, after the days of purification (33 days for a boy, 66 for a girl). One lamb as olah and one bird as chatas. If she cannot afford a lamb, two birds. One of the most common life-event korbanos — every birth triggers this obligation."},
+  {id:"yoledet",       cat:CAT.LIFE,     label:"Yoledet",                  hebrew:"יוֹלֶדֶת",             catalogId:"yoledet",          defaultQty:0, rationale:"Brought by a woman after childbirth, after the days of purification (33 days for a boy, 66 for a girl). One lamb as olah and one bird as chatas. If she cannot afford a lamb, two birds. One of the most common life-event korbanot — every birth triggers this obligation."},
   {id:"olah_vol",      cat:CAT.LIFE,     label:"Olah - Voluntary",         hebrew:"עוֹלָה",               catalogId:"olah_animal",      defaultQty:0, rationale:"A wholly-consumed ascent-offering brought voluntarily — no trigger required. Expresses pure devotion; nothing returns to the owner. Can be brought at any time. The animal may be a bull, ram, or lamb depending on means."},
   {id:"shelamim_vol",  cat:CAT.LIFE,     label:"Shelamim - Peace Offering",hebrew:"שְׁלָמִים",             catalogId:"shelamim",         defaultQty:0, rationale:"Brought voluntarily to celebrate, fulfill a vow, or as a freewill gift. Divided among the altar, the kohanim, and the owner's family — eaten in Yerushalayim. Occasions include births, recoveries, business successes, or simple gratitude."},
-  {id:"nazir_vol",     cat:CAT.LIFE,     label:"Korbanos Nazir",           hebrew:"נָזִיר",               catalogId:"nazir",            defaultQty:0, rationale:"Brought at the end of a nazirite vow. The Nazir abstains from wine, haircuts, and contact with the dead, then brings a lamb as olah, a ewe as chatas, a ram as shelamim, plus 40 loaves."},
+  {id:"nazir_vol",     cat:CAT.LIFE,     label:"Korbanot Nazir",           hebrew:"נָזִיר",               catalogId:"nazir",            defaultQty:0, rationale:"Brought at the end of a nazirite vow. The Nazir abstains from wine, haircuts, and contact with the dead, then brings a lamb as olah, a ewe as chatas, a ram as shelamim, plus 40 loaves."},
   {id:"metzora_vol",   cat:CAT.LIFE,     label:"Korban Metzora",           hebrew:"מְצֹרָע",              catalogId:"yoledet",          defaultQty:0, rationale:"Brought upon purification from tzara'at. Two lambs (asham and olah), one ewe (chatas), flour and oil, with an elaborate blood-and-oil anointing ritual. This offering marks complete reintegration into the community."},
   {id:"oleh_yored",    cat:CAT.LIFE,     label:"Korban Oleh v'Yored",      hebrew:"עוֹלֶה וְיוֹרֵד",     catalogId:"chatat_individual",defaultQty:0, rationale:"A sliding-scale offering for specific transgressions: false oath, entering the Mikdash while tamei, or eating kodashim while tamei. The wealthy bring a lamb; moderate means bring two birds; the very poor bring a flour offering (Vayikra 5:1-13)."},
   {id:"bikkurim",      cat:CAT.LIFE,     label:"Bikkurim",                 hebrew:"בִּכּוּרִים",           catalogId:null,               defaultQty:0, rationale:"First fruits of the seven species (wheat, barley, grapes, figs, pomegranates, olives, dates) brought to the Mikdash between Shavuos and Sukkos. Only obligatory for landowners in Eretz Yisrael. Accompanied by the Arami oved avi declaration (Devarim 26:5-10). No specific animal — the basket of first fruits goes to the kohen. Set to 0 if you own no qualifying land in Israel."},
@@ -221,7 +221,7 @@ function fixedPriceFor(id){
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-export default function KorbanosCalculator() {
+export default function KorbanotCalculator() {
   const [activeTab,        setActiveTab]        = useState("annual");
   const [counts,           setCounts]           = useState({});
   const [expanded,         setExpanded]         = useState({});
@@ -398,7 +398,7 @@ export default function KorbanosCalculator() {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2s4 4 4 8a4 4 0 1 1-8 0c0-1.5.5-2.5 1-3.5C10 8 10 10 11 10c.5 0 1-.5 1-1 0-2-1-4 0-7z"/></svg>
             <div style={{width:40,height:1,background:"#f0c060"}}/>
           </div>
-          <h1 className="df" style={{fontSize:"clamp(2rem,4vw,3rem)",fontWeight:700,margin:"0.4rem 0",color:"#f0ddb0",textShadow:"0 2px 20px rgba(240,192,96,.3)"}}>KORBANOS</h1>
+          <h1 className="df" style={{fontSize:"clamp(2rem,4vw,3rem)",fontWeight:700,margin:"0.4rem 0",color:"#f0ddb0",textShadow:"0 2px 20px rgba(240,192,96,.3)"}}>KORBANOT</h1>
           <div className="hf" style={{fontSize:"clamp(1.4rem,3vw,2.2rem)",color:"#f0c060",marginBottom:"0.5rem"}}>קָרְבְּנוֹת בֵּית הַמִּקְדָּשׁ</div>
           <p style={{fontStyle:"italic",color:"#c9a45a",maxWidth:560,margin:"0 auto",fontSize:"1rem",lineHeight:1.6}}>A modern-day price calculator for the sacrifices of the Temple. All prices based on Jerusalem market rates.</p>
         </header>
@@ -475,7 +475,7 @@ export default function KorbanosCalculator() {
                     Include travel in total
                   </label>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:"0.75rem",marginBottom:"0.9rem"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:"0.75rem",marginBottom:"0.9rem"}}>
                   {[{label:"Flight / person",key:"flightCost",prefix:"$",step:50},{label:"Nightly hotel",key:"nightlyRate",prefix:"$",step:25},{label:"Extra travelers",key:"familyMembers",step:1,suffix:"beyond self"},{label:"Pesach nights",key:"pesachNights",step:1},{label:"Shavuos nights",key:"shavuotNights",step:1},{label:"Sukkos nights",key:"sukkotNights",step:1}].map(({label,key,prefix,step,suffix})=>(
                     <div key={key}>
                       <div style={lbl}>{label}</div>
@@ -523,7 +523,7 @@ export default function KorbanosCalculator() {
                   <div style={{marginTop:"0.7rem",fontSize:"0.95rem",color:"#d4a060",fontStyle:"italic",borderTop:"1px dashed #aa3030",paddingTop:"0.6rem",lineHeight:1.7}}>The person who goes, violates an eruv, and brings a chatas has a cleaner ledger at year's end than the person who stayed home and saved the airfare.</div>
                 </div>
               )}
-              {Object.values(regalimAttending).every(v=>v)&&<div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic"}}>All three regalim — travel and korbanos included in your annual total below.</div>}
+              {Object.values(regalimAttending).every(v=>v)&&<div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic"}}>All three regalim — travel and korbanot included in your annual total below.</div>}
             </div>
 
             {byCategory.map(({cat,items,subtotal,isTravel})=>{
@@ -696,7 +696,7 @@ export default function KorbanosCalculator() {
             {/* Summary cards */}
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:"1rem",marginBottom:"2rem"}}>
               {[
-                {label:"Total Annual Communal Cost",value:fmt(communalTotal),sub:"all public korbanos combined",color:"#f0c060"},
+                {label:"Total Annual Communal Cost",value:fmt(communalTotal),sub:"all public korbanot combined",color:"#f0c060"},
                 {label:"Per Capita Cost",value:fmt(perCapitaCommunal),sub:`assuming ${(ASSUMED_POPULATION/1000).toFixed(0)}k adult males`,color:"#4ec98a"},
                 {label:"Actual Chatzi Shekel",value:fmt(CHATZI_SHEKEL_USD),sub:"10g silver • fixed by Torah",color:"#c07ad8"},
                 {label:"Subsidy per Person",value:fmt(Math.max(0,CHATZI_SHEKEL_USD-perCapitaCommunal)),sub:"chatzi shekel minus per-capita cost",color:"#5aabdf"},
@@ -824,7 +824,7 @@ export default function KorbanosCalculator() {
         {activeTab==="prices"&&(
           <div className="fi">
             <div style={{marginBottom:"1.5rem",padding:"1rem 1.25rem",background:"rgba(90,171,223,.07)",border:"1px solid #3a7aaa",borderLeft:"3px solid #5aabdf",fontSize:"1rem",lineHeight:1.7,color:"#e8d4a0"}}>
-              <strong style={{color:"#f0ddb0"}}>All prices are Jerusalem market rates.</strong> Korbanos are brought in Jerusalem. NIS prices converted to USD at $1 = NIS {nisPerUsd}.
+              <strong style={{color:"#f0ddb0"}}>All prices are Jerusalem market rates.</strong> Korbanot are brought in Jerusalem. NIS prices converted to USD at $1 = NIS {nisPerUsd}.
             </div>
             <div style={{marginBottom:"1.5rem",padding:"1rem 1.25rem",background:"rgba(240,192,96,.06)",border:"1px solid #7a4f20",borderLeft:"3px solid #f0c060"}}>
               <div style={{marginBottom:"0.4rem"}}>
