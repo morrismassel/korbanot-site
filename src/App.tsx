@@ -166,10 +166,10 @@ const ANNUAL_ASSUMPTIONS = [
   {id:"chagigah",      cat:CAT.FIXED,    label:"Chagigah x regalim",       hebrew:"חֲגִיגָה",            catalogId:"chagigah",         defaultQty:3, rationale:"Obligatory on Pesach, Shavuos, and Sukkos. Animal type varies by financial standing."},
   {id:"shalmei_simcha",cat:CAT.FIXED,    label:"Shalmei Simcha x regalim", hebrew:"שַׁלְמֵי שִׂמְחָה",   catalogId:"shalmei_simcha",   defaultQty:3, rationale:"The Torah obligation of simcha on each regel — distinct from the chagigah. Every adult male must eat from the meat of a shelamim in Yerushalayim on each of the three regalim. Scales with regalim attendance."},
   {id:"chagigah_14_nissan",cat:CAT.FIXED, label:"Chagigat 14 Nisan",        hebrew:"חֲגִיגַת י\"ד",        catalogId:"chagigah_14",      defaultQty:1, rationale:"Brought on Erev Pesach (14 Nisan) alongside the Korban Pesach, so that the seder meal is eaten al hasova — on satiety — rather than from hunger. Tied to Pesach attendance. Note: when 14 Nisan falls on Shabbos, this chagigah is not brought (and cannot be made up). In practice, toggle Pesach off to reflect non-attendance; the offering drops to zero automatically."},
-  {id:"chatzi_shekel", cat:CAT.FIXED,    label:"Chatzi Shekel",            hebrew:"מַחֲצִית הַשֶּׁקֶל",   catalogId:null,               defaultQty:1, rationale:"Mandatory annual contribution of every adult Jewish male, used to fund all communal korbanos. Fixed at exactly half a shekel of the kodesh — 10 grams of silver. Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. No one gives more or less — the wealthy and the poor are equal."},
+  {id:"chatzi_shekel", cat:CAT.FIXED,    label:"Chatzi Shekel",            hebrew:"מַחֲצִית הַשֶּׁקֶל",   catalogId:null,               defaultQty:1, rationale:"Mandatory annual contribution of every adult Jewish male, used to fund all communal korbanos. Fixed at exactly half a shekel hakodesh — 9.6 grams of silver per R' Naeh (shekel = 19.2g = 320 barley grains; Rambam Hilchos Shekalim 1:2). Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. No one gives more or less — the wealthy and the poor are equal. Price updates with live silver spot price."},
   {id:"chatas_total",  cat:CAT.PERSONAL, label:"Chataos",                  hebrew:"חַטָּאוֹת",            catalogId:"chatat_individual",defaultQty:7, rationale:"Total inadvertent violations of kareis prohibitions: Shabbos melachos, eruv failures, arayos, and basar b'chalav. Set by the scrutiny slider; adjust freely.", violations:V.chatas_total},
   {id:"asham_talui",   cat:CAT.PERSONAL, label:"Asham Toluy",              hebrew:"אָשָׁם תָּלוּי",       catalogId:"asham",            defaultQty:3, rationale:"Brought when genuinely unsure whether a kareis violation occurred.", violations:V.asham_talui},
-  {id:"todah",         cat:CAT.TODAH,    label:"Korban Todah",             hebrew:"תּוֹדָה",              catalogId:"todah",            defaultQty:3, rationale:"Each aliyah l'regel round-trip generates 2 todah obligations. Plus a baseline of 2 for illness and other travel. Scales automatically with regalim attendance."},
+  {id:"todah",         cat:CAT.TODAH,    label:"Korban Todah",             hebrew:"תּוֹדָה",              catalogId:"todah",            defaultQty:2, rationale:"Baseline of 2 for illness, other travel, and general hashgacha pratis during the year. Check the box below to add 2 more per regel attended (each round-trip to Yerushalayim generates a todah obligation — departure and return). Adjust the total freely with +/-."},
   {id:"yoledet",       cat:CAT.LIFE,     label:"Yoledet",                  hebrew:"יוֹלֶדֶת",             catalogId:"yoledet",          defaultQty:0, rationale:"Brought by a woman after childbirth, after the days of purification (33 days for a boy, 66 for a girl). One lamb as olah and one bird as chatas. If she cannot afford a lamb, two birds. One of the most common life-event korbanos — every birth triggers this obligation."},
   {id:"olah_vol",      cat:CAT.LIFE,     label:"Olah - Voluntary",         hebrew:"עוֹלָה",               catalogId:"olah_animal",      defaultQty:0, rationale:"A wholly-consumed ascent-offering brought voluntarily — no trigger required. Expresses pure devotion; nothing returns to the owner. Can be brought at any time. The animal may be a bull, ram, or lamb depending on means."},
   {id:"shelamim_vol",  cat:CAT.LIFE,     label:"Shelamim - Peace Offering",hebrew:"שְׁלָמִים",             catalogId:"shelamim",         defaultQty:0, rationale:"Brought voluntarily to celebrate, fulfill a vow, or as a freewill gift. Divided among the altar, the kohanim, and the owner's family — eaten in Yerushalayim. Occasions include births, recoveries, business successes, or simple gratitude."},
@@ -177,7 +177,7 @@ const ANNUAL_ASSUMPTIONS = [
   {id:"metzora_vol",   cat:CAT.LIFE,     label:"Korban Metzora",           hebrew:"מְצֹרָע",              catalogId:"yoledet",          defaultQty:0, rationale:"Brought upon purification from tzara'at. Two lambs (asham and olah), one ewe (chatas), flour and oil, with an elaborate blood-and-oil anointing ritual. This offering marks complete reintegration into the community."},
   {id:"oleh_yored",    cat:CAT.LIFE,     label:"Korban Oleh v'Yored",      hebrew:"עוֹלֶה וְיוֹרֵד",     catalogId:"chatat_individual",defaultQty:0, rationale:"A sliding-scale offering for specific transgressions: false oath, entering the Mikdash while tamei, or eating kodashim while tamei. The wealthy bring a lamb; moderate means bring two birds; the very poor bring a flour offering (Vayikra 5:1-13)."},
   {id:"bikkurim",      cat:CAT.LIFE,     label:"Bikkurim",                 hebrew:"בִּכּוּרִים",           catalogId:null,               defaultQty:0, rationale:"First fruits of the seven species (wheat, barley, grapes, figs, pomegranates, olives, dates) brought to the Mikdash between Shavuos and Sukkos. Only obligatory for landowners in Eretz Yisrael. Accompanied by the Arami oved avi declaration (Devarim 26:5-10). No specific animal — the basket of first fruits goes to the kohen. Set to 0 if you own no qualifying land in Israel."},
-  {id:"pidyon_haben",  cat:CAT.LIFE,     label:"Pidyon HaBen",             hebrew:"פִּדְיוֹן הַבֵּן",     catalogId:null,               defaultQty:0, rationale:"Redemption of the firstborn son, paid to a kohen 30 days after birth. Fixed at 5 shekalim of silver = approx 100 grams silver = ~$97 at current silver prices. One-time obligation, not annual — but included here for completeness. Only applies to the firstborn son of a mother who has not previously given birth."},
+  {id:"pidyon_haben",  cat:CAT.LIFE,     label:"Pidyon HaBen",             hebrew:"פִּדְיוֹן הַבֵּן",     catalogId:null,               defaultQty:0, rationale:"Redemption of the firstborn son, paid to a kohen 30 days after birth. Fixed at 5 shekalim hakodesh = 96 grams silver (per R' Naeh: 5 × 19.2g). Price updates with live silver spot price. One-time obligation, not annual — but included here for completeness. Only applies to the firstborn son of a mother who has not previously given birth."},
   {id:"pesach_sheni",  cat:CAT.LIFE,     label:"Korban Pesach Sheni",      hebrew:"פֶּסַח שֵׁנִי",        catalogId:"pesach",           defaultQty:0, rationale:"A second chance to bring the korban Pesach, on 14 Iyar, for those who were tamei or on a distant journey during 14 Nisan. The only case in halacha where the Torah explicitly grants a make-up date for a missed time-bound mitzvah."},
 ];
 
@@ -185,7 +185,7 @@ const CATEGORY_ORDER  = [CAT.FIXED, CAT.PERSONAL, CAT.TODAH, CAT.LIFE, CAT.TRAVE
 const CATEGORY_NOTES  = {
   [CAT.FIXED]:    "Non-negotiable. Every adult male owes these every year regardless of conduct. The chatzi shekel is the same for everyone — wealthy and poor alike.",
   [CAT.PERSONAL]: "Inadvertent violations of kareis prohibitions. Set the scrutiny slider, then adjust as needed.",
-  [CAT.TODAH]:    "Scales automatically with your regalim attendance — each round-trip flight generates two obligations. Plus a baseline for illness and other travel.",
+  [CAT.TODAH]:    "Baseline of 2 for illness and other travel. Optionally add 2 per regel attended — each round-trip flight to Yerushalayim generates two todah obligations. Adjust the total freely.",
   [CAT.LIFE]:     "Not obligatory every year — brought as life events occur or as voluntary acts of devotion. All default to zero.",
   [CAT.TRAVEL]:   "Round-trips New York to Jerusalem for the regalim. The true cost of living in the Diaspora.",
 };
@@ -219,14 +219,17 @@ const TRAVEL_ITEMS = [
 const DEFAULT_TRAVEL = {flightCost:1500,nightlyRate:400,familyMembers:0,pesachNights:4,shavuotNights:0,sukkotNights:4};
 
 // Silver price for chatzi shekel / pidyon haben
-const SILVER_GRAMS_PER_USD = 1/0.97; // ~$0.97/gram silver
-const CHATZI_SHEKEL_USD     = 10 * 0.97; // 10g silver
-const PIDYON_HABEN_USD      = 100 * 0.97; // 100g silver (5 shekalim)
-const BIKKURIM_USD          = 150; // nominal basket of first-quality produce
+// Shekel hakodesh per R' Naeh = 19.2g → chatzi shekel = 9.6g (Rambam Hilchos Shekalim 1:2)
+// Pidyon haben = 5 shekalim = 96g
+// Silver fallback ~$1.06/gram (≈$33/troy oz, April 2026). Fetched live at runtime.
+const SILVER_USD_PER_GRAM_FALLBACK = 1.06;
+const CHATZI_SHEKEL_GRAMS = 9.6;   // per R' Naeh; Chazon Ish = 12g
+const PIDYON_HABEN_GRAMS  = 96.0;  // 5 shekalim × 19.2g
+const BIKKURIM_USD        = 150;   // nominal basket of first-quality produce
 
-function fixedPriceFor(id){ 
-  if(id==="chatzi_shekel") return CHATZI_SHEKEL_USD;
-  if(id==="pidyon_haben")  return PIDYON_HABEN_USD;
+function fixedPriceFor(id, silverUsdPerGram=SILVER_USD_PER_GRAM_FALLBACK){ 
+  if(id==="chatzi_shekel") return CHATZI_SHEKEL_GRAMS * silverUsdPerGram;
+  if(id==="pidyon_haben")  return PIDYON_HABEN_GRAMS  * silverUsdPerGram;
   if(id==="bikkurim")      return BIKKURIM_USD;
   return 0;
 }
@@ -247,11 +250,15 @@ export default function korbanosCalculator() {
   const [shiurId,          setShiurId]          = useState("naeh");
   const [usdPerNis,        setUsdPerNis]        = useState(1/2.96);
   const [rateStatus,       setRateStatus]       = useState("idle");
+  const [silverUsdPerGram, setSilverUsdPerGram] = useState(SILVER_USD_PER_GRAM_FALLBACK);
+  const [silverStatus,     setSilverStatus]     = useState("idle");
   const [travelCfg,        setTravelCfg]        = useState(DEFAULT_TRAVEL);
   const [strictness,       setStrictness]       = useState(2);
   const [financialTier,    setFinancialTier]    = useState("average");
   const [personalQtys,     setPersonalQtys]     = useState({chatas_total:7,asham_talui:3});
   const [includeTravel,    setIncludeTravel]    = useState(true);
+  const [includeTravelTodah, setIncludeTravelTodah] = useState(true);
+  const [todahOverride,    setTodahOverride]    = useState<number|null>(null);
 
   useEffect(()=>{
     setRateStatus("loading");
@@ -259,6 +266,21 @@ export default function korbanosCalculator() {
       try{const r=await fetch("https://open.er-api.com/v6/latest/USD");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
       try{const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
       setRateStatus("error");
+    })();
+    // Fetch live silver price (XAG = silver in troy oz)
+    setSilverStatus("loading");
+    (async()=>{
+      try{
+        const r=await fetch("https://open.er-api.com/v6/latest/XAG");
+        const d=await r.json();
+        if(d?.rates?.USD){
+          // d.rates.USD = USD per troy oz of silver
+          const usdPerTroyOz=d.rates.USD;
+          setSilverUsdPerGram(usdPerTroyOz/31.1035);
+          setSilverStatus("live");return;
+        }
+      }catch(e){}
+      setSilverStatus("fallback");
     })();
   },[]);
 
@@ -288,8 +310,10 @@ export default function korbanosCalculator() {
   }),[travelCfg]);
 
   const regalimCount    = Object.values(regalimAttending).filter(Boolean).length;
-  const todahFromTravel = regalimCount*2;
-  const todahTotal      = 2+todahFromTravel;
+  const todahFromTravel = includeTravelTodah ? regalimCount*2 : 0;
+  const todahAuto       = 2 + todahFromTravel;
+  const todahTotal      = todahOverride !== null ? todahOverride : todahAuto;
+  const resetTodah      = ()=>setTodahOverride(null);
 
   const resolveCatalogId = id=>{
     if(id==="reiyah")   return tier.reiyahId;
@@ -297,7 +321,7 @@ export default function korbanosCalculator() {
     return ANNUAL_ASSUMPTIONS.find(a=>a.id===id)?.catalogId;
   };
   const resolveUnitCost=(id,P)=>{
-    if(FIXED_PRICE_IDS.includes(id)) return fixedPriceFor(id);
+    if(FIXED_PRICE_IDS.includes(id)) return fixedPriceFor(id, silverUsdPerGram);
     const catId=resolveCatalogId(id);
     const entry=catId?CATALOG.find(c=>c.id===catId):null;
     return entry?offeringTotal(entry,P):0;
@@ -356,6 +380,7 @@ export default function korbanosCalculator() {
     setRegalimAttending({pesach:true,shavuot:true,sukkot:true});
     setStrictness(2);setPersonalQtys(STRICTNESS_LEVELS[1].qtys);
     setFinancialTier("average");setTravelCfg(DEFAULT_TRAVEL);setShiurId("naeh");setIncludeTravel(true);
+    setIncludeTravelTodah(true);setTodahOverride(null);
   };
 
   const disclaimer=(
@@ -651,9 +676,21 @@ export default function korbanosCalculator() {
                             : isChatziFixed
                               ? <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #5a3a1a",color:"#c9a45a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>fixed</div>
                             : isTodah
-                              ? <div style={{textAlign:"right"}}>
-                                  <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #3a7a50",color:"#4ec98a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>{qty} — auto</div>
-                                  <div style={{fontSize:"0.8rem",color:"#4ec98a",marginTop:"0.25rem",fontStyle:"italic",maxWidth:160,textAlign:"right",lineHeight:1.4}}>{regalimCount} regel{regalimCount!==1?"im":""} x2 + 2 other</div>
+                              ? <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"0.4rem",minWidth:200}}>
+                                  {/* Travel todah checkbox */}
+                                  <label style={{display:"flex",alignItems:"center",gap:"0.5rem",cursor:"pointer",fontSize:"0.88rem",color:"#4ec98a",whiteSpace:"nowrap"}}>
+                                    <input type="checkbox" checked={includeTravelTodah} onChange={e=>{setIncludeTravelTodah(e.target.checked);setTodahOverride(null);}} style={{width:15,height:15,accentColor:"#4ec98a",cursor:"pointer"}}/>
+                                    +{regalimCount*2} for {regalimCount} regel{regalimCount!==1?"im":""} travel
+                                  </label>
+                                  {/* Manual qty spinner */}
+                                  <div style={{display:"flex",alignItems:"center",gap:"0.4rem"}}>
+                                    <button onClick={()=>setTodahOverride(Math.max(0,(todahOverride??todahAuto)-1))} style={qBtn(todahTotal>0)}>-</button>
+                                    <input type="number" min="0" value={todahTotal} onChange={e=>{const v=parseInt(e.target.value);setTodahOverride(isNaN(v)?0:Math.max(0,v));}} style={{width:52,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
+                                    <button onClick={()=>setTodahOverride((todahOverride??todahAuto)+1)} style={qBtn(true)}>+</button>
+                                  </div>
+                                  {/* Reset to auto link */}
+                                  {todahOverride!==null&&<button onClick={resetTodah} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.82rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>reset to auto ({todahAuto})</button>}
+                                  {todahOverride===null&&<div style={{fontSize:"0.8rem",color:"#4ec98a",fontStyle:"italic"}}>auto: 2 baseline{includeTravelTodah&&regalimCount>0?` + ${regalimCount*2} travel`:""}</div>}
                                 </div>
                             : isPersonal
                               ? <PersonalCtrl id={item.id}/>
@@ -703,7 +740,7 @@ export default function korbanosCalculator() {
             <div style={{marginBottom:"1.5rem",padding:"1.25rem",background:"rgba(240,192,96,.06)",border:"1px solid #7a4f20",borderLeft:"4px solid #f0c060"}}>
               <div style={{fontSize:"1rem",color:"#f0c060",fontFamily:"'Cinzel',serif",letterSpacing:"0.08em",marginBottom:"0.75rem",fontWeight:700}}>The Chatzi Shekel Pool</div>
               <p style={{fontSize:"1rem",color:"#e8d4a0",lineHeight:1.8,margin:"0 0 0.75rem"}}>Every adult Jewish male contributed exactly half a shekel annually — no more, no less. These funds paid for every communal korban: the tamid, all musaf offerings, the Yom Kippur service, the Shtei HaLechem, and more. The wealthy and the poor were equal before the altar.</p>
-              <p style={{fontSize:"0.95rem",color:"#c9a45a",fontStyle:"italic",lineHeight:1.7,margin:0}}>Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. Half a shekel of the kodesh = 10 grams silver = <strong style={{color:"#f0ddb0"}}>{fmt(CHATZI_SHEKEL_USD)}</strong> at current silver prices (~$0.97/gram).</p>
+              <p style={{fontSize:"0.95rem",color:"#c9a45a",fontStyle:"italic",lineHeight:1.7,margin:0}}>Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. Half a shekel hakodesh = 9.6g silver (per R' Naeh; shekel = 19.2g = 320 barley grains) = <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram))}</strong> at current silver prices (~${silverUsdPerGram.toFixed(2)}/gram{silverStatus==="live"?<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>:<span style={{color:"#c9a45a",marginLeft:"0.3rem"}}>est.</span>}).</p>
             </div>
 
             {/* Summary cards */}
@@ -711,8 +748,8 @@ export default function korbanosCalculator() {
               {[
                 {label:"Total Annual Communal Cost",value:fmt(communalTotal),sub:"all public korbanos combined",color:"#f0c060"},
                 {label:"Per Capita Cost",value:fmt(perCapitaCommunal),sub:`assuming ${(ASSUMED_POPULATION/1000).toFixed(0)}k adult males`,color:"#4ec98a"},
-                {label:"Actual Chatzi Shekel",value:fmt(CHATZI_SHEKEL_USD),sub:"10g silver • fixed by Torah",color:"#c07ad8"},
-                {label:"Subsidy per Person",value:fmt(Math.max(0,CHATZI_SHEKEL_USD-perCapitaCommunal)),sub:"chatzi shekel minus per-capita cost",color:"#5aabdf"},
+                {label:"Actual Chatzi Shekel",value:fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram)),sub:`9.6g silver • R' Naeh • ${silverStatus==="live"?"live price":"est. price"}`,color:"#c07ad8"},
+                {label:"Subsidy per Person",value:fmt(Math.max(0,fixedPriceFor("chatzi_shekel",silverUsdPerGram)-perCapitaCommunal)),sub:"chatzi shekel minus per-capita cost",color:"#5aabdf"},
               ].map(({label,value,sub,color})=>(
                 <div key={label} style={{padding:"1.1rem 1.25rem",background:"rgba(24,12,4,.8)",border:`1px solid ${color}44`,borderTop:`3px solid ${color}`}}>
                   <div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.4rem"}}>{label}</div>
@@ -919,8 +956,8 @@ export default function korbanosCalculator() {
         Created by Jeremy Spier and Morris Massel with help from AI. Send questions and comments to info@korbancalculator.com
       </div>
       <div style={{textAlign:"center",marginTop:"0.5rem",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
-  Code available at <a href="https://github.com/morrismassel/korbanos-site" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>github.com/morrismassel/korbanos-site</a>
-</div>
+        Code available at <a href="https://github.com/morrismassel/korbanos-site" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>github.com/morrismassel/korbanos-site</a>
+      </div>
     </div>
   );
 }
