@@ -105,7 +105,6 @@ const COMMUNAL_OFFERINGS = [
 const V = {
   chatas_total:{
     kareis:[
-      {act:"Carried keys home from shul - eruv later found posul",detail:"Hotza'ah b'shogeg; classic chatas case"},
       {act:"Pushed a stroller outside the valid eruv boundary",detail:"Eruv route assumed valid; later found posul"},
       {act:"Tore along a perforated line on Shabbos",detail:"Kore'a - a common toladah not widely known"},
       {act:"Squeezed a lemon into a drink on Shabbos",detail:"Sechita - toladah of dash (threshing)"},
