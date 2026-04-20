@@ -478,11 +478,11 @@ export default function KorbanotCalculator() {
                 <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:"0.75rem",marginBottom:"0.9rem"}}>
                   {[{label:"Flight / person",key:"flightCost",prefix:"$",step:50},{label:"Nightly hotel",key:"nightlyRate",prefix:"$",step:25},{label:"Extra travelers",key:"familyMembers",step:1,suffix:"beyond self"},{label:"Pesach nights",key:"pesachNights",step:1},{label:"Shavuos nights",key:"shavuotNights",step:1},{label:"Sukkos nights",key:"sukkotNights",step:1}].map(({label,key,prefix,step,suffix})=>(
                     <div key={key}>
-                      <div style={lbl}>{label}</div>
+                      <div style={{...lbl,fontSize:"0.7rem",letterSpacing:"0.06em",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{label}</div>
                       <div style={{display:"flex",alignItems:"center",gap:"0.3rem"}}>
                         {prefix&&<span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>{prefix}</span>}
-                        <input type="number" min="0" step={step} value={travelCfg[key]} onChange={e=>setTravel(key,parseFloat(e.target.value)||0)} style={inp}/>
-                        {suffix&&<span style={{fontSize:"0.78rem",color:"#7a5030",whiteSpace:"nowrap"}}>{suffix}</span>}
+                        <input type="number" min="0" step={step} value={travelCfg[key]} onChange={e=>setTravel(key,parseFloat(e.target.value)||0)} style={{...inp,fontSize:"0.9rem"}}/>
+                        {suffix&&<span style={{fontSize:"0.72rem",color:"#7a5030",whiteSpace:"nowrap"}}>{suffix}</span>}
                       </div>
                     </div>
                   ))}
