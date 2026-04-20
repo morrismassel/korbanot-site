@@ -506,15 +506,15 @@ export default function korbanosCalculator() {
         <div style={{marginBottom:"1.5rem",background:"rgba(20,10,2,.95)",border:"1px solid #7a4f20"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"0.5rem",padding:"0.75rem 1.1rem",borderBottom:showSettings?"1px solid #5a3a1a":"none"}}>
             <div style={{display:"flex",alignItems:"center",gap:"0.75rem 1.5rem",flexWrap:"wrap",fontSize:"0.9rem",color:"#c9a45a"}}>
-              <span><span style={{color:"#8a6030"}}>Rate: </span><span style={{color:"#f0ddb0"}}>$1 = NIS {nisPerUsd}</span>{rateStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{rateStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
-              <span style={{color:"#5a3a1a"}}>|</span>
-              <span><span style={{color:"#8a6030"}}>Silver: </span><span style={{color:"#f0ddb0"}}>${silverInputVal}/oz</span>{silverStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{silverStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
-              <span style={{color:"#5a3a1a"}}>|</span>
-              <span><span style={{color:"#8a6030"}}>Shiur: </span><span style={{color:"#f0ddb0"}}>{shiur.labelShort}</span>{shiurId!=="naeh"&&<span style={{color:"#b070e0",marginLeft:"0.3rem"}}>x{shiur.multiplier}</span>}</span>
+              <span><span style={{color:"#8a6030"}}>Live: </span><span style={{color:"#f0ddb0"}}>{livesInEY?"Eretz Yisroel":"Chutz L'Aretz"}</span></span>
               <span style={{color:"#5a3a1a"}}>|</span>
               <span><span style={{color:"#8a6030"}}>Standing: </span><span style={{color:"#f0ddb0"}}>{tier.label}</span></span>
               <span style={{color:"#5a3a1a"}}>|</span>
-              <span><span style={{color:"#8a6030"}}>Travel: </span><span style={{color:"#f0ddb0"}}>${travelCfg.flightCost}/flight</span>{travelCfg.familyMembers>0&&<span style={{color:"#5aabdf",marginLeft:"0.3rem"}}>- {travelCfg.familyMembers+1} travelers</span>}</span>
+              <span><span style={{color:"#8a6030"}}>Shiur: </span><span style={{color:"#f0ddb0"}}>{shiur.labelShort}</span>{shiurId!=="naeh"&&<span style={{color:"#b070e0",marginLeft:"0.3rem"}}>x{shiur.multiplier}</span>}</span>
+              <span style={{color:"#5a3a1a"}}>|</span>
+              <span><span style={{color:"#8a6030"}}>Silver: </span><span style={{color:"#f0ddb0"}}>${silverInputVal}/oz</span>{silverStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{silverStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
+              <span style={{color:"#5a3a1a"}}>|</span>
+              <span><span style={{color:"#8a6030"}}>Rate: </span><span style={{color:"#f0ddb0"}}>$1 = NIS {nisPerUsd}</span>{rateStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{rateStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
             </div>
             <button onClick={()=>setShowSettings(s=>!s)} style={{padding:"0.5rem 1rem",background:showSettings?"rgba(240,192,96,.15)":"transparent",border:`1px solid ${showSettings?"#f0c060":"#7a4f20"}`,color:"#f0c060",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",whiteSpace:"nowrap"}}>
               {showSettings?"Close":"Assumptions"}
