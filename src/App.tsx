@@ -263,37 +263,60 @@ export default function korbanosCalculator() {
 
   useEffect(()=>{
     setRateStatus("loading");
-    (async()=>{
-      try{const r=await fetch("https://open.er-api.com/v6/latest/USD");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
-      try{const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
-      setRateStatus("error");
-    })();
-    // Fetch live silver price via USD base rate — XAG (troy oz) per USD, inverted to USD per troy oz
     setSilverStatus("loading");
     (async()=>{
+      let silverGot=false;
+      // Single call — open.er-api USD base includes both ILS and XAG (silver)
       try{
         const r=await fetch("https://open.er-api.com/v6/latest/USD");
         const d=await r.json();
+        if(d?.rates?.ILS){
+          setUsdPerNis(1/d.rates.ILS);
+          setRateStatus("live");
+        }
         if(d?.rates?.XAG && d.rates.XAG>0){
-          // d.rates.XAG = troy oz of silver per 1 USD → invert for USD per troy oz
-          const usdPerTroyOz = 1/d.rates.XAG;
-          const perGram = usdPerTroyOz/31.1035;
-          setSilverUsdPerGram(perGram);
+          const usdPerTroyOz=1/d.rates.XAG;
+          setSilverUsdPerGram(usdPerTroyOz/31.1035);
           setSilverInputVal(usdPerTroyOz.toFixed(2));
-          setSilverStatus("live");return;
+          setSilverStatus("live");
+          silverGot=true;
+        }
+        if(d?.rates?.ILS){
+          if(!silverGot) setSilverStatus("error");
+          return;
         }
       }catch(e){}
-      setSilverStatus("error");
+      // Fallback for NIS only (frankfurter doesn't support XAG)
+      if(!silverGot) setSilverStatus("error");
+      try{
+        const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");
+        const d=await r.json();
+        if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}
+      }catch(e){}
+      setRateStatus("error");
     })();
   },[]);
 
+  // Refresh NIS rate (and silver if available in same response)
   const fetchRate=async()=>{
     setRateStatus("loading");
-    try{const r=await fetch("https://open.er-api.com/v6/latest/USD");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
+    try{
+      const r=await fetch("https://open.er-api.com/v6/latest/USD");
+      const d=await r.json();
+      if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");}
+      if(d?.rates?.XAG && d.rates.XAG>0){
+        const usdPerTroyOz=1/d.rates.XAG;
+        setSilverUsdPerGram(usdPerTroyOz/31.1035);
+        setSilverInputVal(usdPerTroyOz.toFixed(2));
+        setSilverStatus("live");
+      }
+      if(d?.rates?.ILS) return;
+    }catch(e){}
     try{const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
     setRateStatus("error");
   };
 
+  // Refresh silver only
   const fetchSilver=async()=>{
     setSilverStatus("loading");
     try{
@@ -301,8 +324,7 @@ export default function korbanosCalculator() {
       const d=await r.json();
       if(d?.rates?.XAG && d.rates.XAG>0){
         const usdPerTroyOz=1/d.rates.XAG;
-        const perGram=usdPerTroyOz/31.1035;
-        setSilverUsdPerGram(perGram);
+        setSilverUsdPerGram(usdPerTroyOz/31.1035);
         setSilverInputVal(usdPerTroyOz.toFixed(2));
         setSilverStatus("live");return;
       }
@@ -1012,7 +1034,7 @@ export default function korbanosCalculator() {
         )}
       </div>
       <div style={{textAlign:"center",marginTop:"2.5rem",paddingTop:"1.5rem",borderTop:"1px solid #3a2010",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
-        Created by Jeremy Spier and Morris Massel with significant help from Claude. Send questions and comments to info@korbancalculator.com
+        Created by Jeremy Spier and Morris Massel with help from AI. Send questions and comments to info@korbancalculator.com
       </div>
       <div style={{textAlign:"center",marginTop:"0.5rem",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
         Code available at <a href="https://github.com/morrismassel/korbanos-site" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>github.com/morrismassel/korbanos-site</a>
