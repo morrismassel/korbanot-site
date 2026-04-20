@@ -251,7 +251,8 @@ export default function korbanosCalculator() {
   const [usdPerNis,        setUsdPerNis]        = useState(1/2.96);
   const [rateStatus,       setRateStatus]       = useState("idle");
   const [silverUsdPerGram, setSilverUsdPerGram] = useState(SILVER_USD_PER_GRAM_FALLBACK);
-  const [silverStatus,     setSilverStatus]     = useState("idle");
+  const [silverStatus,     setSilverStatus]     = useState<"idle"|"loading"|"live"|"error">("idle");
+  const [silverInputVal,   setSilverInputVal]   = useState((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));
   const [travelCfg,        setTravelCfg]        = useState(DEFAULT_TRAVEL);
   const [strictness,       setStrictness]       = useState(2);
   const [financialTier,    setFinancialTier]    = useState("average");
@@ -267,20 +268,22 @@ export default function korbanosCalculator() {
       try{const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
       setRateStatus("error");
     })();
-    // Fetch live silver price (XAG = silver in troy oz)
+    // Fetch live silver price via USD base rate — XAG (troy oz) per USD, inverted to USD per troy oz
     setSilverStatus("loading");
     (async()=>{
       try{
-        const r=await fetch("https://open.er-api.com/v6/latest/XAG");
+        const r=await fetch("https://open.er-api.com/v6/latest/USD");
         const d=await r.json();
-        if(d?.rates?.USD){
-          // d.rates.USD = USD per troy oz of silver
-          const usdPerTroyOz=d.rates.USD;
-          setSilverUsdPerGram(usdPerTroyOz/31.1035);
+        if(d?.rates?.XAG && d.rates.XAG>0){
+          // d.rates.XAG = troy oz of silver per 1 USD → invert for USD per troy oz
+          const usdPerTroyOz = 1/d.rates.XAG;
+          const perGram = usdPerTroyOz/31.1035;
+          setSilverUsdPerGram(perGram);
+          setSilverInputVal(usdPerTroyOz.toFixed(2));
           setSilverStatus("live");return;
         }
       }catch(e){}
-      setSilverStatus("fallback");
+      setSilverStatus("error");
     })();
   },[]);
 
@@ -294,9 +297,15 @@ export default function korbanosCalculator() {
   const fetchSilver=async()=>{
     setSilverStatus("loading");
     try{
-      const r=await fetch("https://open.er-api.com/v6/latest/XAG");
+      const r=await fetch("https://open.er-api.com/v6/latest/USD");
       const d=await r.json();
-      if(d?.rates?.USD){setSilverUsdPerGram(d.rates.USD/31.1035);setSilverStatus("live");return;}
+      if(d?.rates?.XAG && d.rates.XAG>0){
+        const usdPerTroyOz=1/d.rates.XAG;
+        const perGram=usdPerTroyOz/31.1035;
+        setSilverUsdPerGram(perGram);
+        setSilverInputVal(usdPerTroyOz.toFixed(2));
+        setSilverStatus("live");return;
+      }
     }catch(e){}
     setSilverStatus("error");
   };
@@ -393,6 +402,7 @@ export default function korbanosCalculator() {
     setStrictness(2);setPersonalQtys(STRICTNESS_LEVELS[1].qtys);
     setFinancialTier("average");setTravelCfg(DEFAULT_TRAVEL);setShiurId("naeh");setIncludeTravel(true);
     setIncludeTravelTodah(true);setTodahOverride(null);
+    setSilverUsdPerGram(SILVER_USD_PER_GRAM_FALLBACK);setSilverInputVal((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));setSilverStatus("idle");
   };
 
   const disclaimer=(
@@ -464,7 +474,7 @@ export default function korbanosCalculator() {
             <div style={{display:"flex",alignItems:"center",gap:"0.75rem 1.5rem",flexWrap:"wrap",fontSize:"0.9rem",color:"#c9a45a"}}>
               <span><span style={{color:"#8a6030"}}>Rate: </span><span style={{color:"#f0ddb0"}}>$1 = NIS {nisPerUsd}</span>{rateStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{rateStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
               <span style={{color:"#5a3a1a"}}>|</span>
-              <span><span style={{color:"#8a6030"}}>Silver: </span><span style={{color:"#f0ddb0"}}>${silverPerTroyOz}/oz</span>{silverStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{silverStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
+              <span><span style={{color:"#8a6030"}}>Silver: </span><span style={{color:"#f0ddb0"}}>${silverInputVal}/oz</span>{silverStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{silverStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
               <span style={{color:"#5a3a1a"}}>|</span>
               <span><span style={{color:"#8a6030"}}>Shiur: </span><span style={{color:"#f0ddb0"}}>{shiur.labelShort}</span>{shiurId!=="naeh"&&<span style={{color:"#b070e0",marginLeft:"0.3rem"}}>x{shiur.multiplier}</span>}</span>
               <span style={{color:"#5a3a1a"}}>|</span>
@@ -498,13 +508,28 @@ export default function korbanosCalculator() {
                 <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>Used to price silver-weight obligations. Chatzi shekel = 9.6g (R' Naeh); pidyon haben = 96g.</div>
                 <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
                   <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>$</span>
-                  <input type="number" step="0.50" min="0.01" value={parseFloat(silverPerTroyOz)} onChange={e=>setSilverUsdPerGram((parseFloat(e.target.value)||33)/31.1035)} style={{width:80,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
+                  <input
+                    type="number" step="0.50" min="0.01"
+                    value={silverInputVal}
+                    onChange={e=>{
+                      setSilverInputVal(e.target.value);
+                      const v=parseFloat(e.target.value);
+                      if(!isNaN(v)&&v>0) setSilverUsdPerGram(v/31.1035);
+                    }}
+                    onBlur={e=>{
+                      const v=parseFloat(e.target.value);
+                      if(isNaN(v)||v<=0){setSilverInputVal((silverUsdPerGram*31.1035).toFixed(2));}
+                      else{setSilverInputVal(v.toFixed(2));setSilverUsdPerGram(v/31.1035);}
+                    }}
+                    style={{width:90,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}
+                  />
                   <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>/troy oz</span>
                   <span style={{fontSize:"0.85rem",color:"#7a5030"}}>(= ${silverUsdPerGram.toFixed(4)}/g)</span>
                   <button onClick={fetchSilver} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>Refresh</button>
                   {silverStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
                   {silverStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
-                  {silverStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>fetch failed - using manual rate</span>}
+                  {silverStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>fetch failed — using manual rate</span>}
+                  {silverStatus==="idle"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>estimated</span>}
                 </div>
                 <div style={{marginTop:"0.6rem",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
                   Chatzi shekel: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram))}</strong>
@@ -987,7 +1012,7 @@ export default function korbanosCalculator() {
         )}
       </div>
       <div style={{textAlign:"center",marginTop:"2.5rem",paddingTop:"1.5rem",borderTop:"1px solid #3a2010",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
-        Created by Jeremy Spier and Morris Massel with help from AI. Send questions and comments to info@korbancalculator.com
+        Created by Jeremy Spier and Morris Massel with significant help from Claude. Send questions and comments to info@korbancalculator.com
       </div>
       <div style={{textAlign:"center",marginTop:"0.5rem",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
         Code available at <a href="https://github.com/morrismassel/korbanos-site" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>github.com/morrismassel/korbanos-site</a>
