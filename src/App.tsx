@@ -262,75 +262,54 @@ export default function korbanosCalculator() {
   const [includeTravelTodah, setIncludeTravelTodah] = useState(true);
   const [todahOverride,    setTodahOverride]    = useState<number|null>(null);
 
+  // Helper: fetch silver from fawazahmed0 metals API
+  // Response: { xag: { usd: <USD_per_troy_oz> } }
+  // Primary: jsdelivr CDN; Fallback: Cloudflare Pages mirror
+  const fetchSilverPrice=async()=>{
+    const applyPrice=(usdPerTroyOz:number)=>{
+      setSilverUsdPerGram(usdPerTroyOz/31.1035);
+      setSilverInputVal(usdPerTroyOz.toFixed(2));
+      setSilverStatus("live");
+    };
+    try{
+      const r=await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xag.json");
+      const d=await r.json();
+      if(d?.xag?.usd && d.xag.usd>0){applyPrice(d.xag.usd);return true;}
+    }catch(e){}
+    try{
+      const r=await fetch("https://latest.currency-api.pages.dev/v1/currencies/xag.json");
+      const d=await r.json();
+      if(d?.xag?.usd && d.xag.usd>0){applyPrice(d.xag.usd);return true;}
+    }catch(e){}
+    return false;
+  };
+
   useEffect(()=>{
+    // Fetch NIS rate
     setRateStatus("loading");
-    setSilverStatus("loading");
     (async()=>{
-      let silverGot=false;
-      // Single call — open.er-api USD base includes both ILS and XAG (silver)
-      try{
-        const r=await fetch("https://open.er-api.com/v6/latest/USD");
-        const d=await r.json();
-        if(d?.rates?.ILS){
-          setUsdPerNis(1/d.rates.ILS);
-          setRateStatus("live");
-        }
-        if(d?.rates?.XAG && d.rates.XAG>0){
-          const usdPerTroyOz=1/d.rates.XAG;
-          setSilverUsdPerGram(usdPerTroyOz/31.1035);
-          setSilverInputVal(usdPerTroyOz.toFixed(2));
-          setSilverStatus("live");
-          silverGot=true;
-        }
-        if(d?.rates?.ILS){
-          if(!silverGot) setSilverStatus("error");
-          return;
-        }
-      }catch(e){}
-      // Fallback for NIS only (frankfurter doesn't support XAG)
-      if(!silverGot) setSilverStatus("error");
-      try{
-        const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");
-        const d=await r.json();
-        if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}
-      }catch(e){}
+      try{const r=await fetch("https://open.er-api.com/v6/latest/USD");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
+      try{const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
       setRateStatus("error");
     })();
+    // Fetch silver price independently
+    setSilverStatus("loading");
+    fetchSilverPrice().then(ok=>{ if(!ok) setSilverStatus("error"); });
   },[]);
 
-  // Refresh NIS rate (and silver if available in same response)
+  // Refresh NIS rate only
   const fetchRate=async()=>{
     setRateStatus("loading");
-    try{
-      const r=await fetch("https://open.er-api.com/v6/latest/USD");
-      const d=await r.json();
-      if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");}
-      if(d?.rates?.XAG && d.rates.XAG>0){
-        const usdPerTroyOz=1/d.rates.XAG;
-        setSilverUsdPerGram(usdPerTroyOz/31.1035);
-        setSilverInputVal(usdPerTroyOz.toFixed(2));
-        setSilverStatus("live");
-      }
-      if(d?.rates?.ILS) return;
-    }catch(e){}
+    try{const r=await fetch("https://open.er-api.com/v6/latest/USD");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
     try{const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
     setRateStatus("error");
   };
 
-  // Refresh silver only
+  // Refresh silver price only
   const fetchSilver=async()=>{
     setSilverStatus("loading");
-    try{
-      const r=await fetch("https://open.er-api.com/v6/latest/USD");
-      const d=await r.json();
-      if(d?.rates?.XAG && d.rates.XAG>0){
-        const usdPerTroyOz=1/d.rates.XAG;
-        setSilverUsdPerGram(usdPerTroyOz/31.1035);
-        setSilverInputVal(usdPerTroyOz.toFixed(2));
-        setSilverStatus("live");return;
-      }
-    }catch(e){}
-    setSilverStatus("error");
+    const ok=await fetchSilverPrice();
+    if(!ok) setSilverStatus("error");
   };
 
   const silverPerTroyOz = (silverUsdPerGram*31.1035).toFixed(2);
