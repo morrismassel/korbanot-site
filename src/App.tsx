@@ -301,7 +301,7 @@ function fixedPriceFor(id, silverUsdPerGram=SILVER_USD_PER_GRAM_FALLBACK, financ
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function korbanosCalculator() {
   const [activeTab,        setActiveTab]        = useState("annual");
-  const [todayAbs,         setTodayAbs]         = useState(()=>gregToAbs(new Date()));
+  const [todayAbs,         setTodayAbs]         = useState<number>(()=>gregToAbs(new Date()));
   const [counts,           setCounts]           = useState({});
   const [expanded,         setExpanded]         = useState({});
   const [activeGroup,      setActiveGroup]      = useState("Daily & Weekly");
@@ -316,10 +316,10 @@ export default function korbanosCalculator() {
   const [usdPerNis,        setUsdPerNis]        = useState(1/2.96);
   const [rateStatus,       setRateStatus]       = useState("idle");
   const [silverUsdPerGram, setSilverUsdPerGram] = useState(SILVER_USD_PER_GRAM_FALLBACK);
-  const [silverStatus,     setSilverStatus]     = useState("idle");
+  const [silverStatus,     setSilverStatus]     = useState<"idle"|"loading"|"live"|"error">("idle");
   const [silverInputVal,   setSilverInputVal]   = useState((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));
   const [travelCfg,        setTravelCfg]        = useState(DEFAULT_TRAVEL);
-  const [travelUserEdited, setTravelUserEdited] = useState({});
+  const [travelUserEdited, setTravelUserEdited] = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
   const [strictness,       setStrictness]       = useState(2);
   const [financialTier,    setFinancialTier]    = useState("average");
   const [personalQtys,     setPersonalQtys]     = useState({chatas_total:7,asham_talui:3});
@@ -327,8 +327,8 @@ export default function korbanosCalculator() {
   const [includeTravelTodah, setIncludeTravelTodah] = useState(true);
   const [livesInEY,        setLivesInEY]        = useState(false);
   const [isLandowner,      setIsLandowner]      = useState(false);
-  const [todahOverride,    setTodahOverride]    = useState(null);
-  const [shalmeiOverride,  setShalmeiOverride]  = useState(null);
+  const [todahOverride,    setTodahOverride]    = useState<number|null>(null);
+  const [shalmeiOverride,  setShalmeiOverride]  = useState<number|null>(null);
 
   // Helper: fetch silver from fawazahmed0 metals API
   // Response: { xag: { usd: <USD_per_troy_oz> } }
@@ -474,11 +474,11 @@ export default function korbanosCalculator() {
   const perCapitaCommunal  = communalTotal/ASSUMED_POPULATION;
 
   const catalogTotal    = useMemo(()=>CATALOG.reduce((s,c)=>s+(counts[c.id]||0)*offeringTotal(c,P),0),[counts,P]);
-  const catalogSelected = useMemo(()=>Object.values(counts).reduce((a,b)=>a+(b||0),0),[counts]);
+  const catalogSelected = useMemo(()=>Object.values(counts).reduce<number>((a,b)=>a+((b as number)||0),0),[counts]);
   const filtered        = CATALOG.filter(s=>s.group===activeGroup);
 
   const lbl = {fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.5rem"};
-  const inp = {width:"100%",padding:"0.5rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"};
+  const inp = {width:"100%",padding:"0.5rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center" as const,fontFamily:"inherit",fontSize:"1rem"};
 
   const doReset=()=>{
     setProfileQtys(Object.fromEntries(ANNUAL_ASSUMPTIONS.map(a=>[a.id,a.defaultQty])));
