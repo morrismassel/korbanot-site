@@ -176,7 +176,7 @@ const ANNUAL_ASSUMPTIONS = [
   {id:"nazir_vol",     cat:CAT.LIFE,     label:"Korbanos Nazir",           hebrew:"נָזִיר",               catalogId:"nazir",            defaultQty:0, rationale:"Brought at the end of a nazirite vow. The Nazir abstains from wine, haircuts, and contact with the dead, then brings a lamb as olah, a ewe as chatas, a ram as shelamim, plus 40 loaves."},
   {id:"metzora_vol",   cat:CAT.LIFE,     label:"Korban Metzora",           hebrew:"מְצֹרָע",              catalogId:"yoledet",          defaultQty:0, rationale:"Brought upon purification from tzara'at. Two lambs (asham and olah), one ewe (chatas), flour and oil, with an elaborate blood-and-oil anointing ritual. This offering marks complete reintegration into the community."},
   {id:"oleh_yored",    cat:CAT.LIFE,     label:"Korban Oleh v'Yored",      hebrew:"עוֹלֶה וְיוֹרֵד",     catalogId:"chatat_individual",defaultQty:0, rationale:"A sliding-scale offering for specific transgressions: false oath, entering the Mikdash while tamei, or eating kodashim while tamei. The wealthy bring a lamb; moderate means bring two birds; the very poor bring a flour offering (Vayikra 5:1-13)."},
-  {id:"bikkurim",      cat:CAT.LIFE,     label:"Bikkurim",                 hebrew:"בִּכּוּרִים",           catalogId:null,               defaultQty:0, rationale:"First fruits of the seven species (wheat, barley, grapes, figs, pomegranates, olives, dates) brought to the Mikdash between Shavuos and Sukkos. Only obligatory for landowners in Eretz Yisrael. Accompanied by the Arami oved avi declaration (Devarim 26:5-10). No specific animal — the basket of first fruits goes to the kohen. Set to 0 if you own no qualifying land in Israel."},
+  {id:"bikkurim",      cat:CAT.LIFE,     label:"Bikkurim",                 hebrew:"בִּכּוּרִים",           catalogId:null,               defaultQty:0, rationale:"First fruits of the seven species brought to the Mikdash between Shavuos and Sukkos. Only obligatory for landowners in Eretz Yisroel. Check the EY and landowner boxes in Assumptions to set automatically. Basket type scales with financial standing — poor: straw (~$150); average: silver basket returned after use (~$450); wealthy: gold basket kept by the Kohen with doves (~$1,200). Source: Devarim 26:1-11; Mishnah Bikkurim 3:8."},
   {id:"pidyon_haben",  cat:CAT.LIFE,     label:"Pidyon HaBen",             hebrew:"פִּדְיוֹן הַבֵּן",     catalogId:null,               defaultQty:0, rationale:"Redemption of the firstborn son, paid to a kohen 30 days after birth. Fixed at 5 shekalim hakodesh = 96 grams silver (per R' Naeh: 5 × 19.2g). Price updates with live silver spot price. One-time obligation, not annual — but included here for completeness. Only applies to the firstborn son of a mother who has not previously given birth."},
   {id:"pesach_sheni",  cat:CAT.LIFE,     label:"Korban Pesach Sheni",      hebrew:"פֶּסַח שֵׁנִי",        catalogId:"pesach",           defaultQty:0, rationale:"A second chance to bring the korban Pesach, on 14 Iyar, for those who were tamei or on a distant journey during 14 Nisan. The only case in halacha where the Torah explicitly grants a make-up date for a missed time-bound mitzvah."},
 ];
@@ -225,12 +225,22 @@ const DEFAULT_TRAVEL = {flightCost:1500,nightlyRate:400,familyMembers:0,pesachNi
 const SILVER_USD_PER_GRAM_FALLBACK = 1.06;
 const CHATZI_SHEKEL_GRAMS = 9.6;   // per R' Naeh; Chazon Ish = 12g
 const PIDYON_HABEN_GRAMS  = 96.0;  // 5 shekalim × 19.2g
-const BIKKURIM_USD        = 150;   // nominal basket of first-quality produce
+// Bikkurim pricing by financial tier (Mishnah Bikkurim 3:8; Rambam Hilchos Bikkurim 4:15)
+// Poor (Ani): simple wicker/straw basket, basic seven-species fruits only
+// Average: silver basket returned to kohen after use; additional fruits and decorations
+// Wealthy (Ashir): gold basket kept by kohen; doves tied to handles as olah/shelamim; elaborate procession
+const BIKKURIM_POOR_USD    = 150;   // straw basket + produce
+const BIKKURIM_AVERAGE_USD = 450;   // silver basket (~$200 silver) + produce + decorations
+const BIKKURIM_WEALTHY_USD = 1200;  // gold basket (~$600 gold) + doves + elaborate produce display
 
-function fixedPriceFor(id, silverUsdPerGram=SILVER_USD_PER_GRAM_FALLBACK){ 
+function fixedPriceFor(id, silverUsdPerGram=SILVER_USD_PER_GRAM_FALLBACK, financialTier="average"){ 
   if(id==="chatzi_shekel") return CHATZI_SHEKEL_GRAMS * silverUsdPerGram;
   if(id==="pidyon_haben")  return PIDYON_HABEN_GRAMS  * silverUsdPerGram;
-  if(id==="bikkurim")      return BIKKURIM_USD;
+  if(id==="bikkurim"){
+    if(financialTier==="wealthy") return BIKKURIM_WEALTHY_USD;
+    if(financialTier==="poor")    return BIKKURIM_POOR_USD;
+    return BIKKURIM_AVERAGE_USD;
+  }
   return 0;
 }
 
@@ -260,6 +270,8 @@ export default function korbanosCalculator() {
   const [personalQtys,     setPersonalQtys]     = useState({chatas_total:7,asham_talui:3});
   const [includeTravel,    setIncludeTravel]    = useState(true);
   const [includeTravelTodah, setIncludeTravelTodah] = useState(true);
+  const [livesInEY,        setLivesInEY]        = useState(false);
+  const [isLandowner,      setIsLandowner]      = useState(false);
   const [todahOverride,    setTodahOverride]    = useState<number|null>(null);
 
   // Helper: fetch silver from fawazahmed0 metals API
@@ -336,8 +348,9 @@ export default function korbanosCalculator() {
   }),[travelCfg]);
 
   const regalimCount    = Object.values(regalimAttending).filter(Boolean).length;
-  const todahFromTravel = includeTravelTodah ? regalimCount*2 : 0;
+  const todahFromTravel = (!livesInEY && includeTravelTodah) ? regalimCount*2 : 0;
   const todahAuto       = 2 + todahFromTravel;
+  const todahTotal      = todahOverride !== null ? todahOverride : todahAuto;
   const todahTotal      = todahOverride !== null ? todahOverride : todahAuto;
   const resetTodah      = ()=>setTodahOverride(null);
 
@@ -347,7 +360,7 @@ export default function korbanosCalculator() {
     return ANNUAL_ASSUMPTIONS.find(a=>a.id===id)?.catalogId;
   };
   const resolveUnitCost=(id,P)=>{
-    if(FIXED_PRICE_IDS.includes(id)) return fixedPriceFor(id, silverUsdPerGram);
+    if(FIXED_PRICE_IDS.includes(id)) return fixedPriceFor(id, silverUsdPerGram, financialTier);
     const catId=resolveCatalogId(id);
     const entry=catId?CATALOG.find(c=>c.id===catId):null;
     return entry?offeringTotal(entry,P):0;
@@ -360,6 +373,7 @@ export default function korbanosCalculator() {
     if(id==="chagigah_14_nissan") return regalimAttending.pesach?1:0;
     if(id==="chatzi_shekel") return 1;
     if(id==="todah")         return todahTotal;
+    if(id==="bikkurim")      return isLandowner?1:0;
     if(id==="chatas_total")  return personalQtys.chatas_total??currentLevel.qtys.chatas_total;
     if(id==="asham_talui")   return personalQtys.asham_talui ??currentLevel.qtys.asham_talui;
     return profileQtys[id]??0;
@@ -407,6 +421,7 @@ export default function korbanosCalculator() {
     setStrictness(2);setPersonalQtys(STRICTNESS_LEVELS[1].qtys);
     setFinancialTier("average");setTravelCfg(DEFAULT_TRAVEL);setTravelUserEdited({});setShiurId("naeh");setIncludeTravel(true);
     setIncludeTravelTodah(true);setTodahOverride(null);
+    setLivesInEY(false);setIsLandowner(false);
     setSilverUsdPerGram(SILVER_USD_PER_GRAM_FALLBACK);setSilverInputVal((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));setSilverStatus("idle");
   };
 
@@ -577,7 +592,35 @@ export default function korbanosCalculator() {
                 </div>
                 <div style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic",lineHeight:1.6}}>{shiur.notes} <span style={{color:"#7a5030"}}>- {shiur.source}</span></div>
               </div>
-              {/* Travel */}
+              {/* Eretz Yisroel */}
+              <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
+                <div style={lbl}>Location</div>
+                <label style={{display:"flex",alignItems:"center",gap:"0.6rem",cursor:"pointer",fontSize:"0.95rem",color:"#f0ddb0",marginBottom:"0.6rem"}}>
+                  <input type="checkbox" checked={livesInEY} onChange={e=>{setLivesInEY(e.target.checked);if(!e.target.checked) setIsLandowner(false);}} style={{width:16,height:16,accentColor:"#f0c060",cursor:"pointer"}}/>
+                  I live in Eretz Yisroel
+                </label>
+                {livesInEY&&(
+                  <div className="fi">
+                    <div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic",marginBottom:"0.75rem",lineHeight:1.6}}>Travel costs and travel-related todaos removed from your annual total.</div>
+                    <label style={{display:"flex",alignItems:"center",gap:"0.6rem",cursor:"pointer",fontSize:"0.95rem",color:"#f0ddb0",marginBottom:"0.4rem"}}>
+                      <input type="checkbox" checked={isLandowner} onChange={e=>setIsLandowner(e.target.checked)} style={{width:16,height:16,accentColor:"#f0c060",cursor:"pointer"}}/>
+                      I own agricultural land in Eretz Yisroel (obligated in Bikkurim)
+                    </label>
+                    {isLandowner&&(
+                      <div style={{marginTop:"0.4rem",padding:"0.5rem 0.75rem",background:"rgba(192,122,216,.07)",border:"1px solid #7a4090",borderLeft:"3px solid #c07ad8",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
+                        <strong style={{color:"#f0ddb0"}}>Bikkurim set automatically</strong> based on your financial standing:{" "}
+                        {financialTier==="poor"&&"straw basket with produce (~$150)"}
+                        {financialTier==="average"&&"silver basket with produce and decorations (~$450)"}
+                        {financialTier==="wealthy"&&"gold basket kept by the Kohen, doves tied to handles, elaborate produce display (~$1,200)"}
+                        {" "}— <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("bikkurim",silverUsdPerGram,financialTier))}</strong>.{" "}
+                        Change your financial standing above to update.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              {/* Travel — hidden for EY residents */}
+              {!livesInEY&&(
               <div style={{paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"0.75rem"}}>
                   <div style={{fontSize:"0.82rem",color:"#5aabdf",letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>Travel Assumptions</div>
@@ -607,6 +650,7 @@ export default function korbanosCalculator() {
                   </div>
                 )}
               </div>
+              )}
               <div style={{display:"flex",justifyContent:"flex-end",paddingTop:"1rem",marginTop:"0.75rem",borderTop:"1px solid #5a3a1a"}}>
                 <button onClick={doReset} style={{padding:"0.5rem 1rem",background:"transparent",border:"1px solid #5a3a1a",color:"#8a6030",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.1em"}}>Reset Defaults</button>
               </div>
@@ -646,7 +690,7 @@ export default function korbanosCalculator() {
             </div>
 
             {byCategory.map(({cat,items,subtotal,isTravel})=>{
-              if(isTravel && !includeTravel) return null;
+              if(isTravel && (!includeTravel || livesInEY)) return null;
               return(
               <div key={cat} style={{marginBottom:"2rem"}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",borderBottom:`2px solid ${CATEGORY_COLORS[cat]}55`,paddingBottom:"0.5rem",marginBottom:"0.3rem"}}>
@@ -693,6 +737,7 @@ export default function korbanosCalculator() {
                   const isLife        = LIFE_IDS.includes(item.id);
                   const isTodah       = item.id==="todah";
                   const isChatziFixed = item.id==="chatzi_shekel";
+                  const isBikkurim    = item.id==="bikkurim";
                   const unitCost      = resolveUnitCost(item.id,P);
                   const qty           = getQty(item.id);
                   const lineCost      = qty*unitCost;
@@ -756,6 +801,15 @@ export default function korbanosCalculator() {
                             ? <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #5a3a1a",color:"#c9a45a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>{qty} — set by regalim</div>
                             : isChatziFixed
                               ? <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #5a3a1a",color:"#c9a45a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>fixed</div>
+                            : isBikkurim
+                              ? <div style={{textAlign:"right"}}>
+                                  <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:`1px solid ${isLandowner?"#7a4090":"#5a3a1a"}`,color:isLandowner?"#c07ad8":"#5a3a1a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>
+                                    {isLandowner?"1 — auto":"0 — set in assumptions"}
+                                  </div>
+                                  {isLandowner&&<div style={{fontSize:"0.8rem",color:"#c07ad8",marginTop:"0.25rem",fontStyle:"italic",maxWidth:160,textAlign:"right",lineHeight:1.4}}>
+                                    {financialTier==="poor"?"straw basket":financialTier==="wealthy"?"gold basket + doves":"silver basket"}
+                                  </div>}
+                                </div>
                             : isTodah
                               ? <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"0.4rem",minWidth:200}}>
                                   {/* Travel todah checkbox */}
