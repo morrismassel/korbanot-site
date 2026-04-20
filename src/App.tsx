@@ -900,6 +900,9 @@ export default function KorbanotCalculator() {
           </div>
         )}
       </div>
+      <div style={{textAlign:"center",marginTop:"2.5rem",paddingTop:"1.5rem",borderTop:"1px solid #3a2010",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
+        Created by Jeremy Spier and Morris Massel with help from AI
+      </div>
     </div>
   );
 }
