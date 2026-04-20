@@ -639,7 +639,7 @@ export default function korbanosCalculator() {
                       <span style={{color:"#f0c0c0"}}>You have violated the positive commandment of aliyah l'regel (Devarim 16:16). The olas re'iyah and chagigah for this regel are permanently lost. There is no korban to bring. The only recourse is teshuvah.</span>
                     </div>
                   ))}
-                  <div style={{marginTop:"0.7rem",fontSize:"0.95rem",color:"#d4a060",fontStyle:"italic",borderTop:"1px dashed #aa3030",paddingTop:"0.6rem",lineHeight:1.7}}>The person who goes, violates an eruv, and brings a chatas has a cleaner ledger at year's end than the person who stayed home and saved the airfare.</div>
+                  <div style={{marginTop:"0.7rem",fontSize:"0.95rem",color:"#d4a060",fontStyle:"italic",borderTop:"1px dashed #aa3030",paddingTop:"0.6rem",lineHeight:1.7}}>The person who violated a Shabbos prohibition and brings a chatas has a cleaner ledger at year's end than the person who stayed home and saved the airfare, which generally cannot be fixed.</div>
                 </div>
               )}
               {Object.values(regalimAttending).every(v=>v)&&<div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic"}}>All three regalim — travel and korbanos included in your annual total below.</div>}
