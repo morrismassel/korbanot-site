@@ -12,6 +12,7 @@ const SHIURIM = {
 const JLM_NIS = {
   bull:9000, ram:1200, lamb:700, goat:650, bird:30,
   issaron_flour:18, log_oil:12, log_wine:15, frankincense:25, salt:2, wood:45,
+  ketores:1072,
 };
 const JLM_SOURCES = {
   bull:        { src:"Central Cattle Market, Moshav Beit Dagan", url:"https://www.moag.gov.il", note:"Israeli cattle market average, Q1 2026." },
@@ -23,6 +24,7 @@ const JLM_SOURCES = {
   log_oil:     { src:"Domestic Israeli extra-virgin olive oil; Galilee production", url:"https://www.zait.co.il", note:"Significantly cheaper than US kosher imports. Mikdash required first-pressing quality." },
   log_wine:    { src:"Israeli table wine; Golan Heights Winery, Carmel",            url:"https://www.golanwines.co.il", note:"No import markup. Must be aged 40+ days (Menachot 87a)." },
   frankincense:{ src:"Machane Yehuda spice market; imported Omani frankincense",    url:"https://www.mahane-yehuda.com", note:"Boswellia sacra resin. Komatz approx 1-2 oz." },
+  ketores:     { src:"Composite calculation — 11 spices per Kerisos 6a", url:"https://www.mahane-yehuda.com", note:"Annual batch: 368 maneh (~184kg) of 11 spices. Dominant costs: saffron (16 maneh × ~NIS 50/g = NIS 400,000), onycha (70 maneh × ~NIS 4/g = NIS 140,000), stacte (70 maneh × ~NIS 3/g = NIS 105,000), galbanum, spikenard, myrrh, cassia, costus, cinnamon, aromatic bark, and frankincense. Annual total ~NIS 782,000 ÷ 730 offerings = NIS 1,072 per offering. Saffron alone accounts for over 50% of the cost. Priced at Jerusalem wholesale; retail substantially higher." },
   wood:        { src:"Jerusalem lumber market", url:"", note:"Nine acceptable species (Tamid 29b). Nominal per-offering estimate." },
   salt:        { src:"Israeli commodity pricing", url:"", note:"Obligatory on all offerings; negligible cost." },
 };
@@ -38,6 +40,7 @@ function buildPrices(shiurId, usdPerNis) {
     issaron_flour:c(JLM_NIS.issaron_flour*m), log_oil:c(JLM_NIS.log_oil*m),
     log_wine:c(JLM_NIS.log_wine*m), frankincense:c(JLM_NIS.frankincense),
     salt:c(JLM_NIS.salt), wood:c(JLM_NIS.wood),
+    ketores:c(JLM_NIS.ketores),
   };
 }
 function libCost(a,P){const l=LIBATION[a];if(!l)return 0;return l.flour*P.issaron_flour+l.oil*P.log_oil+l.wine*P.log_wine;}
@@ -51,6 +54,7 @@ function compCost(key,count,P){
     case"bird":return count*P.bird; case"issaron_flour":return count*P.issaron_flour;
     case"log_oil":return count*P.log_oil; case"log_wine":return count*P.log_wine;
     case"frankincense":return count*P.frankincense; case"wood":return count*P.wood;
+    case"ketores":return count*P.ketores;
     default:return 0;
   }
 }
@@ -60,15 +64,18 @@ const fmtNIS = n=>"NIS "+n.toLocaleString("en-US",{minimumFractionDigits:0,maxim
 
 // ── Catalog ───────────────────────────────────────────────────────────────────
 const CATALOG = [
-  {id:"tamid",group:"Daily & Weekly",hebrew:"תָּמִיד",name:"Korban Tamid",subtitle:"The twice-daily continual offering",source:"Bamidbar 28:3-8",description:"Two yearling male lambs as olah each day with libations, ketoret and menorah oil.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Ketoret (2x)",key:"frankincense",count:4},{label:"Menorah oil",key:"log_oil",count:3.5},{label:"Altar wood",key:"wood",count:1}]},
+  {id:"tamid",group:"Daily & Weekly",hebrew:"תָּמִיד",name:"Korban Tamid",subtitle:"The twice-daily continual offering",source:"Bamidbar 28:3-8",description:"Two yearling male lambs as olah each day with libations and wood. Ketores and menorah oil are listed separately in the communal budget.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Altar wood",key:"wood",count:1}]},
+  {id:"ketores_daily",group:"Daily & Weekly",hebrew:"קְטֹרֶת",name:"Ketores - Daily Incense",subtitle:"Morning and afternoon incense offering",source:"Shemot 30:7-8; Yoma 26b; Kerisos 6a",description:"The 11-spice incense offered twice daily on the golden altar. One of the most expensive communal obligations. Per Kerisos 6a the annual batch is 368 maneh (~184kg): stacte, onycha, galbanum, and frankincense (70 maneh each); myrrh, cassia, spikenard, and saffron (16 maneh each); costus (12 maneh), aromatic bark (3 maneh), cinnamon (9 maneh). Saffron alone — at ~NIS 50/gram wholesale — accounts for over half the total cost. Price reflects a composite calculation across all 11 spices at Jerusalem wholesale rates; annual total ~NIS 782,000 ÷ 730 offerings.",components:[{label:"11-spice blend (full offering)",key:"ketores",count:1}]},
+  {id:"menorah_oil",group:"Daily & Weekly",hebrew:"שֶׁמֶן הַמְּנוֹרָה",name:"Menorah Oil",subtitle:"Pure olive oil for the golden menorah",source:"Shemot 27:20; Menachos 89a",description:"Pure beaten olive oil lit each evening (and replenished each morning) in the seven-branched golden menorah. The Talmud (Menachos 89a) records the precise amount used. Approximately half a log per lamp per day for the six outer lamps; the western lamp burned continuously. Total daily consumption approximately 3.5 log of first-pressing olive oil.",components:[{label:"Olive oil (3.5 log daily)",key:"log_oil",count:3.5}]},
   {id:"shabbat",group:"Daily & Weekly",hebrew:"מוּסַף שַׁבָּת",name:"Musaf Shabbos",subtitle:"Additional offering for the Sabbath",source:"Bamidbar 28:9-10",description:"Two yearling male lambs as olah with nesachim, plus lechem hapanim.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Lechem hapanim (24 issaron)",key:"issaron_flour",count:24}]},
   {id:"rosh_chodesh",group:"Daily & Weekly",hebrew:"רֹאשׁ חֹדֶשׁ",name:"Musaf Rosh Chodesh",subtitle:"Additional offering for the new month",source:"Bamidbar 28:11-15",description:"Two bulls, one ram, seven lambs as olah with nesachim, plus one goat as chatas.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
   {id:"pesach",group:"Pilgrimage Festivals",hebrew:"פֶּסַח",name:"Korban Pesach",subtitle:"Paschal offering (14 Nisan)",source:"Shemot 12; Bamidbar 9",description:"A yearling lamb or kid, roasted whole, eaten by a registered group on the night of the 15th.",components:[{label:"1 lamb (pesach)",key:"lamb",count:1}]},
+  {id:"chagigah_14",group:"Pilgrimage Festivals",hebrew:"חֲגִיגַת י\"ד",name:"Chagigat 14 Nisan",subtitle:"The supplementary festive offering on Erev Pesach",source:"Pesachim 70a-71a; Rambam Hilchos Korban Pesach 10:12",description:"When 14 Nisan falls on a weekday, a shelamim is brought alongside the Korban Pesach to supplement the seder meal, ensuring there is additional meat so that the Korban Pesach is eaten al hasova (on satiety) rather than out of hunger. Brought only on 14 Nisan, unlike the standard chagigah which is brought on the first day of the regel. Eaten on the night of the 15th before the Pesach itself.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
   {id:"pesach_musaf_day",group:"Pilgrimage Festivals",hebrew:"מוּסַף פֶּסַח",name:"Musaf of Pesach - one day",subtitle:"Per day, for each of the 7 days",source:"Bamidbar 28:19-24",description:"2 bulls, 1 ram, 7 lambs as olah with nesachim, and 1 goat as chatas.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
   {id:"omer",group:"Pilgrimage Festivals",hebrew:"עֹמֶר",name:"Korban HaOmer",subtitle:"Barley wave-offering (16 Nisan)",source:"Vayikra 23:9-14",description:"One issaron of barley flour with a yearling male lamb as olah and its libation.",components:[{label:"1 issaron barley flour",key:"issaron_flour",count:1},{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
   {id:"shavuot",group:"Pilgrimage Festivals",hebrew:"שָׁבֻעוֹת",name:"Shavuos - Full Day",subtitle:"Including the Two Loaves and peace offerings",source:"Vayikra 23:15-21; Bamidbar 28:26-31",description:"Shtei HaLechem with 2 lambs as shelamim, plus full musaf and chatas.",components:[{label:"Shtei HaLechem (4 issaron)",key:"issaron_flour",count:4},{label:"2 lambs (shelamim)",key:"lamb_olah",count:2},{label:"Musaf: 7 lambs",key:"lamb_olah",count:7},{label:"Musaf: 1 bull",key:"bull_olah",count:1},{label:"Musaf: 2 rams",key:"ram_olah",count:2},{label:"Bamidbar 28: 2 bulls",key:"bull_olah",count:2},{label:"Bamidbar 28: 1 ram",key:"ram_olah",count:1},{label:"Bamidbar 28: 7 lambs",key:"lamb_olah",count:7},{label:"2 goats (chatas)",key:"goat",count:2}]},
   {id:"rosh_hashanah",group:"Pilgrimage Festivals",hebrew:"רֹאשׁ הַשָּׁנָה",name:"Musaf Rosh Hashana",subtitle:"New Year additional offering",source:"Bamidbar 29:1-6",description:"1 bull, 1 ram, 7 lambs as olah with nesachim, plus 1 goat as chatas.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"yom_kippur",group:"Pilgrimage Festivals",hebrew:"יוֹם הַכִּפּוּרִים",name:"Yom Kippur - Full Service",subtitle:"The avodah of the Kohen Gadol",source:"Vayikra 16; Bamidbar 29:7-11",description:"The high priest's personal bull, two goats, two rams, and communal musaf.",components:[{label:"Kohen Gadol's bull (chatas)",key:"bull",count:1},{label:"2 goats (chatas + Azazel)",key:"goat",count:2},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"Musaf: 1 bull",key:"bull_olah",count:1},{label:"Musaf: 1 ram",key:"ram_olah",count:1},{label:"Musaf: 7 lambs",key:"lamb_olah",count:7},{label:"Musaf goat (chatas)",key:"goat",count:1},{label:"Ketoret",key:"frankincense",count:4}]},
+  {id:"yom_kippur",group:"Pilgrimage Festivals",hebrew:"יוֹם הַכִּפּוּרִים",name:"Yom Kippur - Full Service",subtitle:"The avodah of the Kohen Gadol",source:"Vayikra 16; Bamidbar 29:7-11",description:"The high priest's personal bull, two goats, two rams, and communal musaf.",components:[{label:"Kohen Gadol's bull (chatas)",key:"bull",count:1},{label:"2 goats (chatas + Azazel)",key:"goat",count:2},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"Musaf: 1 bull",key:"bull_olah",count:1},{label:"Musaf: 1 ram",key:"ram_olah",count:1},{label:"Musaf: 7 lambs",key:"lamb_olah",count:7},{label:"Musaf goat (chatas)",key:"goat",count:1},{label:"Ketores",key:"frankincense",count:4}]},
   {id:"sukkot_day1",group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - יוֹם א",name:"Sukkos - Day 1",subtitle:"Largest animal offering of the year",source:"Bamidbar 29:12-16",description:"13 bulls, 2 rams, 14 lambs as olah with nesachim, plus 1 goat as chatas.",components:[{label:"13 bulls (olah) with nesachim",key:"bull_olah",count:13},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 lambs (olah) with nesachim",key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}]},
   {id:"sukkot_all",group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - כָּל הַיָּמִים",name:"Sukkos - All 7 Days",subtitle:"70 bulls total, representing 70 nations",source:"Bamidbar 29:12-34",description:"Seven days: 70 bulls, 14 rams, 98 lambs as olah, plus 7 goats as chatas.",components:[{label:"70 bulls (olah) with nesachim",key:"bull_olah",count:70},{label:"14 rams (olah) with nesachim",key:"ram_olah",count:14},{label:"98 lambs (olah) with nesachim",key:"lamb_olah",count:98},{label:"7 goats (chatas)",key:"goat",count:7}]},
   {id:"shemini_atzeret",group:"Pilgrimage Festivals",hebrew:"שְׁמִינִי עֲצֶרֶת",name:"Shemini Atzeres",subtitle:"The eighth-day assembly",source:"Bamidbar 29:35-38",description:"1 bull, 1 ram, 7 lambs as olah with nesachim + 1 goat as chatas.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
@@ -77,6 +84,7 @@ const CATALOG = [
   {id:"olah_animal",group:"Individual Offerings",hebrew:"עוֹלָה",name:"Olah - Voluntary Burnt Offering",subtitle:"Wholly consumed on the altar",source:"Vayikra 1",description:"A voluntary ascent-offering. One male lamb with its libation.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
   {id:"olah_bird",group:"Individual Offerings",hebrew:"עוֹלַת הָעוֹף",name:"Olah of the Poor - Bird",subtitle:"For one unable to afford an animal",source:"Vayikra 1:14-17",description:"A turtledove or young pigeon as olah. No nesachim.",components:[{label:"1 bird (olah)",key:"bird",count:1}]},
   {id:"shelamim",group:"Individual Offerings",hebrew:"שְׁלָמִים",name:"Shelamim - Peace Offering",subtitle:"Eaten by owner, priest, and altar",source:"Vayikra 3; 7:11-21",description:"A voluntary peace-offering. One mature ram with libation.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
+  {id:"shalmei_simcha",group:"Individual Offerings",hebrew:"שַׁלְמֵי שִׂמְחָה",name:"Shalmei Simcha - Festive Peace Offering",subtitle:"Obligatory joy-offering on the three festivals",source:"Devarim 27:7; Rambam Hilchos Chagigah 1:1",description:"The Torah obligation of simcha on the three regalim — eating the meat of a shelamim in Yerushalayim. Distinct from the chagigah: the chagigah is a fixed minimal obligation, while the shalmei simcha scales to financial means and the size of one's household. Both are required; neither fulfills the other.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
   {id:"todah",group:"Individual Offerings",hebrew:"תּוֹדָה",name:"Korban Todah - Thanksgiving",subtitle:"Animal + 40 loaves",source:"Vayikra 7:11-15",description:"After surviving danger. Ram + 40 loaves (20 issaron flour + oil).",components:[{label:"1 ram (todah) with nesachim",key:"ram_olah",count:1},{label:"40 loaves (~20 issaron flour)",key:"issaron_flour",count:20},{label:"Oil for loaves (~2 log)",key:"log_oil",count:2}]},
   {id:"chagigah",group:"Individual Offerings",hebrew:"חֲגִיגָה",name:"Chagigah - Festival Peace Offering",subtitle:"Obligatory on the three pilgrimage festivals",source:"Devarim 16:16; Chagigah 1:1",description:"Every adult male at the Temple on each regel brings a shelamim-type offering.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
   {id:"reiyah",group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה",name:"Olas Re'iyah - Appearance Offering",subtitle:"Obligatory olah on each of the 3 regalim",source:"Devarim 16:16; Chagigah 2a",description:"On each regel, every adult male brings a wholly-consumed olah.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
@@ -89,7 +97,7 @@ const GROUPS = ["Daily & Weekly","Pilgrimage Festivals","Individual Offerings"];
 
 // ── Communal offerings (funded by chatzi shekel pool) ─────────────────────────
 const COMMUNAL_OFFERINGS = [
-  { id:"c_tamid",    label:"Korban Tamid",        hebrew:"תָּמִיד",           source:"Bamidbar 28:3-8",   note:"2 lambs daily × 365 days, with full nesachim, ketoret, menorah oil, and wood.",           count:365, catalogId:"tamid" },
+  { id:"c_tamid",    label:"Korban Tamid",        hebrew:"תָּמִיד",           source:"Bamidbar 28:3-8",   note:"2 lambs daily × 365 days, with full nesachim and wood. Ketores and menorah oil are listed as separate communal line items.",           count:365, catalogId:"tamid" },
   { id:"c_shabbat",  label:"Musaf Shabbos",        hebrew:"מוּסַף שַׁבָּת",   source:"Bamidbar 28:9-10",  note:"52 Shabbosos × (2 lambs with nesachim + lechem hapanim).",                                count:52,  catalogId:"shabbat" },
   { id:"c_rch",      label:"Musaf Rosh Chodesh",   hebrew:"רֹאשׁ חֹדֶשׁ",    source:"Bamidbar 28:11-15", note:"12 Rosh Chodesh months × full musaf (2 bulls, 1 ram, 7 lambs, 1 goat).",                  count:12,  catalogId:"rosh_chodesh" },
   { id:"c_pesach",   label:"Musaf Pesach",         hebrew:"מוּסַף פֶּסַח",    source:"Bamidbar 28:19-24", note:"7 days × full musaf. Does not include the individual Korban Pesach.",                    count:7,   catalogId:"pesach_musaf_day" },
@@ -99,6 +107,8 @@ const COMMUNAL_OFFERINGS = [
   { id:"c_yk",       label:"Yom Kippur Service",   hebrew:"יוֹם הַכִּפּוּרִים",source:"Vayikra 16",        note:"Communal portion: 2 goats (chatas + Azazel), plus communal musaf. The Kohen Gadol's personal bull is not from the public fund.", count:1, catalogId:"yom_kippur" },
   { id:"c_sukkot",   label:"Musaf Sukkos - All 7", hebrew:"סֻכּוֹת",          source:"Bamidbar 29:12-34", note:"70 bulls, 14 rams, 98 lambs over 7 days. Represents atonement for the 70 nations.",      count:1,   catalogId:"sukkot_all" },
   { id:"c_atzeret",  label:"Shemini Atzeres",      hebrew:"שְׁמִינִי עֲצֶרֶת",source:"Bamidbar 29:35-38", note:"1 bull, 1 ram, 7 lambs, 1 goat. A modest intimate offering after the abundance of Sukkos.", count:1, catalogId:"shemini_atzeret" },
+  { id:"c_ketores",  label:"Ketores - Daily Incense",  hebrew:"קְטֹרֶת",            source:"Shemot 30:7-8; Kerisos 6a",  note:"Offered twice daily (morning and afternoon) — 730 offerings per year. The 11-spice formula (368 maneh annually) is fixed by Torah. Saffron alone accounts for over half the cost. Composite price of ~NIS 1,072 per offering based on Jerusalem wholesale rates for all 11 spices.", count:365, catalogId:"ketores_daily" },
+  { id:"c_menorah",  label:"Menorah Oil",               hebrew:"שֶׁמֶן הַמְּנוֹרָה", source:"Shemot 27:20; Menachos 89a",  note:"Pure beaten first-pressing olive oil for the seven-branched golden menorah. Approximately 3.5 log per day. Requires exclusively first-pressing quality oil — significantly more expensive than standard olive oil.", count:365, catalogId:"menorah_oil" },
 ];
 
 // ── Violation examples ────────────────────────────────────────────────────────
@@ -154,6 +164,8 @@ const ANNUAL_ASSUMPTIONS = [
   {id:"pesach_korban", cat:CAT.FIXED,    label:"Korban Pesach",            hebrew:"קָרְבַּן פֶּסַח",      catalogId:"pesach",           defaultQty:1, rationale:"Obligatory. Failure without valid exemption carries kareis."},
   {id:"reiyah",        cat:CAT.FIXED,    label:"Olas Re'iyah x regalim",   hebrew:"עוֹלַת רְאִיָּה",      catalogId:"reiyah",           defaultQty:3, rationale:"Obligatory on Pesach, Shavuos, and Sukkos. Animal type varies by financial standing."},
   {id:"chagigah",      cat:CAT.FIXED,    label:"Chagigah x regalim",       hebrew:"חֲגִיגָה",            catalogId:"chagigah",         defaultQty:3, rationale:"Obligatory on Pesach, Shavuos, and Sukkos. Animal type varies by financial standing."},
+  {id:"shalmei_simcha",cat:CAT.FIXED,    label:"Shalmei Simcha x regalim", hebrew:"שַׁלְמֵי שִׂמְחָה",   catalogId:"shalmei_simcha",   defaultQty:3, rationale:"The Torah obligation of simcha on each regel — distinct from the chagigah. Every adult male must eat from the meat of a shelamim in Yerushalayim on each of the three regalim. Scales with regalim attendance."},
+  {id:"chagigah_14_nissan",cat:CAT.FIXED, label:"Chagigat 14 Nisan",        hebrew:"חֲגִיגַת י\"ד",        catalogId:"chagigah_14",      defaultQty:1, rationale:"Brought on Erev Pesach (14 Nisan) alongside the Korban Pesach, so that the seder meal is eaten al hasova — on satiety — rather than from hunger. Tied to Pesach attendance. Note: when 14 Nisan falls on Shabbos, this chagigah is not brought (and cannot be made up). In practice, toggle Pesach off to reflect non-attendance; the offering drops to zero automatically."},
   {id:"chatzi_shekel", cat:CAT.FIXED,    label:"Chatzi Shekel",            hebrew:"מַחֲצִית הַשֶּׁקֶל",   catalogId:null,               defaultQty:1, rationale:"Mandatory annual contribution of every adult Jewish male, used to fund all communal korbanos. Fixed at exactly half a shekel of the kodesh — 10 grams of silver. Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. No one gives more or less — the wealthy and the poor are equal."},
   {id:"chatas_total",  cat:CAT.PERSONAL, label:"Chataos",                  hebrew:"חַטָּאוֹת",            catalogId:"chatat_individual",defaultQty:7, rationale:"Total inadvertent violations of kareis prohibitions: Shabbos melachos, eruv failures, arayos, and basar b'chalav. Set by the scrutiny slider; adjust freely.", violations:V.chatas_total},
   {id:"asham_talui",   cat:CAT.PERSONAL, label:"Asham Toluy",              hebrew:"אָשָׁם תָּלוּי",       catalogId:"asham",            defaultQty:3, rationale:"Brought when genuinely unsure whether a kareis violation occurred.", violations:V.asham_talui},
@@ -183,7 +195,7 @@ const CATEGORY_COLORS = {
 };
 
 const PERSONAL_IDS   = ["chatas_total","asham_talui"];
-const REGALIM_LOCKED = ["pesach_korban","reiyah","chagigah"];
+const REGALIM_LOCKED = ["pesach_korban","reiyah","chagigah","shalmei_simcha","chagigah_14_nissan"];
 const LIFE_IDS       = ["yoledet","olah_vol","shelamim_vol","nazir_vol","metzora_vol","oleh_yored","bikkurim","pidyon_haben","pesach_sheni"];
 const FIXED_PRICE_IDS= ["chatzi_shekel","bikkurim","pidyon_haben"]; // non-catalog fixed prices
 
@@ -294,6 +306,8 @@ export default function korbanosCalculator() {
     if(id==="pesach_korban") return regalimAttending.pesach?1:0;
     if(id==="reiyah")        return regalimCount;
     if(id==="chagigah")      return regalimCount;
+    if(id==="shalmei_simcha") return regalimCount;
+    if(id==="chagigah_14_nissan") return regalimAttending.pesach?1:0;
     if(id==="chatzi_shekel") return 1;
     if(id==="todah")         return todahTotal;
     if(id==="chatas_total")  return personalQtys.chatas_total??currentLevel.qtys.chatas_total;
@@ -838,7 +852,7 @@ export default function korbanosCalculator() {
 
             {[
               {category:"Livestock",   keys:["bull","ram","lamb","goat","bird"],                              isAgr:false},
-              {category:"Agricultural",keys:["issaron_flour","log_oil","log_wine","frankincense","wood","salt"],isAgr:true},
+              {category:"Agricultural",keys:["issaron_flour","log_oil","log_wine","frankincense","ketores","wood","salt"],isAgr:true},
             ].map(({category,keys,isAgr})=>(
               <div key={category} style={{marginBottom:"2rem"}}>
                 <div style={{borderBottom:"1px solid #5a3a1a",paddingBottom:"0.5rem",marginBottom:"0.75rem"}}>
