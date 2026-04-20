@@ -859,26 +859,28 @@ export default function korbanosCalculator() {
                   <h2 className="df" style={{margin:0,fontSize:"0.9rem",color:"#f0c060",letterSpacing:"0.15em",textTransform:"uppercase"}}>{category}</h2>
                 </div>
                 {keys.map(key=>{
-                  const baseNIS=JLM_NIS[key];const m=isAgr?shiur.multiplier:1;const adjNIS=baseNIS*m;const usdPrice=adjNIS*usdPerNis;
+                  const isFixed=key==="ketores"||key==="frankincense"||key==="wood"||key==="salt";
+                  const baseNIS=JLM_NIS[key];const m=(isAgr&&!isFixed)?shiur.multiplier:1;const adjNIS=baseNIS*m;const usdPrice=adjNIS*usdPerNis;
                   const isExp=expandedPrice[key];const {src,url,note}=JLM_SOURCES[key];
                   return(<div key={key} style={{background:"rgba(24,12,4,.7)",border:"1px solid #5a3a1a",borderLeft:`4px solid ${isAgr?"#b070e0":"#7a4f20"}`,padding:"0.9rem 1rem",marginBottom:"0.55rem"}}>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem",flexWrap:"wrap"}}>
                       <div style={{flex:"1 1 200px"}}>
                         <div style={{display:"flex",alignItems:"baseline",gap:"0.5rem",flexWrap:"wrap"}}>
-                          <span style={{fontWeight:700,fontSize:"1rem",color:"#f0ddb0",textTransform:"capitalize"}}>{key.replace(/_/g," ")}</span>
-                          {isAgr&&<span style={{fontSize:"0.72rem",color:"#b070e0",border:"1px solid #b070e0",padding:"0.1rem 0.35rem",letterSpacing:"0.08em"}}>SHIUR-DEPENDENT</span>}
+                          <span style={{fontWeight:700,fontSize:"1rem",color:"#f0ddb0",textTransform:"capitalize"}}>{key==="ketores"?"Ketores (per offering)":key.replace(/_/g," ")}</span>
+                          {isAgr&&!isFixed&&<span style={{fontSize:"0.72rem",color:"#b070e0",border:"1px solid #b070e0",padding:"0.1rem 0.35rem",letterSpacing:"0.08em"}}>SHIUR-DEPENDENT</span>}
+                          {key==="ketores"&&<span style={{fontSize:"0.72rem",color:"#4ec98a",border:"1px solid #4ec98a",padding:"0.1rem 0.35rem",letterSpacing:"0.08em"}}>FIXED FORMULA</span>}
                         </div>
                       </div>
                       <div style={{display:"flex",alignItems:"center",gap:"1rem",flexShrink:0}}>
                         <div style={{textAlign:"right"}}>
-                          <div style={{fontSize:"0.82rem",color:"#a08050"}}>NIS {adjNIS.toFixed(1)}{isAgr&&shiurId!=="naeh"&&<span style={{color:"#b070e0"}}> x{shiur.multiplier}</span>}</div>
+                          <div style={{fontSize:"0.82rem",color:"#a08050"}}>NIS {adjNIS.toFixed(1)}{isAgr&&!isFixed&&shiurId!=="naeh"&&<span style={{color:"#b070e0"}}> x{shiur.multiplier}</span>}</div>
                           <div className="df" style={{fontSize:"1.5rem",color:"#f0c060",fontWeight:700}}>{fmt(usdPrice)}</div>
                         </div>
                         <button onClick={()=>setExpandedPrice(e=>({...e,[key]:!e[key]}))} style={{background:"transparent",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.9rem",fontFamily:"inherit",fontStyle:"italic",textDecoration:"underline",textUnderlineOffset:"3px",whiteSpace:"nowrap"}}>{isExp?"hide":"sources"}</button>
                       </div>
                     </div>
                     {isExp&&(<div className="fi" style={{marginTop:"0.85rem",paddingTop:"0.85rem",borderTop:"1px dashed #5a3a1a",display:"flex",flexDirection:"column",gap:"0.5rem"}}>
-                      {isAgr&&shiurId!=="naeh"&&<div style={{padding:"0.4rem 0.75rem",background:"rgba(176,112,224,.08)",border:"1px solid rgba(176,112,224,.27)",fontSize:"0.9rem",color:"#c9a45a",lineHeight:1.6}}><strong style={{color:"#f0ddb0"}}>Shiur impact:</strong> Base (R' Naeh x1.0) = NIS {baseNIS} — {shiur.labelShort} x{shiur.multiplier} = NIS {adjNIS.toFixed(1)} = <strong style={{color:"#f0c060"}}>{fmt(usdPrice)}</strong></div>}
+                      {isAgr&&!isFixed&&shiurId!=="naeh"&&<div style={{padding:"0.4rem 0.75rem",background:"rgba(176,112,224,.08)",border:"1px solid rgba(176,112,224,.27)",fontSize:"0.9rem",color:"#c9a45a",lineHeight:1.6}}><strong style={{color:"#f0ddb0"}}>Shiur impact:</strong> Base (R' Naeh x1.0) = NIS {baseNIS} — {shiur.labelShort} x{shiur.multiplier} = NIS {adjNIS.toFixed(1)} = <strong style={{color:"#f0c060"}}>{fmt(usdPrice)}</strong></div>}
                       <div><div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:"0.2rem"}}>Source</div><div style={{fontSize:"0.95rem",color:"#e8d4a0",lineHeight:1.6}}>{src}{url&&<> — <a href={url} target="_blank" rel="noopener noreferrer" className="sl">{url.replace("https://","")}</a></>}</div></div>
                       <div><div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:"0.2rem"}}>Notes</div><div style={{fontSize:"0.95rem",color:"#c9a45a",lineHeight:1.6,fontStyle:"italic"}}>{note}</div></div>
                     </div>)}
@@ -916,8 +918,9 @@ export default function korbanosCalculator() {
       <div style={{textAlign:"center",marginTop:"2.5rem",paddingTop:"1.5rem",borderTop:"1px solid #3a2010",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
         Created by Jeremy Spier and Morris Massel with help from AI. Send questions and comments to info@korbancalculator.com
       </div>
-      <div style={{textAlign:"center",marginTop:"0.5rem",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}> Code available at <a href="https://github.com/morrismassel/korbanos-site" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>github.com/morrismassel/korbanos-site</a>
-      </div>
+      <div style={{textAlign:"center",marginTop:"0.5rem",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
+  Code available at <a href="https://github.com/morrismassel/korbanos-site" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>github.com/morrismassel/korbanos-site</a>
+</div>
     </div>
   );
 }
