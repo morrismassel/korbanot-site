@@ -67,15 +67,15 @@ const CATALOG = [
   {id:"tamid",group:"Daily & Weekly",hebrew:"תָּמִיד",name:"Korban Tamid",subtitle:"The twice-daily continual offering",source:"Bamidbar 28:3-8",description:"Two yearling male lambs as olah each day with libations and wood. Ketores and menorah oil are listed separately in the communal budget.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Altar wood",key:"wood",count:1}]},
   {id:"ketores_daily",group:"Daily & Weekly",hebrew:"קְטֹרֶת",name:"Ketores - Daily Incense",subtitle:"Morning and afternoon incense offering",source:"Shemot 30:7-8; Yoma 26b; Kerisos 6a",description:"The 11-spice incense offered twice daily on the golden altar. One of the most expensive communal obligations. Per Kerisos 6a the annual batch is 368 maneh (~184kg): stacte, onycha, galbanum, and frankincense (70 maneh each); myrrh, cassia, spikenard, and saffron (16 maneh each); costus (12 maneh), aromatic bark (3 maneh), cinnamon (9 maneh). Saffron alone — at ~NIS 50/gram wholesale — accounts for over half the total cost. Price reflects a composite calculation across all 11 spices at Jerusalem wholesale rates; annual total ~NIS 782,000 ÷ 730 offerings.",components:[{label:"11-spice blend (full offering)",key:"ketores",count:1}]},
   {id:"menorah_oil",group:"Daily & Weekly",hebrew:"שֶׁמֶן הַמְּנוֹרָה",name:"Menorah Oil",subtitle:"Pure olive oil for the golden menorah",source:"Shemot 27:20; Menachos 89a",description:"Pure beaten olive oil lit each evening (and replenished each morning) in the seven-branched golden menorah. The Talmud (Menachos 89a) records the precise amount used. Approximately half a log per lamp per day for the six outer lamps; the western lamp burned continuously. Total daily consumption approximately 3.5 log of first-pressing olive oil.",components:[{label:"Olive oil (3.5 log daily)",key:"log_oil",count:3.5}]},
-  {id:"shabbat",group:"Daily & Weekly",hebrew:"מוּסַף שַׁבָּת",name:"Musaf Shabbos",subtitle:"Additional offering for the Sabbath",source:"Bamidbar 28:9-10",description:"Two yearling male lambs as olah with nesachim, plus lechem hapanim.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Lechem hapanim (24 issaron)",key:"issaron_flour",count:24}]},
-  {id:"rosh_chodesh",group:"Daily & Weekly",hebrew:"רֹאשׁ חֹדֶשׁ",name:"Musaf Rosh Chodesh",subtitle:"Additional offering for the new month",source:"Bamidbar 28:11-15",description:"Two bulls, one ram, seven lambs as olah with nesachim, plus one goat as chatas.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
+  {id:"shabbat",group:"Daily & Weekly",hebrew:"מוּסַף שַׁבָּת",name:"Mussaf Shabbos",subtitle:"Additional offering for the Sabbath",source:"Bamidbar 28:9-10",description:"Two yearling male lambs as olah with nesachim, plus lechem hapanim.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Lechem hapanim (24 issaron)",key:"issaron_flour",count:24}]},
+  {id:"rosh_chodesh",group:"Daily & Weekly",hebrew:"רֹאשׁ חֹדֶשׁ",name:"Mussaf Rosh Chodesh",subtitle:"Additional offering for the new month",source:"Bamidbar 28:11-15",description:"Two bulls, one ram, seven lambs as olah with nesachim, plus one goat as chatas.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
   {id:"pesach",group:"Pilgrimage Festivals",hebrew:"פֶּסַח",name:"Korban Pesach",subtitle:"Paschal offering (14 Nisan)",source:"Shemot 12; Bamidbar 9",description:"A yearling lamb or kid, roasted whole, eaten by a registered group on the night of the 15th.",components:[{label:"1 lamb (pesach)",key:"lamb",count:1}]},
   {id:"chagigah_14",group:"Pilgrimage Festivals",hebrew:"חֲגִיגַת י\"ד",name:"Chagigat 14 Nisan",subtitle:"The supplementary festive offering on Erev Pesach",source:"Pesachim 70a-71a; Rambam Hilchos Korban Pesach 10:12",description:"When 14 Nisan falls on a weekday, a shelamim is brought alongside the Korban Pesach to supplement the seder meal, ensuring there is additional meat so that the Korban Pesach is eaten al hasova (on satiety) rather than out of hunger. Brought only on 14 Nisan, unlike the standard chagigah which is brought on the first day of the regel. Eaten on the night of the 15th before the Pesach itself.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
-  {id:"pesach_musaf_day",group:"Pilgrimage Festivals",hebrew:"מוּסַף פֶּסַח",name:"Musaf of Pesach - one day",subtitle:"Per day, for each of the 7 days",source:"Bamidbar 28:19-24",description:"2 bulls, 1 ram, 7 lambs as olah with nesachim, and 1 goat as chatas.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
+  {id:"pesach_mussaf_day",group:"Pilgrimage Festivals",hebrew:"מוּסַף פֶּסַח",name:"Mussaf of Pesach - one day",subtitle:"Per day, for each of the 7 days",source:"Bamidbar 28:19-24",description:"2 bulls, 1 ram, 7 lambs as olah with nesachim, and 1 goat as chatas.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
   {id:"omer",group:"Pilgrimage Festivals",hebrew:"עֹמֶר",name:"Korban HaOmer",subtitle:"Barley wave-offering (16 Nisan)",source:"Vayikra 23:9-14",description:"One issaron of barley flour with a yearling male lamb as olah and its libation.",components:[{label:"1 issaron barley flour",key:"issaron_flour",count:1},{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
-  {id:"shavuot",group:"Pilgrimage Festivals",hebrew:"שָׁבֻעוֹת",name:"Shavuos - Full Day",subtitle:"Including the Two Loaves and peace offerings",source:"Vayikra 23:15-21; Bamidbar 28:26-31",description:"Shtei HaLechem with 2 lambs as shelamim, plus full musaf and chatas.",components:[{label:"Shtei HaLechem (4 issaron)",key:"issaron_flour",count:4},{label:"2 lambs (shelamim)",key:"lamb_olah",count:2},{label:"Musaf: 7 lambs",key:"lamb_olah",count:7},{label:"Musaf: 1 bull",key:"bull_olah",count:1},{label:"Musaf: 2 rams",key:"ram_olah",count:2},{label:"Bamidbar 28: 2 bulls",key:"bull_olah",count:2},{label:"Bamidbar 28: 1 ram",key:"ram_olah",count:1},{label:"Bamidbar 28: 7 lambs",key:"lamb_olah",count:7},{label:"2 goats (chatas)",key:"goat",count:2}]},
-  {id:"rosh_hashanah",group:"Pilgrimage Festivals",hebrew:"רֹאשׁ הַשָּׁנָה",name:"Musaf Rosh Hashana",subtitle:"New Year additional offering",source:"Bamidbar 29:1-6",description:"1 bull, 1 ram, 7 lambs as olah with nesachim, plus 1 goat as chatas.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"yom_kippur",group:"Pilgrimage Festivals",hebrew:"יוֹם הַכִּפּוּרִים",name:"Yom Kippur - Full Service",subtitle:"The avodah of the Kohen Gadol",source:"Vayikra 16; Bamidbar 29:7-11",description:"The high priest's personal bull, two goats, two rams, and communal musaf.",components:[{label:"Kohen Gadol's bull (chatas)",key:"bull",count:1},{label:"2 goats (chatas + Azazel)",key:"goat",count:2},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"Musaf: 1 bull",key:"bull_olah",count:1},{label:"Musaf: 1 ram",key:"ram_olah",count:1},{label:"Musaf: 7 lambs",key:"lamb_olah",count:7},{label:"Musaf goat (chatas)",key:"goat",count:1},{label:"Ketores",key:"frankincense",count:4}]},
+  {id:"shavuot",group:"Pilgrimage Festivals",hebrew:"שָׁבֻעוֹת",name:"Shavuos - Full Day",subtitle:"Including the Two Loaves and peace offerings",source:"Vayikra 23:15-21; Bamidbar 28:26-31",description:"Shtei HaLechem with 2 lambs as shelamim, plus full mussaf and chatas.",components:[{label:"Shtei HaLechem (4 issaron)",key:"issaron_flour",count:4},{label:"2 lambs (shelamim)",key:"lamb_olah",count:2},{label:"Mussaf: 7 lambs",key:"lamb_olah",count:7},{label:"Mussaf: 1 bull",key:"bull_olah",count:1},{label:"Mussaf: 2 rams",key:"ram_olah",count:2},{label:"Bamidbar 28: 2 bulls",key:"bull_olah",count:2},{label:"Bamidbar 28: 1 ram",key:"ram_olah",count:1},{label:"Bamidbar 28: 7 lambs",key:"lamb_olah",count:7},{label:"2 goats (chatas)",key:"goat",count:2}]},
+  {id:"rosh_hashanah",group:"Pilgrimage Festivals",hebrew:"רֹאשׁ הַשָּׁנָה",name:"Mussaf Rosh Hashana",subtitle:"New Year additional offering",source:"Bamidbar 29:1-6",description:"1 bull, 1 ram, 7 lambs as olah with nesachim, plus 1 goat as chatas.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
+  {id:"yom_kippur",group:"Pilgrimage Festivals",hebrew:"יוֹם הַכִּפּוּרִים",name:"Yom Kippur - Full Service",subtitle:"The avodah of the Kohen Gadol",source:"Vayikra 16; Bamidbar 29:7-11",description:"The high priest's personal bull, two goats, two rams, and communal mussaf.",components:[{label:"Kohen Gadol's bull (chatas)",key:"bull",count:1},{label:"2 goats (chatas + Azazel)",key:"goat",count:2},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"Mussaf: 1 bull",key:"bull_olah",count:1},{label:"Mussaf: 1 ram",key:"ram_olah",count:1},{label:"Mussaf: 7 lambs",key:"lamb_olah",count:7},{label:"Mussaf goat (chatas)",key:"goat",count:1},{label:"Ketores",key:"frankincense",count:4}]},
   {id:"sukkot_day1",group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - יוֹם א",name:"Sukkos - Day 1",subtitle:"Largest animal offering of the year",source:"Bamidbar 29:12-16",description:"13 bulls, 2 rams, 14 lambs as olah with nesachim, plus 1 goat as chatas.",components:[{label:"13 bulls (olah) with nesachim",key:"bull_olah",count:13},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 lambs (olah) with nesachim",key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}]},
   {id:"sukkot_all",group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - כָּל הַיָּמִים",name:"Sukkos - All 7 Days",subtitle:"70 bulls total, representing 70 nations",source:"Bamidbar 29:12-34",description:"Seven days: 70 bulls, 14 rams, 98 lambs as olah, plus 7 goats as chatas.",components:[{label:"70 bulls (olah) with nesachim",key:"bull_olah",count:70},{label:"14 rams (olah) with nesachim",key:"ram_olah",count:14},{label:"98 lambs (olah) with nesachim",key:"lamb_olah",count:98},{label:"7 goats (chatas)",key:"goat",count:7}]},
   {id:"shemini_atzeret",group:"Pilgrimage Festivals",hebrew:"שְׁמִינִי עֲצֶרֶת",name:"Shemini Atzeres",subtitle:"The eighth-day assembly",source:"Bamidbar 29:35-38",description:"1 bull, 1 ram, 7 lambs as olah with nesachim + 1 goat as chatas.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
@@ -98,14 +98,14 @@ const GROUPS = ["Daily & Weekly","Pilgrimage Festivals","Individual Offerings"];
 // ── Communal offerings (funded by chatzi shekel pool) ─────────────────────────
 const COMMUNAL_OFFERINGS = [
   { id:"c_tamid",    label:"Korban Tamid",        hebrew:"תָּמִיד",           source:"Bamidbar 28:3-8",   note:"2 lambs daily × 365 days, with full nesachim and wood. Ketores and menorah oil are listed as separate communal line items.",           count:365, catalogId:"tamid" },
-  { id:"c_shabbat",  label:"Musaf Shabbos",        hebrew:"מוּסַף שַׁבָּת",   source:"Bamidbar 28:9-10",  note:"52 Shabbosos × (2 lambs with nesachim + lechem hapanim).",                                count:52,  catalogId:"shabbat" },
-  { id:"c_rch",      label:"Musaf Rosh Chodesh",   hebrew:"רֹאשׁ חֹדֶשׁ",    source:"Bamidbar 28:11-15", note:"12 Rosh Chodesh months × full musaf (2 bulls, 1 ram, 7 lambs, 1 goat).",                  count:12,  catalogId:"rosh_chodesh" },
-  { id:"c_pesach",   label:"Musaf Pesach",         hebrew:"מוּסַף פֶּסַח",    source:"Bamidbar 28:19-24", note:"7 days × full musaf. Does not include the individual Korban Pesach.",                    count:7,   catalogId:"pesach_musaf_day" },
+  { id:"c_shabbat",  label:"Mussaf Shabbos",        hebrew:"מוּסַף שַׁבָּת",   source:"Bamidbar 28:9-10",  note:"52 Shabbosos × (2 lambs with nesachim + lechem hapanim).",                                count:52,  catalogId:"shabbat" },
+  { id:"c_rch",      label:"Mussaf Rosh Chodesh",   hebrew:"רֹאשׁ חֹדֶשׁ",    source:"Bamidbar 28:11-15", note:"12 Rosh Chodesh months × full mussaf (2 bulls, 1 ram, 7 lambs, 1 goat).",                  count:12,  catalogId:"rosh_chodesh" },
+  { id:"c_pesach",   label:"Mussaf Pesach",         hebrew:"מוּסַף פֶּסַח",    source:"Bamidbar 28:19-24", note:"7 days × full mussaf. Does not include the individual Korban Pesach.",                    count:7,   catalogId:"pesach_mussaf_day" },
   { id:"c_omer",     label:"Korban HaOmer",        hebrew:"עֹמֶר",            source:"Vayikra 23:9-14",   note:"Brought once on 16 Nisan.",                                                              count:1,   catalogId:"omer" },
-  { id:"c_shavuot",  label:"Shavuos Full Musaf",   hebrew:"שָׁבֻעוֹת",        source:"Vayikra 23:15-21",  note:"Includes Shtei HaLechem, shelamim, full musaf.",                                         count:1,   catalogId:"shavuot" },
-  { id:"c_rh",       label:"Musaf Rosh Hashana",   hebrew:"רֹאשׁ הַשָּׁנָה",  source:"Bamidbar 29:1-6",   note:"1 bull, 1 ram, 7 lambs, 1 goat.",                                                        count:1,   catalogId:"rosh_hashanah" },
-  { id:"c_yk",       label:"Yom Kippur Service",   hebrew:"יוֹם הַכִּפּוּרִים",source:"Vayikra 16",        note:"Communal portion: 2 goats (chatas + Azazel), plus communal musaf. The Kohen Gadol's personal bull is not from the public fund.", count:1, catalogId:"yom_kippur" },
-  { id:"c_sukkot",   label:"Musaf Sukkos - All 7", hebrew:"סֻכּוֹת",          source:"Bamidbar 29:12-34", note:"70 bulls, 14 rams, 98 lambs over 7 days. Represents atonement for the 70 nations.",      count:1,   catalogId:"sukkot_all" },
+  { id:"c_shavuot",  label:"Shavuos Full Mussaf",   hebrew:"שָׁבֻעוֹת",        source:"Vayikra 23:15-21",  note:"Includes Shtei HaLechem, shelamim, full mussaf.",                                         count:1,   catalogId:"shavuot" },
+  { id:"c_rh",       label:"Mussaf Rosh Hashana",   hebrew:"רֹאשׁ הַשָּׁנָה",  source:"Bamidbar 29:1-6",   note:"1 bull, 1 ram, 7 lambs, 1 goat.",                                                        count:1,   catalogId:"rosh_hashanah" },
+  { id:"c_yk",       label:"Yom Kippur Service",   hebrew:"יוֹם הַכִּפּוּרִים",source:"Vayikra 16",        note:"Communal portion: 2 goats (chatas + Azazel), plus communal mussaf. The Kohen Gadol's personal bull is not from the public fund.", count:1, catalogId:"yom_kippur" },
+  { id:"c_sukkot",   label:"Mussaf Sukkos - All 7", hebrew:"סֻכּוֹת",          source:"Bamidbar 29:12-34", note:"70 bulls, 14 rams, 98 lambs over 7 days. Represents atonement for the 70 nations.",      count:1,   catalogId:"sukkot_all" },
   { id:"c_atzeret",  label:"Shemini Atzeres",      hebrew:"שְׁמִינִי עֲצֶרֶת",source:"Bamidbar 29:35-38", note:"1 bull, 1 ram, 7 lambs, 1 goat. A modest intimate offering after the abundance of Sukkos.", count:1, catalogId:"shemini_atzeret" },
   { id:"c_ketores",  label:"Ketores - Daily Incense",  hebrew:"קְטֹרֶת",            source:"Shemot 30:7-8; Kerisos 6a",  note:"Offered twice daily (morning and afternoon) — 730 offerings per year. The 11-spice formula (368 maneh annually) is fixed by Torah. Saffron alone accounts for over half the cost. Composite price of ~NIS 1,072 per offering based on Jerusalem wholesale rates for all 11 spices.", count:365, catalogId:"ketores_daily" },
   { id:"c_menorah",  label:"Menorah Oil",               hebrew:"שֶׁמֶן הַמְּנוֹרָה", source:"Shemot 27:20; Menachos 89a",  note:"Pure beaten first-pressing olive oil for the seven-branched golden menorah. Approximately 3.5 log per day. Requires exclusively first-pressing quality oil — significantly more expensive than standard olive oil.", count:365, catalogId:"menorah_oil" },
@@ -152,6 +152,55 @@ const V = {
   },
 };
 
+// ── Hebrew Calendar (pure JS, no external library) ───────────────────────────
+function gregToAbs(date){
+  const y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
+  const lp=(y%4===0&&y%100!==0)||y%400===0;
+  const ml=[0,31,lp?29:28,31,30,31,30,31,31,30,31,30,31];
+  let n=365*(y-1)+Math.floor((y-1)/4)-Math.floor((y-1)/100)+Math.floor((y-1)/400);
+  for(let i=1;i<m;i++) n+=ml[i];
+  return n+d;
+}
+function absToGreg(abs){
+  let y=Math.floor(abs/365.2425)+1;
+  const ga=(y)=>{const lp=(y%4===0&&y%100!==0)||y%400===0;return 365*(y-1)+Math.floor((y-1)/4)-Math.floor((y-1)/100)+Math.floor((y-1)/400)+(lp?366:365)+1;};
+  const gb=(y)=>{return 365*(y-1)+Math.floor((y-1)/4)-Math.floor((y-1)/100)+Math.floor((y-1)/400)+1;};
+  while(gb(y+1)<=abs)y++;while(gb(y)>abs)y--;
+  const lp=(y%4===0&&y%100!==0)||y%400===0;
+  const ml=[0,31,lp?29:28,31,30,31,30,31,31,30,31,30,31];
+  let rem=abs-gb(y);let mo=1;
+  while(mo<=12&&rem>=ml[mo]){rem-=ml[mo];mo++;}
+  return new Date(y,mo-1,rem+1);
+}
+function hElapsed(y){const m=Math.floor((235*y-234)/19);const p=12084+13753*m;let d=m*29+Math.floor(p/25920);if((3*(d+1))%7<3)d++;return d;}
+const H_EPOCH=-1373427;
+function hNewYear(y){return hElapsed(y)+H_EPOCH;}
+function isHLeap(y){return(7*y+1)%19<7;}
+function hYearLen(y){return hNewYear(y+1)-hNewYear(y);}
+function hMonthInfo(y){
+  const yl=hYearLen(y);const il=isHLeap(y);const lc=yl%10===5;const sk=yl%10===3;
+  return il
+    ?[{m:7,d:30},{m:8,d:lc?30:29},{m:9,d:sk?29:30},{m:10,d:29},{m:11,d:30},{m:12,d:30},{m:13,d:29},{m:1,d:30},{m:2,d:29},{m:3,d:30},{m:4,d:29},{m:5,d:30},{m:6,d:29}]
+    :[{m:7,d:30},{m:8,d:lc?30:29},{m:9,d:sk?29:30},{m:10,d:29},{m:11,d:30},{m:12,d:29},{m:1,d:30},{m:2,d:29},{m:3,d:30},{m:4,d:29},{m:5,d:30},{m:6,d:29}];
+}
+function hebrewToAbs(y,m,d){
+  const ny=hNewYear(y);const mi=hMonthInfo(y);let dbm=0;
+  for(const e of mi){if(e.m===m)break;dbm+=e.d;}
+  return ny+dbm+(d-1);
+}
+function absToHebrew(abs){
+  let year=Math.floor((abs-H_EPOCH)/365.2468)+1;
+  while(hNewYear(year+1)<=abs)year++;while(hNewYear(year)>abs)year--;
+  const ny=hNewYear(year);const mi=hMonthInfo(year);
+  let dayOfYear=abs-ny;let hm=7,hd=1;
+  for(const{m,d}of mi){if(dayOfYear<d){hm=m;hd=dayOfYear+1;break;}dayOfYear-=d;}
+  return{year,month:hm,day:hd,dow:abs%7,isLeap:isHLeap(year)};
+}
+// Nisan-first month number to name
+const H_MONTH_NAMES=['','Nisan','Iyyar','Sivan','Tammuz','Av','Elul','Tishrei','Cheshvan','Kislev','Tevet','Shevat','Adar','Adar II'];
+// Month constants (Nisan=1)
+const HM={NISAN:1,IYYAR:2,SIVAN:3,TAMMUZ:4,AV:5,ELUL:6,TISHREI:7,CHESHVAN:8,KISLEV:9,TEVET:10,SHEVAT:11,ADAR:12,ADAR_II:13};
+
 // ── Categories ────────────────────────────────────────────────────────────────
 const CAT = {
   FIXED:    "Fixed Obligations",
@@ -164,7 +213,7 @@ const ANNUAL_ASSUMPTIONS = [
   {id:"pesach_korban", cat:CAT.FIXED,    label:"Korban Pesach",            hebrew:"קָרְבַּן פֶּסַח",      catalogId:"pesach",           defaultQty:1, rationale:"Obligatory. Failure without valid exemption carries kareis."},
   {id:"reiyah",        cat:CAT.FIXED,    label:"Olas Re'iyah x regalim",   hebrew:"עוֹלַת רְאִיָּה",      catalogId:"reiyah",           defaultQty:3, rationale:"Obligatory on Pesach, Shavuos, and Sukkos. Animal type varies by financial standing."},
   {id:"chagigah",      cat:CAT.FIXED,    label:"Chagigah x regalim",       hebrew:"חֲגִיגָה",            catalogId:"chagigah",         defaultQty:3, rationale:"Obligatory on Pesach, Shavuos, and Sukkos. Animal type varies by financial standing."},
-  {id:"shalmei_simcha",cat:CAT.FIXED,    label:"Shalmei Simcha x regalim", hebrew:"שַׁלְמֵי שִׂמְחָה",   catalogId:"shalmei_simcha",   defaultQty:3, rationale:"The Torah obligation of simcha on each regel — distinct from the chagigah. Every adult male must eat from the meat of a shelamim in Yerushalayim on each of the three regalim. Scales with regalim attendance."},
+  {id:"shalmei_simcha",cat:CAT.FIXED,    label:"Shalmei Simcha x regalim", hebrew:"שַׁלמֵי שִׂמְחָה",   catalogId:"shalmei_simcha",   defaultQty:3, rationale:"The Torah mitzvah of simcha on each regel is fulfilled through shelamim (Rambam Hilchos Yom Tov 6:17). For adult males this is a distinct obligation from the chagigah — neither fulfills the other. Scales with regalim attendance. Default is 1 per regel attended; adjust freely."},
   {id:"chagigah_14_nissan",cat:CAT.FIXED, label:"Chagigat 14 Nisan",        hebrew:"חֲגִיגַת י\"ד",        catalogId:"chagigah_14",      defaultQty:1, rationale:"Brought on Erev Pesach (14 Nisan) alongside the Korban Pesach, so that the seder meal is eaten al hasova — on satiety — rather than from hunger. Tied to Pesach attendance. Note: when 14 Nisan falls on Shabbos, this chagigah is not brought (and cannot be made up). In practice, toggle Pesach off to reflect non-attendance; the offering drops to zero automatically."},
   {id:"chatzi_shekel", cat:CAT.FIXED,    label:"Chatzi Shekel",            hebrew:"מַחֲצִית הַשֶּׁקֶל",   catalogId:null,               defaultQty:1, rationale:"Mandatory annual contribution of every adult Jewish male, used to fund all communal korbanos. Fixed at exactly half a shekel hakodesh — 9.6 grams of silver per R' Naeh (shekel = 19.2g = 320 barley grains; Rambam Hilchos Shekalim 1:2). Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. No one gives more or less — the wealthy and the poor are equal. Price updates with live silver spot price."},
   {id:"bikkurim",      cat:CAT.FIXED,    label:"Bikkurim",                 hebrew:"בִּכּוּרִים",           catalogId:null,               defaultQty:0, rationale:"First fruits of the seven species brought to the Mikdash between Shavuos and Sukkos. Only obligatory for landowners in Eretz Yisroel. Check the EY and landowner boxes in Assumptions to set automatically. Basket type scales with financial standing — poor: straw (~$150); average: silver basket returned after use (~$450); wealthy: gold basket kept by the Kohen with doves (~$1,200). Source: Devarim 26:1-11; Mishnah Bikkurim 3:8."},
@@ -195,7 +244,7 @@ const CATEGORY_COLORS = {
 };
 
 const PERSONAL_IDS   = ["chatas_total","asham_talui"];
-const REGALIM_LOCKED = ["pesach_korban","reiyah","chagigah","shalmei_simcha","chagigah_14_nissan"];
+const REGALIM_LOCKED = ["pesach_korban","reiyah","chagigah","chagigah_14_nissan"];
 const LIFE_IDS       = ["yoledet","olah_vol","shelamim_vol","nazir_vol","metzora_vol","oleh_yored","pidyon_haben","pesach_sheni"];
 const FIXED_PRICE_IDS= ["chatzi_shekel","bikkurim","pidyon_haben"]; // non-catalog fixed prices
 
@@ -252,6 +301,7 @@ function fixedPriceFor(id, silverUsdPerGram=SILVER_USD_PER_GRAM_FALLBACK, financ
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function korbanosCalculator() {
   const [activeTab,        setActiveTab]        = useState("annual");
+  const [todayAbs,         setTodayAbs]         = useState(()=>gregToAbs(new Date()));
   const [counts,           setCounts]           = useState({});
   const [expanded,         setExpanded]         = useState({});
   const [activeGroup,      setActiveGroup]      = useState("Daily & Weekly");
@@ -266,10 +316,10 @@ export default function korbanosCalculator() {
   const [usdPerNis,        setUsdPerNis]        = useState(1/2.96);
   const [rateStatus,       setRateStatus]       = useState("idle");
   const [silverUsdPerGram, setSilverUsdPerGram] = useState(SILVER_USD_PER_GRAM_FALLBACK);
-  const [silverStatus,     setSilverStatus]     = useState<"idle"|"loading"|"live"|"error">("idle");
+  const [silverStatus,     setSilverStatus]     = useState("idle");
   const [silverInputVal,   setSilverInputVal]   = useState((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));
   const [travelCfg,        setTravelCfg]        = useState(DEFAULT_TRAVEL);
-  const [travelUserEdited, setTravelUserEdited] = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
+  const [travelUserEdited, setTravelUserEdited] = useState({});
   const [strictness,       setStrictness]       = useState(2);
   const [financialTier,    setFinancialTier]    = useState("average");
   const [personalQtys,     setPersonalQtys]     = useState({chatas_total:7,asham_talui:3});
@@ -277,13 +327,14 @@ export default function korbanosCalculator() {
   const [includeTravelTodah, setIncludeTravelTodah] = useState(true);
   const [livesInEY,        setLivesInEY]        = useState(false);
   const [isLandowner,      setIsLandowner]      = useState(false);
-  const [todahOverride,    setTodahOverride]    = useState<number|null>(null);
+  const [todahOverride,    setTodahOverride]    = useState(null);
+  const [shalmeiOverride,  setShalmeiOverride]  = useState(null);
 
   // Helper: fetch silver from fawazahmed0 metals API
   // Response: { xag: { usd: <USD_per_troy_oz> } }
   // Primary: jsdelivr CDN; Fallback: Cloudflare Pages mirror
   const fetchSilverPrice=async()=>{
-    const applyPrice=(usdPerTroyOz:number)=>{
+    const applyPrice=(usdPerTroyOz)=>{
       setSilverUsdPerGram(usdPerTroyOz/31.1035);
       setSilverInputVal(usdPerTroyOz.toFixed(2));
       setSilverStatus("live");
@@ -291,12 +342,12 @@ export default function korbanosCalculator() {
     try{
       const r=await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xag.json");
       const d=await r.json();
-      if(d?.xag?.usd && d.xag.usd>0){applyPrice(d.xag.usd);return true;}
+      if(d&&d.xag&&d.xag.usd&&d.xag.usd>0){applyPrice(d.xag.usd);return true;}
     }catch(e){}
     try{
       const r=await fetch("https://latest.currency-api.pages.dev/v1/currencies/xag.json");
       const d=await r.json();
-      if(d?.xag?.usd && d.xag.usd>0){applyPrice(d.xag.usd);return true;}
+      if(d&&d.xag&&d.xag.usd&&d.xag.usd>0){applyPrice(d.xag.usd);return true;}
     }catch(e){}
     return false;
   };
@@ -305,8 +356,8 @@ export default function korbanosCalculator() {
     // Fetch NIS rate
     setRateStatus("loading");
     (async()=>{
-      try{const r=await fetch("https://open.er-api.com/v6/latest/USD");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
-      try{const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
+      try{const r=await fetch("https://open.er-api.com/v6/latest/USD");const d=await r.json();if(d&&d.rates&&d.rates.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
+      try{const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");const d=await r.json();if(d&&d.rates&&d.rates.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
       setRateStatus("error");
     })();
     // Fetch silver price independently
@@ -317,8 +368,8 @@ export default function korbanosCalculator() {
   // Refresh NIS rate only
   const fetchRate=async()=>{
     setRateStatus("loading");
-    try{const r=await fetch("https://open.er-api.com/v6/latest/USD");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
-    try{const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");const d=await r.json();if(d?.rates?.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
+    try{const r=await fetch("https://open.er-api.com/v6/latest/USD");const d=await r.json();if(d&&d.rates&&d.rates.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
+    try{const r=await fetch("https://api.frankfurter.app/latest?from=USD&to=ILS");const d=await r.json();if(d&&d.rates&&d.rates.ILS){setUsdPerNis(1/d.rates.ILS);setRateStatus("live");return;}}catch(e){}
     setRateStatus("error");
   };
 
@@ -342,7 +393,7 @@ export default function korbanosCalculator() {
     if(item.id==="chatzi_shekel"){
       const shekelG=(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier).toFixed(1);
       const chatziG=(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1);
-      return `Mandatory annual contribution of every adult Jewish male, used to fund all communal korbanos. Fixed at exactly half a shekel hakodesh — ${chatziG} grams of silver per ${shiur.labelShort} (shekel = ${shekelG}g = 320 barley grains; Rambam Hilchos Shekalim 1:2). Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. No one gives more or less — the wealthy and the poor are equal. Price updates with live silver spot price.`;
+      return "Mandatory annual contribution of every adult Jewish male, used to fund all communal korbanos. Fixed at exactly half a shekel hakodesh — "+(chatziG)+" grams of silver per "+(shiur.labelShort)+" (shekel = "+(shekelG)+"g = 320 barley grains; Rambam Hilchos Shekalim 1:2). Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. No one gives more or less — the wealthy and the poor are equal. Price updates with live silver spot price.";
     }
     return item.rationale;
   };
@@ -371,7 +422,7 @@ export default function korbanosCalculator() {
   const resolveCatalogId = id=>{
     if(id==="reiyah")   return tier.reiyahId;
     if(id==="chagigah") return tier.chagigahId;
-    return ANNUAL_ASSUMPTIONS.find(a=>a.id===id)?.catalogId;
+    return (ANNUAL_ASSUMPTIONS.find(a=>a.id===id)||{}).catalogId;
   };
   const resolveUnitCost=(id,P)=>{
     if(FIXED_PRICE_IDS.includes(id)) return fixedPriceFor(id, silverUsdPerGram, financialTier, shiur.multiplier);
@@ -383,14 +434,14 @@ export default function korbanosCalculator() {
     if(id==="pesach_korban") return regalimAttending.pesach?1:0;
     if(id==="reiyah")        return regalimCount;
     if(id==="chagigah")      return regalimCount;
-    if(id==="shalmei_simcha") return regalimCount;
+    if(id==="shalmei_simcha") return shalmeiOverride !== null ? shalmeiOverride : regalimCount;
     if(id==="chagigah_14_nissan") return regalimAttending.pesach?1:0;
     if(id==="chatzi_shekel") return 1;
     if(id==="todah")         return todahTotal;
     if(id==="bikkurim")      return isLandowner?1:0;
-    if(id==="chatas_total")  return personalQtys.chatas_total??currentLevel.qtys.chatas_total;
-    if(id==="asham_talui")   return personalQtys.asham_talui ??currentLevel.qtys.asham_talui;
-    return profileQtys[id]??0;
+    if(id==="chatas_total")  return personalQtys.chatas_total!=null?personalQtys.chatas_total:currentLevel.qtys.chatas_total;
+    if(id==="asham_talui")   return personalQtys.asham_talui!=null?personalQtys.asham_talui:currentLevel.qtys.asham_talui;
+    return profileQtys[id]!=null?profileQtys[id]:0;
   };
 
   const travelSubtotal = useMemo(()=>TRAVEL_ITEMS.reduce((s,t)=>{
@@ -423,18 +474,18 @@ export default function korbanosCalculator() {
   const perCapitaCommunal  = communalTotal/ASSUMED_POPULATION;
 
   const catalogTotal    = useMemo(()=>CATALOG.reduce((s,c)=>s+(counts[c.id]||0)*offeringTotal(c,P),0),[counts,P]);
-  const catalogSelected = useMemo(()=>Object.values(counts).reduce<number>((a,b)=>a+((b as number)||0),0),[counts]);
+  const catalogSelected = useMemo(()=>Object.values(counts).reduce((a,b)=>a+(b||0),0),[counts]);
   const filtered        = CATALOG.filter(s=>s.group===activeGroup);
 
   const lbl = {fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.5rem"};
-  const inp = {width:"100%",padding:"0.5rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center" as const,fontFamily:"inherit",fontSize:"1rem"};
+  const inp = {width:"100%",padding:"0.5rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"};
 
   const doReset=()=>{
     setProfileQtys(Object.fromEntries(ANNUAL_ASSUMPTIONS.map(a=>[a.id,a.defaultQty])));
     setRegalimAttending({pesach:true,shavuot:true,sukkot:true});
     setStrictness(2);setPersonalQtys(STRICTNESS_LEVELS[1].qtys);
     setFinancialTier("average");setTravelCfg(DEFAULT_TRAVEL);setTravelUserEdited({});setShiurId("naeh");setIncludeTravel(true);
-    setIncludeTravelTodah(true);setTodahOverride(null);
+    setIncludeTravelTodah(true);setTodahOverride(null);setShalmeiOverride(null);
     setLivesInEY(false);setIsLandowner(false);
     setSilverUsdPerGram(SILVER_USD_PER_GRAM_FALLBACK);setSilverInputVal((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));setSilverStatus("idle");
   };
@@ -447,7 +498,7 @@ export default function korbanosCalculator() {
   );
 
   const TAB=(id,label)=>(
-    <button onClick={()=>setActiveTab(id)} style={{padding:"0.75rem 1.1rem",background:activeTab===id?"#daa520":"transparent",color:activeTab===id?"#1a0f08":"#f0c060",border:`1px solid ${activeTab===id?"#daa520":"#7a4f20"}`,cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.8rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",flex:"1 1 auto"}}>{label}</button>
+    <button onClick={()=>setActiveTab(id)} style={{padding:"0.75rem 1.1rem",background:activeTab===id?"#daa520":"transparent",color:activeTab===id?"#1a0f08":"#f0c060",border:"1px solid "+(activeTab===id?"#daa520":"#7a4f20"),cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.8rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",flex:"1 1 auto"}}>{label}</button>
   );
   const QtyCtrl=({id})=>{
     const qty=profileQtys[id]||0;
@@ -499,7 +550,7 @@ export default function korbanosCalculator() {
 
         {/* TABS */}
         <div style={{display:"flex",gap:"0.4rem",marginBottom:"1.5rem",flexWrap:"wrap"}}>
-          {TAB("annual","My Annual Bill")}{TAB("communal","Communal Budget")}{TAB("catalog","Full Catalog")}{TAB("prices","Prices & Sources")}
+          {TAB("annual","My Annual Bill")}{TAB("communal","Annual Communal Budget")}{TAB("today","Today's Communal Costs")}{TAB("catalog","Full Catalog")}{TAB("prices","Prices & Sources")}
         </div>
 
         {/* SETTINGS STRIP */}
@@ -516,7 +567,7 @@ export default function korbanosCalculator() {
               <span style={{color:"#5a3a1a"}}>|</span>
               <span><span style={{color:"#8a6030"}}>Rate: </span><span style={{color:"#f0ddb0"}}>$1 = NIS {nisPerUsd}</span>{rateStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{rateStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
             </div>
-            <button onClick={()=>setShowSettings(s=>!s)} style={{padding:"0.5rem 1rem",background:showSettings?"rgba(240,192,96,.15)":"transparent",border:`1px solid ${showSettings?"#f0c060":"#7a4f20"}`,color:"#f0c060",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",whiteSpace:"nowrap"}}>
+            <button onClick={()=>setShowSettings(s=>!s)} style={{padding:"0.5rem 1rem",background:showSettings?"rgba(240,192,96,.15)":"transparent",border:"1px solid "+(showSettings?"#f0c060":"#7a4f20"),color:"#f0c060",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",whiteSpace:"nowrap"}}>
               {showSettings?"Close":"Assumptions"}
             </button>
           </div>
@@ -563,7 +614,7 @@ export default function korbanosCalculator() {
                         if(!travelUserEdited.flightCost) setTravelCfg(c=>({...c,flightCost:DEFAULT_TRAVEL.flightCost}));
                         if(!travelUserEdited.nightlyRate) setTravelCfg(c=>({...c,nightlyRate:DEFAULT_TRAVEL.nightlyRate}));
                       }
-                    }} style={{display:"flex",alignItems:"center",gap:"0.5rem",padding:"0.55rem 1rem",background:financialTier===t.id?"rgba(240,192,96,.18)":"transparent",color:financialTier===t.id?"#f0c060":"#c9a45a",border:`1px solid ${financialTier===t.id?"#f0c060":"#5a3a1a"}`,cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
+                    }} style={{display:"flex",alignItems:"center",gap:"0.5rem",padding:"0.55rem 1rem",background:financialTier===t.id?"rgba(240,192,96,.18)":"transparent",color:financialTier===t.id?"#f0c060":"#c9a45a",border:"1px solid "+(financialTier===t.id?"#f0c060":"#5a3a1a"),cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
                       <span style={{fontFamily:"'Cinzel',serif",fontWeight:600}}>{t.label}</span>
                       <span className="hf" style={{fontSize:"1.1rem",color:financialTier===t.id?"#f0c060":"#7a5030"}}>{t.hebrew}</span>
                     </button>
@@ -576,9 +627,9 @@ export default function korbanosCalculator() {
                 <div style={lbl}>Shiur - Halachic Measurement Standard</div>
                 <div style={{display:"flex",flexWrap:"wrap",gap:"0.4rem",marginBottom:"0.5rem"}}>
                   {Object.values(SHIURIM).map(s=>(
-                    <button key={s.id} onClick={()=>setShiurId(s.id)} style={{padding:"0.45rem 0.9rem",background:shiurId===s.id?"rgba(240,192,96,.15)":"transparent",color:shiurId===s.id?"#f0c060":"#c9a45a",border:`1px solid ${shiurId===s.id?"#f0c060":"#5a3a1a"}`,cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
+                    <button key={s.id} onClick={()=>setShiurId(s.id)} style={{padding:"0.45rem 0.9rem",background:shiurId===s.id?"rgba(240,192,96,.15)":"transparent",color:shiurId===s.id?"#f0c060":"#c9a45a",border:"1px solid "+(shiurId===s.id?"#f0c060":"#5a3a1a"),cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
                       <span style={{fontFamily:"'Cinzel',serif",fontWeight:600}}>{s.labelShort}</span>
-                      <span style={{marginLeft:"0.4rem",opacity:.75,fontSize:"0.8rem"}}>{s.multiplier===1?"baseline":`x${s.multiplier}`}</span>
+                      <span style={{marginLeft:"0.4rem",opacity:.75,fontSize:"0.8rem"}}>{s.multiplier===1?"baseline":"x"+(s.multiplier)}</span>
                     </button>
                   ))}
                 </div>
@@ -681,8 +732,8 @@ export default function korbanosCalculator() {
               <div style={{display:"flex",gap:"0.85rem",flexWrap:"wrap",marginBottom:"0.9rem"}}>
                 {[{id:"pesach",label:"Pesach",hebrew:"פֶּסַח"},{id:"shavuot",label:"Shavuos",hebrew:"שָׁבֻעוֹת"},{id:"sukkot",label:"Sukkos",hebrew:"סֻכּוֹת"}].map(({id,label,hebrew})=>{
                   const going=regalimAttending[id];
-                  return(<button key={id} onClick={()=>setRegalimAttending(r=>({...r,[id]:!r[id]}))} style={{display:"flex",alignItems:"center",gap:"0.6rem",padding:"0.65rem 1.2rem",background:going?"rgba(240,192,96,.15)":"rgba(30,14,6,.8)",border:`2px solid ${going?"#f0c060":"#5a3a1a"}`,color:going?"#f0ddb0":"#7a5030",cursor:"pointer",fontFamily:"inherit"}}>
-                    <div style={{width:16,height:16,borderRadius:"50%",border:`2px solid ${going?"#f0c060":"#5a3a1a"}`,background:going?"#f0c060":"transparent",flexShrink:0}}/>
+                  return(<button key={id} onClick={()=>setRegalimAttending(r=>({...r,[id]:!r[id]}))} style={{display:"flex",alignItems:"center",gap:"0.6rem",padding:"0.65rem 1.2rem",background:going?"rgba(240,192,96,.15)":"rgba(30,14,6,.8)",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),color:going?"#f0ddb0":"#7a5030",cursor:"pointer",fontFamily:"inherit"}}>
+                    <div style={{width:16,height:16,borderRadius:"50%",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),background:going?"#f0c060":"transparent",flexShrink:0}}/>
                     <span style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400}}>{label}</span>
                     <span className="hf" style={{color:going?"#f0c060":"#5a3a1a",fontSize:"1.15rem"}}>{hebrew}</span>
                   </button>);
@@ -707,7 +758,7 @@ export default function korbanosCalculator() {
               if(isTravel && (!includeTravel || livesInEY)) return null;
               return(
               <div key={cat} style={{marginBottom:"2rem"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",borderBottom:`2px solid ${CATEGORY_COLORS[cat]}55`,paddingBottom:"0.5rem",marginBottom:"0.3rem"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",borderBottom:"2px solid "+(CATEGORY_COLORS[cat])+"55",paddingBottom:"0.5rem",marginBottom:"0.3rem"}}>
                   <div style={{display:"flex",alignItems:"center",gap:"0.6rem"}}>
                     <div style={{width:4,height:18,background:CATEGORY_COLORS[cat],borderRadius:2}}/>
                     <h2 className="df" style={{margin:0,fontSize:"0.95rem",color:CATEGORY_COLORS[cat],letterSpacing:"0.15em",textTransform:"uppercase"}}>{cat}</h2>
@@ -733,14 +784,14 @@ export default function korbanosCalculator() {
 
                 {isTravel ? TRAVEL_ITEMS.map(t=>{
                   const regel=t.id.replace("travel_",""); const going=regalimAttending[regel]; const nights=travelCfg[t.nightsKey];
-                  return(<div key={t.id} style={{background:going?"rgba(42,24,16,.5)":"rgba(20,10,2,.4)",border:`1px solid ${going?"#5a3a1a":"#2a1a08"}`,borderLeft:`4px solid ${going?"#5aabdf":"#2a1a08"}`,padding:"1rem 1.1rem",marginBottom:"0.7rem",opacity:going?1:0.4}}>
+                  return(<div key={t.id} style={{background:going?"rgba(42,24,16,.5)":"rgba(20,10,2,.4)",border:"1px solid "+(going?"#5a3a1a":"#2a1a08"),borderLeft:"4px solid "+(going?"#5aabdf":"#2a1a08"),padding:"1rem 1.1rem",marginBottom:"0.7rem",opacity:going?1:0.4}}>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"0.5rem"}}>
                       <div>
                         <div style={{display:"flex",alignItems:"baseline",gap:"0.5rem"}}>
-                          <span style={{fontWeight:700,fontSize:"1.1rem",color:"#f0ddb0"}}>{t.label}{nights>0?` + ${nights} nights`:""}</span>
+                          <span style={{fontWeight:700,fontSize:"1.1rem",color:"#f0ddb0"}}>{t.label}{nights>0?" + "+(nights)+" nights":""}</span>
                           <span className="hf" style={{color:"#5aabdf",fontSize:"1.2rem"}}>{t.hebrew}</span>
                         </div>
-                        <div style={{fontSize:"0.88rem",color:"#a08050",fontStyle:"italic",marginTop:"0.1rem"}}>{1+travelCfg.familyMembers}x ${travelCfg.flightCost}{nights>0?` + ${nights}x $${travelCfg.nightlyRate} lodging`:""}</div>
+                        <div style={{fontSize:"0.88rem",color:"#a08050",fontStyle:"italic",marginTop:"0.1rem"}}>{1+travelCfg.familyMembers}x ${travelCfg.flightCost}{nights>0?" + "+(nights)+"x $"+(travelCfg.nightlyRate)+" lodging":""}</div>
                       </div>
                       <div className="df" style={{fontSize:"1.3rem",color:going?"#5aabdf":"#4a2a08",fontWeight:700}}>{fmt(travelCosts[t.id])}</div>
                     </div>
@@ -752,6 +803,7 @@ export default function korbanosCalculator() {
                   const isTodah       = item.id==="todah";
                   const isChatziFixed = item.id==="chatzi_shekel";
                   const isBikkurim    = item.id==="bikkurim";
+                  const isShalmei     = item.id==="shalmei_simcha";
                   const unitCost      = resolveUnitCost(item.id,P);
                   const qty           = getQty(item.id);
                   const lineCost      = qty*unitCost;
@@ -761,7 +813,7 @@ export default function korbanosCalculator() {
                   const catId         = resolveCatalogId(item.id);
                   const catEntry      = catId?CATALOG.find(c=>c.id===catId):null;
                   return(
-                    <div key={item.id} style={{background:isLife&&qty===0?"rgba(16,8,2,.6)":"rgba(24,12,4,.7)",border:`1px solid ${isLife&&qty===0?"#3a2510":"#5a3a1a"}`,borderLeft:`4px solid ${lineCost>0?ac:isLife?"#5a3060":"#3a2010"}`,padding:"1rem 1.1rem",marginBottom:"0.7rem",opacity:isLife&&qty===0?0.75:1}}>
+                    <div key={item.id} style={{background:isLife&&qty===0?"rgba(16,8,2,.6)":"rgba(24,12,4,.7)",border:"1px solid "+(isLife&&qty===0?"#3a2510":"#5a3a1a"),borderLeft:"4px solid "+(lineCost>0?ac:isLife?"#5a3060":"#3a2010"),padding:"1rem 1.1rem",marginBottom:"0.7rem",opacity:isLife&&qty===0?0.75:1}}>
                       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem",flexWrap:"wrap"}}>
                         <div style={{flex:"1 1 260px"}}>
                           <div style={{display:"flex",alignItems:"baseline",gap:"0.6rem",flexWrap:"wrap"}}>
@@ -817,12 +869,22 @@ export default function korbanosCalculator() {
                               ? <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #5a3a1a",color:"#c9a45a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>fixed</div>
                             : isBikkurim
                               ? <div style={{textAlign:"right"}}>
-                                  <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:`1px solid ${isLandowner?"#7a4090":"#5a3a1a"}`,color:isLandowner?"#c07ad8":"#5a3a1a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>
+                                  <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid "+(isLandowner?"#7a4090":"#5a3a1a"),color:isLandowner?"#c07ad8":"#5a3a1a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>
                                     {isLandowner?"1 — auto":"0 — set in assumptions"}
                                   </div>
                                   {isLandowner&&<div style={{fontSize:"0.8rem",color:"#c07ad8",marginTop:"0.25rem",fontStyle:"italic",maxWidth:160,textAlign:"right",lineHeight:1.4}}>
                                     {financialTier==="poor"?"straw basket":financialTier==="wealthy"?"gold basket + doves":"silver basket"}
                                   </div>}
+                                </div>
+                            : isShalmei
+                              ? <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"0.4rem",minWidth:160}}>
+                                  <div style={{display:"flex",alignItems:"center",gap:"0.4rem"}}>
+                                    <button onClick={()=>setShalmeiOverride(Math.max(0,(shalmeiOverride!=null?shalmeiOverride:regalimCount)-1))} style={qBtn(qty>0)}>-</button>
+                                    <input type="number" min="0" value={qty} onChange={e=>{const v=parseInt(e.target.value);setShalmeiOverride(isNaN(v)?0:Math.max(0,v));}} style={{width:52,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
+                                    <button onClick={()=>setShalmeiOverride((shalmeiOverride!=null?shalmeiOverride:regalimCount)+1)} style={qBtn(true)}>+</button>
+                                  </div>
+                                  {shalmeiOverride!==null&&<button onClick={()=>setShalmeiOverride(null)} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.82rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>reset to auto ({regalimCount})</button>}
+                                  {shalmeiOverride===null&&<div style={{fontSize:"0.8rem",color:"#f0c060",fontStyle:"italic"}}>auto: {regalimCount} regel{regalimCount!==1?"im":""}</div>}
                                 </div>
                             : isTodah
                               ? <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"0.4rem",minWidth:200}}>
@@ -833,13 +895,13 @@ export default function korbanosCalculator() {
                                   </label>
                                   {/* Manual qty spinner */}
                                   <div style={{display:"flex",alignItems:"center",gap:"0.4rem"}}>
-                                    <button onClick={()=>setTodahOverride(Math.max(0,(todahOverride??todahAuto)-1))} style={qBtn(todahTotal>0)}>-</button>
+                                    <button onClick={()=>setTodahOverride(Math.max(0,(todahOverride!=null?todahOverride:todahAuto)-1))} style={qBtn(todahTotal>0)}>-</button>
                                     <input type="number" min="0" value={todahTotal} onChange={e=>{const v=parseInt(e.target.value);setTodahOverride(isNaN(v)?0:Math.max(0,v));}} style={{width:52,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
-                                    <button onClick={()=>setTodahOverride((todahOverride??todahAuto)+1)} style={qBtn(true)}>+</button>
+                                    <button onClick={()=>setTodahOverride((todahOverride!=null?todahOverride:todahAuto)+1)} style={qBtn(true)}>+</button>
                                   </div>
                                   {/* Reset to auto link */}
                                   {todahOverride!==null&&<button onClick={resetTodah} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.82rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>reset to auto ({todahAuto})</button>}
-                                  {todahOverride===null&&<div style={{fontSize:"0.8rem",color:"#4ec98a",fontStyle:"italic"}}>auto: 2 baseline{includeTravelTodah&&regalimCount>0?` + ${regalimCount*2} travel`:""}</div>}
+                                  {todahOverride===null&&<div style={{fontSize:"0.8rem",color:"#4ec98a",fontStyle:"italic"}}>auto: 2 baseline{includeTravelTodah&&regalimCount>0?" + "+(regalimCount*2)+" travel":""}</div>}
                                 </div>
                             : isPersonal
                               ? <PersonalCtrl id={item.id}/>
@@ -858,7 +920,7 @@ export default function korbanosCalculator() {
             <div style={{marginBottom:"1.5rem"}}>
               <div style={{fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:"0.5rem",fontFamily:"'Cinzel',serif"}}>Cost Breakdown</div>
               <div style={{display:"flex",height:14,borderRadius:3,overflow:"hidden",gap:1}}>
-                {byCategory.filter(x=>includeTravel||!x.isTravel).map(({cat,subtotal})=>{const pct=(subtotal/annualTotal)*100;if(pct<0.5||!annualTotal)return null;return <div key={cat} title={`${cat}: ${fmt(subtotal)}`} style={{width:`${pct}%`,background:CATEGORY_COLORS[cat]}}/>;})}</div>
+                {byCategory.filter(x=>includeTravel||!x.isTravel).map(({cat,subtotal})=>{const pct=(subtotal/annualTotal)*100;if(pct<0.5||!annualTotal)return null;return <div key={cat} title={(cat)+": "+(fmt(subtotal))} style={{width:(pct)+"%",background:CATEGORY_COLORS[cat]}}/>;})}</div>
               <div style={{display:"flex",flexWrap:"wrap",gap:"0.5rem 1.2rem",marginTop:"0.6rem"}}>
                 {byCategory.filter(x=>includeTravel||!x.isTravel).map(({cat,subtotal})=>(
                   <div key={cat} style={{display:"flex",alignItems:"center",gap:"0.4rem",fontSize:"0.9rem",color:"#c9a45a"}}>
@@ -888,7 +950,7 @@ export default function korbanosCalculator() {
           <div className="fi">
             <div style={{marginBottom:"1.5rem",padding:"1.25rem",background:"rgba(240,192,96,.06)",border:"1px solid #7a4f20",borderLeft:"4px solid #f0c060"}}>
               <div style={{fontSize:"1rem",color:"#f0c060",fontFamily:"'Cinzel',serif",letterSpacing:"0.08em",marginBottom:"0.75rem",fontWeight:700}}>The Chatzi Shekel Pool</div>
-              <p style={{fontSize:"1rem",color:"#e8d4a0",lineHeight:1.8,margin:"0 0 0.75rem"}}>Every adult Jewish male contributed exactly half a shekel annually — no more, no less. These funds paid for every communal korban: the tamid, all musaf offerings, the Yom Kippur service, the Shtei HaLechem, and more. The wealthy and the poor were equal before the altar.</p>
+              <p style={{fontSize:"1rem",color:"#e8d4a0",lineHeight:1.8,margin:"0 0 0.75rem"}}>Every adult Jewish male contributed exactly half a shekel annually — no more, no less. These funds paid for every communal korban: the tamid, all mussaf offerings, the Yom Kippur service, the Shtei HaLechem, and more. The wealthy and the poor were equal before the altar.</p>
               <p style={{fontSize:"0.95rem",color:"#c9a45a",fontStyle:"italic",lineHeight:1.7,margin:0}}>Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. Half a shekel hakodesh = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g silver ({shiur.labelShort}; shekel = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier).toFixed(1)}g = 320 barley grains) = <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier))}</strong> at current silver prices (~${silverUsdPerGram.toFixed(2)}/gram{silverStatus==="live"?<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>:<span style={{color:"#c9a45a",marginLeft:"0.3rem"}}>est.</span>}).</p>
             </div>
 
@@ -896,11 +958,11 @@ export default function korbanosCalculator() {
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:"1rem",marginBottom:"2rem"}}>
               {[
                 {label:"Total Annual Communal Cost",value:fmt(communalTotal),sub:"all public korbanos combined",color:"#f0c060"},
-                {label:"Per Capita Cost",value:fmt(perCapitaCommunal),sub:`assuming ${(ASSUMED_POPULATION/1000).toFixed(0)}k adult males`,color:"#4ec98a"},
-                {label:"Actual Chatzi Shekel",value:fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)),sub:`${(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g silver • ${shiur.labelShort} • ${silverStatus==="live"?"live price":"est. price"}`,color:"#c07ad8"},
+                {label:"Per Capita Cost",value:fmt(perCapitaCommunal),sub:"assuming "+((ASSUMED_POPULATION/1000).toFixed(0))+"k adult males",color:"#4ec98a"},
+                {label:"Actual Chatzi Shekel",value:fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)),sub:((SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1))+"g silver • "+(shiur.labelShort)+" • "+(silverStatus==="live"?"live price":"est. price"),color:"#c07ad8"},
                 {label:"Subsidy per Person",value:fmt(Math.max(0,fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)-perCapitaCommunal)),sub:"chatzi shekel minus per-capita cost",color:"#5aabdf"},
               ].map(({label,value,sub,color})=>(
-                <div key={label} style={{padding:"1.1rem 1.25rem",background:"rgba(24,12,4,.8)",border:`1px solid ${color}44`,borderTop:`3px solid ${color}`}}>
+                <div key={label} style={{padding:"1.1rem 1.25rem",background:"rgba(24,12,4,.8)",border:"1px solid "+(color)+"44",borderTop:"3px solid "+(color)}}>
                   <div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.4rem"}}>{label}</div>
                   <div className="df" style={{fontSize:"1.8rem",color:color,fontWeight:900}}>{value}</div>
                   <div style={{fontSize:"0.85rem",color:"#c9a45a",fontStyle:"italic",marginTop:"0.2rem"}}>{sub}</div>
@@ -952,22 +1014,284 @@ export default function korbanosCalculator() {
             })}
 
             <div style={{marginTop:"1.5rem",padding:"1rem 1.25rem",background:"rgba(240,192,96,.04)",border:"1px solid #5a3a1a",fontSize:"0.9rem",color:"#c9a45a",lineHeight:1.7,fontStyle:"italic"}}>
-              Note: The Kohen Gadol's personal bull on Yom Kippur was not funded by the communal pool — he brought it at his own expense. The 12 Rosh Chodesh musafim assume a standard year; a leap year adds one additional Rosh Chodesh musaf. Population assumption of 600,000 adult males is a conventional figure; actual Second Temple era population estimates vary considerably.
+              Note: The Kohen Gadol's personal bull on Yom Kippur was not funded by the communal pool — he brought it at his own expense. The 12 Rosh Chodesh mussafim assume a standard year; a leap year adds one additional Rosh Chodesh mussaf. Population assumption of 600,000 adult males is a conventional figure; actual Second Temple era population estimates vary considerably.
             </div>
             {disclaimer}
           </div>
         )}
 
+        {/* ══ TODAY'S COMMUNAL COSTS ══ */}
+        {/* ══ TODAY'S COMMUNAL COSTS ══ */}
+        {activeTab==="today"&&(()=>{
+          const todayAbsNow = gregToAbs(new Date());
+          const hd = absToHebrew(todayAbs);
+          const {year:hy, month:hm, day:hday, dow, isLeap} = hd;
+
+          // Day type flags
+          const isShabbat     = dow === 6; // Saturday
+          const isRoshChodesh = hday===1 || (hday===30); // 30th is RC of next month if 30 days
+          // More precise RC: day 1 of any month, or day 30 of a month with 30 days
+          const monthLen = (hMonthInfo(hy).find(e=>e.m===hm)||{d:29}).d;
+          const prevMonthInfo = hMonthInfo(hy);
+          const prevIdx = prevMonthInfo.findIndex(e=>e.m===hm);
+          const prevMonthLen = prevIdx>0 ? prevMonthInfo[prevIdx-1].d : 30;
+          const isRC = hday===1 || (hday===30 && monthLen===30);
+
+          const is14Nisan     = hm===HM.NISAN   && hday===14;
+          const is16Nisan     = hm===HM.NISAN   && hday===16;
+          const isPesach      = hm===HM.NISAN   && hday>=15 && hday<=21;
+          const pesachDay     = isPesach ? hday-14 : 0;
+          const isShavuos     = hm===HM.SIVAN   && hday===6;
+          const isRH          = hm===HM.TISHREI && hday<=2  && hday>=1 && (()=>{const yl=hYearLen(hy); return yl===354||yl===355||yl===353||yl===383||yl===384||yl===385;})();
+          const isYK          = hm===HM.TISHREI && hday===10;
+          const isSukkos      = hm===HM.TISHREI && hday>=15 && hday<=21;
+          const sukkosDay     = isSukkos ? hday-14 : 0;
+          const sukkosBulls   = isSukkos ? 14-sukkosDay : 0;
+          const isShemini     = hm===HM.TISHREI && hday===22;
+          const isCholHamoed  = (hm===HM.NISAN && hday>=16 && hday<=20) || (hm===HM.TISHREI && hday>=16 && hday<=21);
+          const isYomTov      = isPesach||isShavuos||isRH||isYK||isSukkos||isShemini;
+          const isMussafDay    = isYomTov||isShabbat||isRC;
+
+          const getDayLabel=()=>{
+            if(isYK)      return "Yom Kippur";
+            if(is14Nisan) return "14 Nisan — Erev Pesach";
+            if(isShemini) return "Shemini Atzeres";
+            if(isSukkos)  return isCholHamoed?"Sukkos Day "+(sukkosDay)+" — Chol HaMoed":"Sukkos Day "+(sukkosDay);
+            if(isRH)      return isShabbat?"Rosh Hashana & Shabbos":"Rosh Hashana Day "+(hday);
+            if(isShavuos) return "Shavuos";
+            if(isPesach)  return isCholHamoed?"Pesach Day "+(pesachDay)+" — Chol HaMoed":"Pesach Day "+(pesachDay);
+            if(isShabbat && isRC) return "Shabbos Rosh Chodesh";
+            if(isShabbat) return "Shabbos";
+            if(isRC)      return "Rosh Chodesh "+(H_MONTH_NAMES[hday===1?hm:(hm%13)+1]||"");
+            return "Weekday";
+          };
+
+          
+          const blocks=[];
+
+          const tamidMorning=[
+            {label:"Tamid (morning) — 1 lamb + nesachim",key:"lamb_olah",count:1},
+            {label:"Ketores (morning)",key:"ketores",count:1},
+            {label:"Menorah oil — 3.5 log",key:"log_oil",count:3.5},
+          ];
+          const tamidAfternoon=[
+            {label:"Tamid (afternoon) — 1 lamb + nesachim",key:"lamb_olah",count:1},
+            {label:"Ketores (afternoon)",key:"ketores",count:1},
+          ];
+
+          // SHACHARIT
+          const shaOff=[...tamidMorning];
+          if(isShabbat) shaOff.push({label:"Lechem HaPanim placed — 24 issaron flour",key:"issaron_flour",count:24});
+          blocks.push({title:"Shacharit",color:"#f0c060",offerings:shaOff,
+            note:isShabbat?"The Lechem HaPanim (12 loaves) is placed on the golden table; the previous week's loaves are distributed to the kohanim. Source: Vayikra 24:5–9.":undefined});
+
+          // OMER — own block 16 Nisan
+          if(is16Nisan){
+            blocks.push({title:"Korban HaOmer",color:"#4ec98a",
+              offerings:[{label:"1 issaron barley flour (wave offering)",key:"issaron_flour",count:1},{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}],
+              note:"Brought after the morning Tamid on 16 Nisan. Barley wave-offering that permits the new grain harvest. Source: Vayikra 23:9–14."});
+          }
+
+          // MUSAF
+          if(isYK){
+            blocks.push({title:"Mussaf — Yom Kippur",color:"#d4884a",
+              offerings:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
+              note:"Communal mussaf only. Source: Bamidbar 29:7–11."});
+            blocks.push({title:"Avodas Yom Kippur — Public Korbanos",color:"#c07ad8",
+              offerings:[{label:"2 goats — chatas & Azazel",key:"goat",count:2},{label:"Ketores — special machta offering (×2)",key:"ketores",count:2}],
+              note:"The two goats are from the public fund. The Kohen Gadol's personal bull (brought at his own expense) is excluded from this communal total. Source: Vayikra 16."});
+          } else if(isShemini){
+            blocks.push({title:"Mussaf — Shemini Atzeres",color:"#5aabdf",
+              offerings:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
+              note:"A modest intimate offering after the abundance of Sukkos — one of each. Source: Bamidbar 29:35–38."});
+          } else if(isSukkos){
+            blocks.push({title:"Mussaf — Sukkos Day "+(sukkosDay),color:"#5aabdf",
+              offerings:[{label:(sukkosBulls)+" bulls (olah) with nesachim",key:"bull_olah",count:sukkosBulls},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 lambs (olah) with nesachim",key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}],
+              note:"Bull count decreases by one each day (13→7). 70 bulls total over all 7 days represent atonement for the 70 nations. Source: Bamidbar 29:12–34."});
+          } else if(isRH){
+            const off=[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}];
+            if(isShabbat) off.unshift({label:"2 lambs (olah) — Mussaf Shabbos",key:"lamb_olah",count:2});
+            blocks.push({title:"Mussaf — Rosh Hashana"+(isShabbat?" & Shabbos":""),color:"#f0a060",offerings:off,note:"Source: Bamidbar 29:1–6."+(isShabbat?" Both mussafim are brought; Shabbos mussaf listed first.":"")});
+          } else if(isShavuos){
+            blocks.push({title:"Mussaf — Shavuos",color:"#4ec98a",
+              offerings:[{label:"Shtei HaLechem — 2 wheat loaves (4 issaron)",key:"issaron_flour",count:4},{label:"2 lambs (shelamim, accompany Shtei HaLechem)",key:"lamb_olah",count:2},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"2 goats (chatas)",key:"goat",count:2}],
+              note:"The only day leavened bread is offered in the Mikdash (Shtei HaLechem). The two loaves and their lambs are the public shelamim. Source: Vayikra 23:15–21; Bamidbar 28:26–31."});
+          } else if(isPesach){
+            blocks.push({title:"Mussaf — Pesach Day "+(pesachDay)+(isCholHamoed?" (Chol HaMoed)":""),color:"#e0a060",
+              offerings:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
+              note:"Same mussaf on all 7 days of Pesach. Source: Bamidbar 28:19–24."});
+          } else {
+            if(isShabbat){
+              blocks.push({title:"Mussaf — Shabbos",color:"#f0c060",
+                offerings:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2}],
+                note:"Source: Bamidbar 28:9–10."});
+            }
+            if(isRC){
+              blocks.push({title:"Mussaf — Rosh Chodesh",color:"#c9a45a",
+                offerings:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
+                note:"Source: Bamidbar 28:11–15."});
+            }
+          }
+
+          // MINCHA — always
+          blocks.push({title:"Mincha / Afternoon",color:"#f0c060",offerings:tamidAfternoon});
+
+          // Pricing
+          const oCost=(key,count)=>compCost(key,count,P);
+          const bTotal=(b)=>b.offerings.reduce((s,o)=>s+oCost(o.key,o.count),0);
+          const dayTotal=blocks.reduce((s,b)=>s+bTotal(b),0);
+
+          // Jump targets — next occurrence from todayAbs
+          const nextOcc=(m,d)=>{
+            let y=absToHebrew(todayAbs).year;
+            for(let attempt=0;attempt<3;attempt++){
+              // check month exists in year (Adar II only in leap)
+              if(m===HM.ADAR_II&&!isHLeap(y)){y++;continue;}
+              const mi=hMonthInfo(y);if(!mi.find(e=>e.m===m)){y++;continue;}
+              const target=hebrewToAbs(y,m,d);
+              if(target>=todayAbs) return target;
+              y++;
+            }
+            return hebrewToAbs(absToHebrew(todayAbs).year+1,m,d);
+          };
+          const nextShabbos=()=>{const daysUntil=(6-dow+7)%7||7;return todayAbs+daysUntil;};
+          const nextRC=()=>{
+            let test=todayAbs+1;
+            for(let i=0;i<35;i++){const h=absToHebrew(test+i);if(h.day===1)return test+i;}
+            return nextOcc(HM.TISHREI,1);
+          };
+          const nextWeekday=()=>{
+            let t=todayAbs+1;
+            while(true){const d=absToHebrew(t).dow;if(d!==6&&d!==0)return t;t++;}
+          };
+
+          const JUMP_GROUPS=[
+            {label:"Regular",col:"#c9a45a",items:[
+              {label:"Next Weekday",abs:nextWeekday()},
+              {label:"Next Shabbos",abs:nextShabbos()},
+              {label:"Next Rosh Chodesh",abs:nextRC()},
+            ]},
+            {label:"Pesach",col:"#e0a060",items:[
+              {label:"14 Nisan",abs:nextOcc(HM.NISAN,14)},
+              {label:"Day 1",abs:nextOcc(HM.NISAN,15)},
+              {label:"Day 2 / Omer",abs:nextOcc(HM.NISAN,16)},
+              {label:"Day 3",abs:nextOcc(HM.NISAN,17)},
+              {label:"Day 4",abs:nextOcc(HM.NISAN,18)},
+              {label:"Day 5",abs:nextOcc(HM.NISAN,19)},
+              {label:"Day 6",abs:nextOcc(HM.NISAN,20)},
+              {label:"Day 7",abs:nextOcc(HM.NISAN,21)},
+            ]},
+            {label:"Sukkos",col:"#5aabdf",items:[
+              {label:"Day 1",abs:nextOcc(HM.TISHREI,15)},
+              {label:"Day 2",abs:nextOcc(HM.TISHREI,16)},
+              {label:"Day 3",abs:nextOcc(HM.TISHREI,17)},
+              {label:"Day 4",abs:nextOcc(HM.TISHREI,18)},
+              {label:"Day 5",abs:nextOcc(HM.TISHREI,19)},
+              {label:"Day 6",abs:nextOcc(HM.TISHREI,20)},
+              {label:"Day 7",abs:nextOcc(HM.TISHREI,21)},
+              {label:"Shemini Atzeres",abs:nextOcc(HM.TISHREI,22)},
+            ]},
+            {label:"Shavuos",col:"#4ec98a",items:[
+              {label:"Shavuos",abs:nextOcc(HM.SIVAN,6)},
+            ]},
+            {label:"Yamim Noraim",col:"#d4884a",items:[
+              {label:"Rosh Hashana",abs:nextOcc(HM.TISHREI,1)},
+              {label:"Yom Kippur",abs:nextOcc(HM.TISHREI,10)},
+            ]},
+          ];
+
+          const hebrewStr=(hday)+" "+(H_MONTH_NAMES[hm]||"")+" "+(hy);
+          const gregDate=absToGreg(todayAbs).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+          const isActualToday=todayAbs===todayAbsNow;
+
+          return(
+          <div className="fi">
+            {/* Date nav */}
+            <div style={{marginBottom:"1.5rem",padding:"1.25rem",background:"rgba(20,10,2,.8)",border:"1px solid #7a4f20"}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"0.75rem",marginBottom:"1rem"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"0.75rem"}}>
+                  <button onClick={()=>setTodayAbs(a=>a-1)} style={{width:36,height:36,background:"#2a1a08",border:"1px solid #7a4f20",color:"#f0c060",cursor:"pointer",fontSize:"1.3rem",fontFamily:"inherit",lineHeight:1}}>‹</button>
+                  <div style={{textAlign:"center",minWidth:200}}>
+                    <div style={{fontFamily:"'Cinzel',serif",fontSize:"1.1rem",color:"#f0ddb0",fontWeight:700}}>{hebrewStr}</div>
+                    <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic"}}>{gregDate}</div>
+                  </div>
+                  <button onClick={()=>setTodayAbs(a=>a+1)} style={{width:36,height:36,background:"#2a1a08",border:"1px solid #7a4f20",color:"#f0c060",cursor:"pointer",fontSize:"1.3rem",fontFamily:"inherit",lineHeight:1}}>›</button>
+                </div>
+                <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
+                  {!isActualToday&&<button onClick={()=>setTodayAbs(todayAbsNow)} style={{padding:"0.4rem 0.9rem",background:"transparent",border:"1px solid #4ec98a",color:"#4ec98a",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.08em"}}>Today</button>}
+                  <div style={{padding:"0.35rem 0.8rem",background:"rgba(240,192,96,.1)",border:"1px solid #7a4f20",color:"#f0c060",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.06em"}}>{getDayLabel()}</div>
+                </div>
+              </div>
+              {/* Jump buttons */}
+              <div style={{borderTop:"1px solid #3a2010",paddingTop:"0.85rem"}}>
+                <div style={{fontSize:"0.75rem",color:"#5a3a1a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.55rem"}}>Jump to next</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"0.45rem"}}>
+                  {JUMP_GROUPS.map(g=>(
+                    <div key={g.label} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
+                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{g.label}</span>
+                      {g.items.map(item=>{
+                        const active=item.abs===todayAbs;
+                        return(<button key={item.label} onClick={()=>setTodayAbs(item.abs)} style={{padding:"0.28rem 0.6rem",background:active?"rgba(240,192,96,.12)":"transparent",border:"1px solid "+(active?g.col:"#3a2010"),color:active?g.col:"#7a5030",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.76rem",letterSpacing:"0.05em",whiteSpace:"nowrap"}}>{item.label}</button>);
+                      })}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Avodah blocks */}
+            {blocks.map((block,bi)=>{
+              const bt=bTotal(block);
+              return(
+              <div key={bi} style={{marginBottom:"1.1rem",background:"rgba(24,12,4,.7)",border:"1px solid #5a3a1a",borderLeft:"4px solid "+(block.color)}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",padding:"0.65rem 1rem",borderBottom:"1px solid #3a2010"}}>
+                  <span style={{fontFamily:"'Cinzel',serif",fontSize:"0.88rem",color:block.color,letterSpacing:"0.1em",textTransform:"uppercase",fontWeight:700}}>{block.title}</span>
+                  <span style={{fontFamily:"'Cinzel',serif",fontSize:"1.15rem",color:block.color,fontWeight:700}}>{fmt(bt)}</span>
+                </div>
+                <table style={{width:"100%",borderCollapse:"collapse",fontSize:"0.91rem"}}>
+                  <tbody>
+                    {block.offerings.map((o,oi)=>(
+                      <tr key={oi} style={{borderBottom:"1px dotted #2a1404"}}>
+                        <td style={{padding:"0.35rem 1rem",color:"#e8d4a0"}}>{o.label}</td>
+                        <td style={{padding:"0.35rem 1rem",textAlign:"right",color:block.color,fontFamily:"'Cinzel',serif",fontSize:"0.86rem",whiteSpace:"nowrap"}}>{fmt(oCost(o.key,o.count))}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {block.note&&<div style={{padding:"0.45rem 1rem",fontSize:"0.83rem",color:"#7a5030",fontStyle:"italic",lineHeight:1.6,borderTop:"1px dotted #2a1404"}}>{block.note}</div>}
+              </div>
+              );
+            })}
+
+            {/* Day total */}
+            <div style={{padding:"1.1rem 1.4rem",background:"linear-gradient(135deg,#4a2808,#2a1404)",border:"2px solid #f0c060",display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1.1rem"}}>
+              <div>
+                <div style={{fontSize:"0.85rem",color:"#f0ddb0",letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.1rem"}}>Total — {getDayLabel()}</div>
+                <div style={{fontSize:"0.8rem",color:"#a08050",fontStyle:"italic"}}>Public korbanos only · current Jerusalem prices</div>
+              </div>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"2.2rem",color:"#f0c060",fontWeight:900}}>{fmt(dayTotal)}</div>
+            </div>
+
+            {/* Ma'arachah note */}
+            <div style={{padding:"0.8rem 1rem",background:"rgba(20,10,2,.5)",border:"1px solid #2a1404",borderLeft:"3px solid #3a2010",fontSize:"0.85rem",color:"#5a3a1a",lineHeight:1.7,fontStyle:"italic",marginBottom:"1.1rem"}}>
+              <strong style={{color:"#7a5030",fontStyle:"normal"}}>Ma'arachah — overnight fire:</strong> The mizbeach fire burns continuously through the night (Vayikra 6:5–6). Fats and limbs from daytime korbanos continue consuming overnight — these are included in the animal costs above. Additional wood for the ma'arachah (Rambam Hilchos Temidin 2:4) adds a nominal amount not separately itemized.
+            </div>
+
+            {disclaimer}
+          </div>
+          );
+        })()}
+
         {/* ══ FULL CATALOG ══ */}
         {activeTab==="catalog"&&(
           <div className="fi">
             <div style={{display:"flex",justifyContent:"center",gap:"0.5rem",flexWrap:"wrap",marginBottom:"1.5rem"}}>
-              {GROUPS.map(g=><button key={g} onClick={()=>setActiveGroup(g)} style={{padding:"0.55rem 1.1rem",background:activeGroup===g?"#daa520":"transparent",color:activeGroup===g?"#1a0f08":"#f0c060",border:`1px solid ${activeGroup===g?"#daa520":"#7a4f20"}`,cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase"}}>{g}</button>)}
+              {GROUPS.map(g=><button key={g} onClick={()=>setActiveGroup(g)} style={{padding:"0.55rem 1.1rem",background:activeGroup===g?"#daa520":"transparent",color:activeGroup===g?"#1a0f08":"#f0c060",border:"1px solid "+(activeGroup===g?"#daa520":"#7a4f20"),cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase"}}>{g}</button>)}
             </div>
             <div style={{display:"flex",flexDirection:"column",gap:"0.9rem"}}>
               {filtered.map(s=>{
                 const count=counts[s.id]||0,cost=offeringTotal(s,P),isExp=expanded[s.id];
-                return(<div key={s.id} style={{background:count>0?"linear-gradient(135deg,rgba(139,69,19,.2),rgba(30,14,6,.7))":"rgba(24,12,4,.7)",border:`1px solid ${count>0?"#f0c060":"#5a3a1a"}`,borderLeft:`4px solid ${count>0?"#f0c060":"#3a2010"}`,padding:"1.1rem"}}>
+                return(<div key={s.id} style={{background:count>0?"linear-gradient(135deg,rgba(139,69,19,.2),rgba(30,14,6,.7))":"rgba(24,12,4,.7)",border:"1px solid "+(count>0?"#f0c060":"#5a3a1a"),borderLeft:"4px solid "+(count>0?"#f0c060":"#3a2010"),padding:"1.1rem"}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem",marginBottom:"0.7rem",flexWrap:"wrap"}}>
                     <div style={{flex:"1 1 260px"}}>
                       <div style={{display:"flex",alignItems:"baseline",gap:"0.6rem",flexWrap:"wrap"}}>
@@ -1048,7 +1372,7 @@ export default function korbanosCalculator() {
                   const isFixed=key==="ketores"||key==="frankincense"||key==="wood"||key==="salt";
                   const baseNIS=JLM_NIS[key];const m=(isAgr&&!isFixed)?shiur.multiplier:1;const adjNIS=baseNIS*m;const usdPrice=adjNIS*usdPerNis;
                   const isExp=expandedPrice[key];const {src,url,note}=JLM_SOURCES[key];
-                  return(<div key={key} style={{background:"rgba(24,12,4,.7)",border:"1px solid #5a3a1a",borderLeft:`4px solid ${isAgr?"#b070e0":"#7a4f20"}`,padding:"0.9rem 1rem",marginBottom:"0.55rem"}}>
+                  return(<div key={key} style={{background:"rgba(24,12,4,.7)",border:"1px solid #5a3a1a",borderLeft:"4px solid "+(isAgr?"#b070e0":"#7a4f20"),padding:"0.9rem 1rem",marginBottom:"0.55rem"}}>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem",flexWrap:"wrap"}}>
                       <div style={{flex:"1 1 200px"}}>
                         <div style={{display:"flex",alignItems:"baseline",gap:"0.5rem",flexWrap:"wrap"}}>
@@ -1081,11 +1405,11 @@ export default function korbanosCalculator() {
                 <span style={{fontSize:"0.88rem",color:"#a08050",fontStyle:"italic"}}>per {shiur.labelShort}</span>
               </div>
               {[
-                {unit:"Ephah",   equiv:`${(shiur.issaron_L*10).toFixed(1)}L`,        basis:`10 x issaron. ${shiur.labelShort}: ${shiur.issaron_L}L per issaron.`},
-                {unit:"Issaron", equiv:`${shiur.issaron_L}L / ~${shiur.issaron_kg}kg flour`,basis:`1/10 ephah. (${shiur.source})`},
-                {unit:"Hin",     equiv:`${(shiur.log_ml*12/1000).toFixed(2)}L`,       basis:`12 log. log=${shiur.log_ml}ml.`},
-                {unit:"Log",     equiv:`${shiur.log_ml}ml (~${(shiur.log_ml/29.57).toFixed(1)} fl oz)`,basis:`6 beitzim. beitzah=${shiur.beitzah_ml}ml.`},
-                {unit:"Beitzah", equiv:`${shiur.beitzah_ml}ml`,                       basis:shiur.source},
+                {unit:"Ephah",   equiv:((shiur.issaron_L*10).toFixed(1))+"L",        basis:"10 x issaron. "+(shiur.labelShort)+": "+(shiur.issaron_L)+"L per issaron."},
+                {unit:"Issaron", equiv:(shiur.issaron_L)+"L / ~"+(shiur.issaron_kg)+"kg flour",basis:"1/10 ephah. ("+(shiur.source)+")"},
+                {unit:"Hin",     equiv:((shiur.log_ml*12/1000).toFixed(2))+"L",       basis:"12 log. log="+(shiur.log_ml)+"ml."},
+                {unit:"Log",     equiv:(shiur.log_ml)+"ml (~"+((shiur.log_ml/29.57).toFixed(1))+" fl oz)",basis:"6 beitzim. beitzah="+(shiur.beitzah_ml)+"ml."},
+                {unit:"Beitzah", equiv:(shiur.beitzah_ml)+"ml",                       basis:shiur.source},
                 {unit:"Komatz",  equiv:"~1-2 oz resin",                                basis:"Three-finger pinch. Unaffected by volume shiurim."},
               ].map(m=>(
                 <div key={m.unit} style={{display:"flex",gap:"1rem",padding:"0.6rem 0",borderBottom:"1px dotted #5a3a1a",flexWrap:"wrap"}}>
@@ -1111,4 +1435,4 @@ export default function korbanosCalculator() {
   );
 }
 
-function qBtn(e){return{width:38,height:38,background:e?"#7a4f20":"#2a1a08",border:`1px solid ${e?"#c9a45a":"#5a3a1a"}`,color:e?"#f0ddb0":"#5a3a1a",cursor:e?"pointer":"not-allowed",fontSize:"1.2rem",fontFamily:"inherit",opacity:e?1:0.4};}
+function qBtn(e){return{width:38,height:38,background:e?"#7a4f20":"#2a1a08",border:"1px solid "+(e?"#c9a45a":"#5a3a1a"),color:e?"#f0ddb0":"#5a3a1a",cursor:e?"pointer":"not-allowed",fontSize:"1.2rem",fontFamily:"inherit",opacity:e?1:0.4};}
