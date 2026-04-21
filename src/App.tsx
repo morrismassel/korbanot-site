@@ -124,8 +124,9 @@ const V = {
       {act:"Smeared ointment on Shabbos not knowing memareiach applies",detail:"Toladah of memachek; often unknown"},
       {act:"Physical contact b'shogeg with a niddah",detail:"Niddah carries kareis; inadvertent contact"},
       {act:"Relations during a period later confirmed as niddah",detail:"Common circumstance; kareis violation b'shogeg"},
-      {act:"Ate a dish containing meat cooked with butter b'shogeg",detail:"D'oraisa basar b'chalav; thought it was pareve"},
       {act:"Alone in an elevator with female colleague - door closed",detail:"If the underlying arayos issur was crossed b'shogeg"},
+      {act:"Ate chelev (forbidden fats)"},
+
     ],
     nonKareis:[
       {act:"Handled muktzeh on Shabbos",detail:"Rabbinic - no chatas"},
@@ -139,7 +140,7 @@ const V = {
   asham_talui:{
     kareis:[
       {act:"Unsure whether an elevator yichud situation went further",detail:"Classic asham toluy case - genuine doubt about whether the arayos issur was violated"},
-      {act:"Ate something at an event - unsure if it was basar b'chalav",detail:"Could not identify ingredients; genuine uncertainty about a kareis prohibition"},
+      {act:"Ate something at an event - unsure if it was chelev",detail:"Could not identify ingredients; genuine uncertainty about a kareis prohibition"},
       {act:"Uncertain whether relations with wife occurred during niddah",detail:"Genuine doubt about a kareis violation generates an asham toluy"},
       {act:"Performed a melacha - uncertain of exact mental state at the time",detail:"Doubt about whether it constituted shogeg generates an asham toluy"},
       {act:"Kissed a relative - uncertain whether the relationship falls under arayos",detail:"Some relationships are disputed; genuine doubt triggers an asham toluy"},
