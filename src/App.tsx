@@ -117,7 +117,7 @@ const V = {
     kareis:[
       {act:"Pushed a stroller outside the valid eruv boundary",detail:"Eruv route assumed valid; later found posul"},
       {act:"Tore along a perforated line on Shabbos",detail:"Kore'a - a common toladah not widely known"},
-      {act:"Squeezed a lemon into a drink on Shabbos",detail:"Sechita - toladah of dash (threshing)"},
+      {act:"Picked an apple from a tree on Shabbos", detail:"Tolesh — Detaching a fruit from its source is a toladah of Kotzer-reaping)"},
       {act:"Wrote a note, forgetting it was Shabbos",detail:"Kotev - shogeg Shabbos, classic case"},
       {act:"Switched on a light momentarily forgetting Shabbos",detail:"Mav'ir - shogeg Shabbos"},
       {act:"Sorted items on Shabbos not knowing borer applies",detail:"Borer - very common unknowing violation"},
