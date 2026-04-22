@@ -1,5 +1,5 @@
 // Korbanos Calculator — V4 build 1776860187
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef} from "react";
 
 // ── Shiurim ───────────────────────────────────────────────────────────────────
 const SHIURIM = {
@@ -617,7 +617,6 @@ const CITE_LINKS = {
   "Shemos 27:20":      "https://www.sefaria.org/Exodus.27.20",
   "Shemos 30:7-8":     "https://www.sefaria.org/Exodus.30.7",
   "Shemos 12:6":       "https://www.sefaria.org/Exodus.12.6",
-  "Bamidbar 18:15-16": "https://www.sefaria.org/Numbers.18.15",
   "Pesachim 70a-71a":  "https://www.sefaria.org/Pesachim.70a",
   "Yoma 26b":          "https://www.sefaria.org/Yoma.26b",
   "Kerisos 6a":        "https://www.sefaria.org/Keritot.6a",
@@ -2099,9 +2098,9 @@ export default function korbanosCalculator() {
 }
 
 function GlossaryTerm({term, children}){
-  const [show, setShow] = React.useState(false);
-  const [pos, setPos] = React.useState({top:0,left:0});
-  const ref = React.useRef(null);
+  const [show, setShow] = useState(false);
+  const [pos, setPos] = useState({top:0,left:0});
+  const ref = useRef(null);
   const def = GLOSSARY[term.toLowerCase()];
   if(!def) return children;
   const handleEnter = ()=>{
