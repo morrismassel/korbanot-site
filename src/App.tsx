@@ -11,7 +11,7 @@ const SHIURIM = {
 // ── Jerusalem prices (NIS) ────────────────────────────────────────────────────
 const JLM_NIS = {
   bull:9000, ram:1200, lamb:700, goat:650, bird:30,
-  issaron_flour:18, log_oil:12, log_wine:15, frankincense:25, salt:2, wood:45,
+  issaron_flour:28, log_oil:12, log_wine:15, frankincense:25, salt:2, wood:45,
   ketores:1072,
 };
 const JLM_SOURCES = {
@@ -20,7 +20,7 @@ const JLM_SOURCES = {
   lamb:        { src:"Central Sheep & Goat Market, Israel",      url:"https://www.moag.gov.il", note:"Yearling lamb at Israeli auction. High domestic consumption; robust supply." },
   goat:        { src:"Central Sheep & Goat Market, Israel",      url:"https://www.moag.gov.il", note:"Widely raised domestically." },
   bird:        { src:"Israeli poultry wholesale market",          url:"https://www.moag.gov.il", note:"Squab consumption common in Middle Eastern cuisine; local supply." },
-  issaron_flour:{ src:"Osem / Sugat fine wheat flour; Israeli supermarket retail", url:"https://www.osem.co.il", note:"Domestic wheat production subsidized. R' Naeh baseline: approx 2.4kg per issaron." },
+  issaron_flour:{ src:"Solet — semolina-grade wheat flour; Israeli supermarket retail (Sugat/Osem semolina)", url:"https://www.osem.co.il", note:"Solet is properly semolina-grade wheat, coarsely ground and sifted — not fine flour (Menachos 27a, Rashi s.v. Solet=Geres; Avos 5:15). Priced at Jerusalem semolina market rates (~NIS 28/kg). R' Naeh baseline: approx 2.4kg per issaron." },
   log_oil:     { src:"Domestic Israeli extra-virgin olive oil; Galilee production", url:"https://www.zait.co.il", note:"Significantly cheaper than US kosher imports. Mikdash required first-pressing quality." },
   log_wine:    { src:"Israeli table wine; Golan Heights Winery, Carmel",            url:"https://www.golanwines.co.il", note:"No import markup. Must be aged 40+ days (Menachot 87a)." },
   frankincense:{ src:"Machane Yehuda spice market; imported Omani frankincense",    url:"https://www.mahane-yehuda.com", note:"Boswellia sacra resin. Komatz approx 1-2 oz." },
@@ -717,7 +717,7 @@ export default function korbanosCalculator() {
   const perCapitaCommunal  = communalTotal/ASSUMED_POPULATION;
 
   const catalogTotal    = useMemo(()=>CATALOG.reduce((s,c)=>s+(counts[c.id]||0)*offeringTotal(c,P),0),[counts,P]);
-  const catalogSelected = useMemo(()=>Object.values(counts).reduce<number>((a,b)=>a+(((b as unknown) as number)||0),0),[counts]);
+  const catalogSelected = useMemo(()=>Object.values(counts).reduce((a,b)=>a+(b||0),0),[counts]);
   const filtered        = CATALOG.filter(s=>s.group===activeGroup);
 
   const lbl = {fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.5rem"};
@@ -794,6 +794,9 @@ export default function korbanosCalculator() {
                     {lang===l.code&&<span style={{color:"#f0c060",marginRight:6,fontSize:"0.65rem"}}>✦</span>}{l.label}
                   </button>
                 ))}
+                <div style={{padding:"0.6rem 1rem",borderTop:"1px solid #2a1404",fontSize:"0.72rem",color:"#3a2010",lineHeight:1.5,fontStyle:"italic",fontFamily:"'EB Garamond',serif"}}>
+                  Interface translated by AI. Halachic content and detailed notes remain in English.
+                </div>
               </div>
             )}
           </div>
@@ -991,7 +994,7 @@ export default function korbanosCalculator() {
                   const going=regalimAttending[id];
                   return(<button key={id} onClick={()=>setRegalimAttending(r=>({...r,[id]:!r[id]}))} style={{display:"flex",alignItems:"center",gap:"0.6rem",padding:"0.65rem 1.2rem",background:going?"rgba(240,192,96,.15)":"rgba(30,14,6,.8)",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),color:going?"#f0ddb0":"#7a5030",cursor:"pointer",fontFamily:"inherit"}}>
                     <div style={{width:16,height:16,borderRadius:"50%",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),background:going?"#f0c060":"transparent",flexShrink:0}}/>
-                    <span style={{fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{T(tkey)}</span>
+                    <span style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{T(tkey)}</span>
                   </button>);
                 })}
               </div>
@@ -1482,8 +1485,8 @@ export default function korbanosCalculator() {
                 <div style={{fontSize:"0.75rem",color:"#5a3a1a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.55rem"}}>{T("jump_to")}</div>
                 <div style={{display:"flex",flexDirection:"column",gap:"0.45rem"}}>
                   {JUMP_GROUPS.map(g=>(
-                    <div key={g.tkey} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
-                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{T(g.tkey)}</span>
+                    <div key={g.tkey||g.label} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
+                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{g.tkey?T(g.tkey):g.label}</span>
                       {g.items.map(item=>{
                         const active=item.abs===todayAbs;
                         return(<button key={item.tkey||item.label} onClick={()=>setTodayAbs(item.abs)} style={{padding:"0.28rem 0.6rem",background:active?"rgba(240,192,96,.12)":"transparent",border:"1px solid "+(active?g.col:"#3a2010"),color:active?g.col:"#7a5030",cursor:"pointer",fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",fontSize:"0.76rem",letterSpacing:"0.05em",whiteSpace:"nowrap"}}>{item.tkey?T(item.tkey):item.label}</button>);
