@@ -65,33 +65,33 @@ const fmtNIS = n=>"₪"+n.toLocaleString("en-US",{minimumFractionDigits:0,maximu
 
 // ── Catalog ───────────────────────────────────────────────────────────────────
 const CATALOG = [
-  {id:"tamid", sefaria:"https://www.sefaria.org/Numbers.28.3",group:"Daily & Weekly",hebrew:"תָּמִיד",name:"Korban Tamid",subtitle:"The twice-daily continual offering",source:"Bamidbar 28:3-8",description:"Two yearling male lambs as olah each day with libations and wood. Ketores and menorah oil are listed separately in the communal budget.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Altar wood",key:"wood",count:1}]},
-  {id:"ketores_daily", sefaria:"https://www.sefaria.org/Exodus.30.7",group:"Daily & Weekly",hebrew:"קְטֹרֶת",name:"Ketores - Daily Incense",subtitle:"Morning and afternoon incense offering",source:"Shemot 30:7-8; Yoma 26b; Kerisos 6a",description:"The 11-spice incense offered twice daily on the golden altar. One of the most expensive communal obligations. Per Kerisos 6a the annual batch is 368 maneh (~184kg): stacte, onycha, galbanum, and frankincense (70 maneh each); myrrh, cassia, spikenard, and saffron (16 maneh each); costus (12 maneh), aromatic bark (3 maneh), cinnamon (9 maneh). Saffron alone — at ~NIS 50/gram wholesale — accounts for over half the total cost. Price reflects a composite calculation across all 11 spices at Jerusalem wholesale rates; annual total ~NIS 782,000 ÷ 730 offerings.",components:[{label:"11-spice blend (full offering)",key:"ketores",count:1}]},
-  {id:"menorah_oil", sefaria:"https://www.sefaria.org/Exodus.27.20",group:"Daily & Weekly",hebrew:"שֶׁמֶן הַמְּנוֹרָה",name:"Menorah Oil",subtitle:"Pure olive oil for the golden menorah",source:"Shemot 27:20; Menachos 89a",description:"Pure beaten olive oil lit each evening (and replenished each morning) in the seven-branched golden menorah. The Talmud (Menachos 89a) records the precise amount used. Approximately half a log per lamp per day for the six outer lamps; the western lamp burned continuously. Total daily consumption approximately 3.5 log of first-pressing olive oil.",components:[{label:"Olive oil (3.5 log daily)",key:"log_oil",count:3.5}]},
-  {id:"shabbat", sefaria:"https://www.sefaria.org/Numbers.28.9",group:"Daily & Weekly",hebrew:"מוּסַף שַׁבָּת",name:"Mussaf Shabbos",subtitle:"Additional offering for the Sabbath",source:"Bamidbar 28:9-10",description:"Two yearling male lambs as olah with nesachim, plus lechem hapanim.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Lechem hapanim (24 issaron)",key:"issaron_flour",count:24}]},
-  {id:"rosh_chodesh", sefaria:"https://www.sefaria.org/Numbers.28.11",group:"Daily & Weekly",hebrew:"רֹאשׁ חֹדֶשׁ",name:"Mussaf Rosh Chodesh",subtitle:"Additional offering for the new month",source:"Bamidbar 28:11-15",description:"Two bulls, one ram, seven lambs as olah with nesachim, plus one goat as chatas.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"pesach", sefaria:"https://www.sefaria.org/Exodus.12.3",group:"Pilgrimage Festivals",hebrew:"פֶּסַח",name:"Korban Pesach",subtitle:"Paschal offering (14 Nisan)",source:"Shemot 12; Bamidbar 9",description:"A yearling lamb or kid, roasted whole, eaten by a registered group on the night of the 15th.",components:[{label:"1 lamb (pesach)",key:"lamb",count:1}]},
-  {id:"chagigah_14", sefaria:"https://www.sefaria.org/Pesachim.70a",group:"Pilgrimage Festivals",hebrew:"חֲגִיגַת י\"ד",name:"Chagigat 14 Nisan",subtitle:"The supplementary festive offering on Erev Pesach",source:"Pesachim 70a-71a; Rambam Hilchos Korban Pesach 10:12",description:"When 14 Nisan falls on a weekday, a shelamim is brought alongside the Korban Pesach to supplement the seder meal, ensuring there is additional meat so that the Korban Pesach is eaten al hasova (on satiety) rather than out of hunger. Brought only on 14 Nisan, unlike the standard chagigah which is brought on the first day of the regel. Eaten on the night of the 15th before the Pesach itself.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
-  {id:"pesach_mussaf_day", sefaria:"https://www.sefaria.org/Numbers.28.19",group:"Pilgrimage Festivals",hebrew:"מוּסַף פֶּסַח",name:"Mussaf of Pesach - one day",subtitle:"Per day, for each of the 7 days",source:"Bamidbar 28:19-24",description:"2 bulls, 1 ram, 7 lambs as olah with nesachim, and 1 goat as chatas.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"omer", sefaria:"https://www.sefaria.org/Leviticus.23.9",group:"Pilgrimage Festivals",hebrew:"עֹמֶר",name:"Korban HaOmer",subtitle:"Barley wave-offering (16 Nisan)",source:"Vayikra 23:9-14",description:"One issaron of barley flour with a yearling male lamb as olah and its libation.",components:[{label:"1 issaron barley flour",key:"issaron_flour",count:1},{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
-  {id:"shavuot", sefaria:"https://www.sefaria.org/Leviticus.23.15",group:"Pilgrimage Festivals",hebrew:"שָׁבֻעוֹת",name:"Shavuos - Full Day",subtitle:"Including the Two Loaves and peace offerings",source:"Vayikra 23:15-21; Bamidbar 28:26-31",description:"Shtei HaLechem with 2 lambs as shelamim, plus full mussaf and chatas.",components:[{label:"Shtei HaLechem (4 issaron)",key:"issaron_flour",count:4},{label:"2 lambs (shelamim)",key:"lamb_olah",count:2},{label:"Mussaf: 7 lambs",key:"lamb_olah",count:7},{label:"Mussaf: 1 bull",key:"bull_olah",count:1},{label:"Mussaf: 2 rams",key:"ram_olah",count:2},{label:"Bamidbar 28: 2 bulls",key:"bull_olah",count:2},{label:"Bamidbar 28: 1 ram",key:"ram_olah",count:1},{label:"Bamidbar 28: 7 lambs",key:"lamb_olah",count:7},{label:"2 goats (chatas)",key:"goat",count:2}]},
-  {id:"rosh_hashanah", sefaria:"https://www.sefaria.org/Numbers.29.1",group:"Pilgrimage Festivals",hebrew:"רֹאשׁ הַשָּׁנָה",name:"Mussaf Rosh Hashana",subtitle:"New Year additional offering",source:"Bamidbar 29:1-6",description:"1 bull, 1 ram, 7 lambs as olah with nesachim, plus 1 goat as chatas.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"yom_kippur", sefaria:"https://www.sefaria.org/Leviticus.16.3",group:"Pilgrimage Festivals",hebrew:"יוֹם הַכִּפּוּרִים",name:"Yom Kippur - Full Service",subtitle:"The avodah of the Kohen Gadol",source:"Vayikra 16; Bamidbar 29:7-11",description:"The high priest's personal bull, two goats, two rams, and communal mussaf.",components:[{label:"Kohen Gadol's bull (chatas)",key:"bull",count:1},{label:"2 goats (chatas + Azazel)",key:"goat",count:2},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"Mussaf: 1 bull",key:"bull_olah",count:1},{label:"Mussaf: 1 ram",key:"ram_olah",count:1},{label:"Mussaf: 7 lambs",key:"lamb_olah",count:7},{label:"Mussaf goat (chatas)",key:"goat",count:1},{label:"Ketores",key:"frankincense",count:4}]},
-  {id:"sukkot_day1",group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - יוֹם א",name:"Sukkos - Day 1",subtitle:"Largest animal offering of the year",source:"Bamidbar 29:12-16",description:"13 bulls, 2 rams, 14 lambs as olah with nesachim, plus 1 goat as chatas.",components:[{label:"13 bulls (olah) with nesachim",key:"bull_olah",count:13},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 lambs (olah) with nesachim",key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"sukkot_all", sefaria:"https://www.sefaria.org/Numbers.29.13",group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - כָּל הַיָּמִים",name:"Sukkos - All 7 Days",subtitle:"70 bulls total, representing 70 nations",source:"Bamidbar 29:12-34",description:"Seven days: 70 bulls, 14 rams, 98 lambs as olah, plus 7 goats as chatas.",components:[{label:"70 bulls (olah) with nesachim",key:"bull_olah",count:70},{label:"14 rams (olah) with nesachim",key:"ram_olah",count:14},{label:"98 lambs (olah) with nesachim",key:"lamb_olah",count:98},{label:"7 goats (chatas)",key:"goat",count:7}]},
-  {id:"shemini_atzeret", sefaria:"https://www.sefaria.org/Numbers.29.35",group:"Pilgrimage Festivals",hebrew:"שְׁמִינִי עֲצֶרֶת",name:"Shemini Atzeres",subtitle:"The eighth-day assembly",source:"Bamidbar 29:35-38",description:"1 bull, 1 ram, 7 lambs as olah with nesachim + 1 goat as chatas.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"chatat_individual", sefaria:"https://www.sefaria.org/Leviticus.4.27",group:"Individual Offerings",hebrew:"חַטָּאת יָחִיד",name:"Chatas - Individual Sin Offering",subtitle:"For inadvertent transgression of a kareis prohibition",source:"Vayikra 4:27-35",description:"An individual who inadvertently violated a kareis prohibition brings a female goat as chatas.",components:[{label:"1 female goat (chatas)",key:"goat",count:1}]},
-  {id:"asham",group:"Individual Offerings",hebrew:"אָשָׁם",name:"Asham - Guilt Offering",subtitle:"Ram for misappropriation or doubt",source:"Vayikra 5:14-26",description:"For misusing sanctified property, certain oaths, or doubt cases: a male ram with nesachim.",components:[{label:"1 ram (asham) with nesachim",key:"ram_olah",count:1}]},
-  {id:"olah_animal", sefaria:"https://www.sefaria.org/Leviticus.1.2",group:"Individual Offerings",hebrew:"עוֹלָה",name:"Olah - Voluntary Burnt Offering",subtitle:"Wholly consumed on the altar",source:"Vayikra 1",description:"A voluntary ascent-offering. One male lamb with its libation.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
-  {id:"olah_bird",group:"Individual Offerings",hebrew:"עוֹלַת הָעוֹף",name:"Olah of the Poor - Bird",subtitle:"For one unable to afford an animal",source:"Vayikra 1:14-17",description:"A turtledove or young pigeon as olah. No nesachim.",components:[{label:"1 bird (olah)",key:"bird",count:1}]},
-  {id:"shelamim", sefaria:"https://www.sefaria.org/Leviticus.3.1",group:"Individual Offerings",hebrew:"שְׁלָמִים",name:"Shelamim - Peace Offering",subtitle:"Eaten by owner, priest, and altar",source:"Vayikra 3; 7:11-21",description:"A voluntary peace-offering. One mature ram with libation.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
-  {id:"shalmei_simcha", sefaria:"https://www.sefaria.org/Mishneh_Torah,_Yom_Tov.6.17", source:"Devarim 27:7; Rambam Hilchos Yom Tov 6:17", sefaria:"https://www.sefaria.org/Mishneh_Torah,_Yom_Tov.6.17",group:"Individual Offerings",hebrew:"שַׁלְמֵי שִׂמְחָה",name:"Shalmei Simcha - Festive Peace Offering",subtitle:"Obligatory joy-offering on the three festivals",source:"Devarim 27:7; Rambam Hilchos Chagigah 1:1",description:"The Torah obligation of simcha on the three regalim — eating the meat of a shelamim in Yerushalayim. Distinct from the chagigah: the chagigah is a fixed minimal obligation, while the shalmei simcha scales to financial means and the size of one's household. Both are required; neither fulfills the other.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
-  {id:"todah", sefaria:"https://www.sefaria.org/Mishneh_Torah,_Temidin_uMussafin.9.12", source:"Vayikra 7:11-15; Rambam Hilchos Maaseh HaKorbanos 9:12", sefaria:"https://www.sefaria.org/Vayikra.7.11",group:"Individual Offerings",hebrew:"תּוֹדָה",name:"Korban Todah - Thanksgiving",subtitle:"Animal + 40 loaves",source:"Vayikra 7:11-15",description:"After surviving danger. Ram + 40 loaves (20 issaron flour + oil).",components:[{label:"1 ram (todah) with nesachim",key:"ram_olah",count:1},{label:"40 loaves (~20 issaron flour)",key:"issaron_flour",count:20},{label:"Oil for loaves (~2 log)",key:"log_oil",count:2}]},
-  {id:"chagigah", sefaria:"https://www.sefaria.org/Mishneh_Torah,_Festival_Offering.1.1",group:"Individual Offerings",hebrew:"חֲגִיגָה",name:"Chagigah - Festival Peace Offering",subtitle:"Obligatory on the three pilgrimage festivals",source:"Devarim 16:16; Chagigah 1:1",description:"Every adult male at the Temple on each regel brings a shelamim-type offering.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
-  {id:"reiyah", sefaria:"https://www.sefaria.org/Mishneh_Torah,_Festival_Offering.1.1", source:"Devarim 16:16; Rambam Hilchos Chagigah 1:1", sefaria:"https://www.sefaria.org/Mishneh_Torah,_Festival_Offering.1.1",group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה",name:"Olas Re'iyah - Appearance Offering",subtitle:"Obligatory olah on each of the 3 regalim",source:"Devarim 16:16; Chagigah 2a",description:"On each regel, every adult male brings a wholly-consumed olah.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
-  {id:"reiyah_ram",group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה - אַיִל",name:"Olas Re'iyah - Ram (Wealthy)",subtitle:"Premium olas re'iyah for the wealthy",source:"Devarim 16:16",description:"A ram as the olas re'iyah, as brought by those of means.",components:[{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1}]},
-  {id:"chagigah_bull",group:"Individual Offerings",hebrew:"חֲגִיגָה - פַּר",name:"Chagigah - Bull (Wealthy)",subtitle:"Premium chagigah for the wealthy",source:"Devarim 16:16; Chagigah 1:1",description:"A bull as the chagigah, as brought by those of means.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1}]},
-  {id:"yoledet", sefaria:"https://www.sefaria.org/Mishneh_Torah,_Mechussarey_Kapparah.1.1",group:"Individual Offerings",hebrew:"יוֹלֶדֶת",name:"Yoledet - After Childbirth",subtitle:"Purification offering of a new mother",source:"Vayikra 12:6-8",description:"A yearling male lamb as olah + a bird as chatas, after the days of purification.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 bird (chatas)",key:"bird",count:1}]},
+  {id:"tamid", group:"Daily & Weekly",hebrew:"תָּמִיד",name:"Korban Tamid",subtitle:"The twice-daily continual offering",description:"Two yearling male lambs as olah each day with libations and wood. Ketores and menorah oil are listed separately in the communal budget.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Altar wood",key:"wood",count:1}]},
+  {id:"ketores_daily", group:"Daily & Weekly",hebrew:"קְטֹרֶת",name:"Ketores - Daily Incense",subtitle:"Morning and afternoon incense offering",description:"The 11-spice incense offered twice daily on the golden altar. One of the most expensive communal obligations. Per Kerisos 6a the annual batch is 368 maneh (~184kg): stacte, onycha, galbanum, and frankincense (70 maneh each); myrrh, cassia, spikenard, and saffron (16 maneh each); costus (12 maneh), aromatic bark (3 maneh), cinnamon (9 maneh). Saffron alone — at ~NIS 50/gram wholesale — accounts for over half the total cost. Price reflects a composite calculation across all 11 spices at Jerusalem wholesale rates; annual total ~NIS 782,000 ÷ 730 offerings.",components:[{label:"11-spice blend (full offering)",key:"ketores",count:1}]},
+  {id:"menorah_oil", group:"Daily & Weekly",hebrew:"שֶׁמֶן הַמְּנוֹרָה",name:"Menorah Oil",subtitle:"Pure olive oil for the golden menorah",description:"Pure beaten olive oil lit each evening (and replenished each morning) in the seven-branched golden menorah. The Talmud (Menachos 89a) records the precise amount used. Approximately half a log per lamp per day for the six outer lamps; the western lamp burned continuously. Total daily consumption approximately 3.5 log of first-pressing olive oil.",components:[{label:"Olive oil (3.5 log daily)",key:"log_oil",count:3.5}]},
+  {id:"shabbat", group:"Daily & Weekly",hebrew:"מוּסַף שַׁבָּת",name:"Mussaf Shabbos",subtitle:"Additional offering for the Sabbath",description:"Two yearling male lambs as olah with nesachim, plus lechem hapanim.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Lechem hapanim (24 issaron)",key:"issaron_flour",count:24}]},
+  {id:"rosh_chodesh", group:"Daily & Weekly",hebrew:"רֹאשׁ חֹדֶשׁ",name:"Mussaf Rosh Chodesh",subtitle:"Additional offering for the new month",description:"Two bulls, one ram, seven lambs as olah with nesachim, plus one goat as chatas.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
+  {id:"pesach", group:"Pilgrimage Festivals",hebrew:"פֶּסַח",name:"Korban Pesach",subtitle:"Paschal offering (14 Nisan)",description:"A yearling lamb or kid, roasted whole, eaten by a registered group on the night of the 15th.",components:[{label:"1 lamb (pesach)",key:"lamb",count:1}]},
+  {id:"chagigah_14", group:"Pilgrimage Festivals",hebrew:"חֲגִיגַת י\"ד",name:"Chagigat 14 Nisan",subtitle:"The supplementary festive offering on Erev Pesach",description:"When 14 Nisan falls on a weekday, a shelamim is brought alongside the Korban Pesach to supplement the seder meal, ensuring there is additional meat so that the Korban Pesach is eaten al hasova (on satiety) rather than out of hunger. Brought only on 14 Nisan, unlike the standard chagigah which is brought on the first day of the regel. Eaten on the night of the 15th before the Pesach itself.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
+  {id:"pesach_mussaf_day", group:"Pilgrimage Festivals",hebrew:"מוּסַף פֶּסַח",name:"Mussaf of Pesach - one day",subtitle:"Per day, for each of the 7 days",description:"2 bulls, 1 ram, 7 lambs as olah with nesachim, and 1 goat as chatas.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
+  {id:"omer", group:"Pilgrimage Festivals",hebrew:"עֹמֶר",name:"Korban HaOmer",subtitle:"Barley wave-offering (16 Nisan)",description:"One issaron of barley flour with a yearling male lamb as olah and its libation.",components:[{label:"1 issaron barley flour",key:"issaron_flour",count:1},{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
+  {id:"shavuot", group:"Pilgrimage Festivals",hebrew:"שָׁבֻעוֹת",name:"Shavuos - Full Day",subtitle:"Including the Two Loaves and peace offerings",description:"Shtei HaLechem with 2 lambs as shelamim, plus full mussaf and chatas.",components:[{label:"Shtei HaLechem (4 issaron)",key:"issaron_flour",count:4},{label:"2 lambs (shelamim)",key:"lamb_olah",count:2},{label:"Mussaf: 7 lambs",key:"lamb_olah",count:7},{label:"Mussaf: 1 bull",key:"bull_olah",count:1},{label:"Mussaf: 2 rams",key:"ram_olah",count:2},{label:"Bamidbar 28: 2 bulls",key:"bull_olah",count:2},{label:"Bamidbar 28: 1 ram",key:"ram_olah",count:1},{label:"Bamidbar 28: 7 lambs",key:"lamb_olah",count:7},{label:"2 goats (chatas)",key:"goat",count:2}]},
+  {id:"rosh_hashanah", group:"Pilgrimage Festivals",hebrew:"רֹאשׁ הַשָּׁנָה",name:"Mussaf Rosh Hashana",subtitle:"New Year additional offering",description:"1 bull, 1 ram, 7 lambs as olah with nesachim, plus 1 goat as chatas.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
+  {id:"yom_kippur", group:"Pilgrimage Festivals",hebrew:"יוֹם הַכִּפּוּרִים",name:"Yom Kippur - Full Service",subtitle:"The avodah of the Kohen Gadol",description:"The high priest's personal bull, two goats, two rams, and communal mussaf.",components:[{label:"Kohen Gadol's bull (chatas)",key:"bull",count:1},{label:"2 goats (chatas + Azazel)",key:"goat",count:2},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"Mussaf: 1 bull",key:"bull_olah",count:1},{label:"Mussaf: 1 ram",key:"ram_olah",count:1},{label:"Mussaf: 7 lambs",key:"lamb_olah",count:7},{label:"Mussaf goat (chatas)",key:"goat",count:1},{label:"Ketores",key:"frankincense",count:4}]},
+  {id:"sukkot_day1",group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - יוֹם א",name:"Sukkos - Day 1",subtitle:"Largest animal offering of the year",description:"13 bulls, 2 rams, 14 lambs as olah with nesachim, plus 1 goat as chatas.",components:[{label:"13 bulls (olah) with nesachim",key:"bull_olah",count:13},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 lambs (olah) with nesachim",key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}]},
+  {id:"sukkot_all", group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - כָּל הַיָּמִים",name:"Sukkos - All 7 Days",subtitle:"70 bulls total, representing 70 nations",description:"Seven days: 70 bulls, 14 rams, 98 lambs as olah, plus 7 goats as chatas.",components:[{label:"70 bulls (olah) with nesachim",key:"bull_olah",count:70},{label:"14 rams (olah) with nesachim",key:"ram_olah",count:14},{label:"98 lambs (olah) with nesachim",key:"lamb_olah",count:98},{label:"7 goats (chatas)",key:"goat",count:7}]},
+  {id:"shemini_atzeret", group:"Pilgrimage Festivals",hebrew:"שְׁמִינִי עֲצֶרֶת",name:"Shemini Atzeres",subtitle:"The eighth-day assembly",description:"1 bull, 1 ram, 7 lambs as olah with nesachim + 1 goat as chatas.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
+  {id:"chatat_individual", group:"Individual Offerings",hebrew:"חַטָּאת יָחִיד",name:"Chatas - Individual Sin Offering",subtitle:"For inadvertent transgression of a kareis prohibition",description:"An individual who inadvertently violated a kareis prohibition brings a female goat as chatas.",components:[{label:"1 female goat (chatas)",key:"goat",count:1}]},
+  {id:"asham",group:"Individual Offerings",hebrew:"אָשָׁם",name:"Asham - Guilt Offering",subtitle:"Ram for misappropriation or doubt",description:"For misusing sanctified property, certain oaths, or doubt cases: a male ram with nesachim.",components:[{label:"1 ram (asham) with nesachim",key:"ram_olah",count:1}]},
+  {id:"olah_animal", group:"Individual Offerings",hebrew:"עוֹלָה",name:"Olah - Voluntary Burnt Offering",subtitle:"Wholly consumed on the altar",description:"A voluntary ascent-offering. One male lamb with its libation.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
+  {id:"olah_bird",group:"Individual Offerings",hebrew:"עוֹלַת הָעוֹף",name:"Olah of the Poor - Bird",subtitle:"For one unable to afford an animal",description:"A turtledove or young pigeon as olah. No nesachim.",components:[{label:"1 bird (olah)",key:"bird",count:1}]},
+  {id:"shelamim", group:"Individual Offerings",hebrew:"שְׁלָמִים",name:"Shelamim - Peace Offering",subtitle:"Eaten by owner, priest, and altar",description:"A voluntary peace-offering. One mature ram with libation.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
+  {id:"shalmei_simcha",   group:"Individual Offerings",hebrew:"שַׁלְמֵי שִׂמְחָה",name:"Shalmei Simcha - Festive Peace Offering",subtitle:"Obligatory joy-offering on the three festivals",description:"The Torah obligation of simcha on the three regalim — eating the meat of a shelamim in Yerushalayim. Distinct from the chagigah: the chagigah is a fixed minimal obligation, while the shalmei simcha scales to financial means and the size of one's household. Both are required; neither fulfills the other.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
+  {id:"todah",   group:"Individual Offerings",hebrew:"תּוֹדָה",name:"Korban Todah - Thanksgiving",subtitle:"Animal + 40 loaves",description:"After surviving danger. Ram + 40 loaves (20 issaron flour + oil).",components:[{label:"1 ram (todah) with nesachim",key:"ram_olah",count:1},{label:"40 loaves (~20 issaron flour)",key:"issaron_flour",count:20},{label:"Oil for loaves (~2 log)",key:"log_oil",count:2}]},
+  {id:"chagigah", group:"Individual Offerings",hebrew:"חֲגִיגָה",name:"Chagigah - Festival Peace Offering",subtitle:"Obligatory on the three pilgrimage festivals",description:"Every adult male at the Temple on each regel brings a shelamim-type offering.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
+  {id:"reiyah",   group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה",name:"Olas Re'iyah - Appearance Offering",subtitle:"Obligatory olah on each of the 3 regalim",description:"On each regel, every adult male brings a wholly-consumed olah.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
+  {id:"reiyah_ram",group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה - אַיִל",name:"Olas Re'iyah - Ram (Wealthy)",subtitle:"Premium olas re'iyah for the wealthy",description:"A ram as the olas re'iyah, as brought by those of means.",components:[{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1}]},
+  {id:"chagigah_bull",group:"Individual Offerings",hebrew:"חֲגִיגָה - פַּר",name:"Chagigah - Bull (Wealthy)",subtitle:"Premium chagigah for the wealthy",description:"A bull as the chagigah, as brought by those of means.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1}]},
+  {id:"yoledet", group:"Individual Offerings",hebrew:"יוֹלֶדֶת",name:"Yoledet - After Childbirth",subtitle:"Purification offering of a new mother",description:"A yearling male lamb as olah + a bird as chatas, after the days of purification.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 bird (chatas)",key:"bird",count:1}]},
   {id:"nazir", sefaria:"https://www.sefaria.org/Numbers.6.13",group:"Individual Offerings",hebrew:"נָזִיר",name:"Korbanos Nazir - End of Nazirite Vow",subtitle:"At the completion of the vow",source:"Bamidbar 6:13-20",description:"1 male lamb (olah), 1 ewe-lamb (chatas), 1 ram (shelamim), basket of matzos.",components:[{label:"1 male lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 ewe-lamb (chatas)",key:"lamb",count:1},{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1},{label:"Basket of matzos (~6 issaron)",key:"issaron_flour",count:6},{label:"Oil (~2 log)",key:"log_oil",count:2}]},
 ];
 const GROUPS = [{id:"Daily & Weekly",tkey:"grp_daily"},{id:"Pilgrimage Festivals",tkey:"grp_pilgrimage"},{id:"Individual Offerings",tkey:"grp_individual"}];
@@ -577,7 +577,6 @@ const CITE_LINKS = {
   "Rambam Hilchos Nezirus 8:1":             "https://www.sefaria.org/Mishneh_Torah,_Naziriteship.8.1",
   "Rambam Hilchos Bikkurim 11:1":           "https://www.sefaria.org/Mishneh_Torah,_First_Fruits.11.1",
   "Rambam Hilchos Bikkurim 4:15":           "https://www.sefaria.org/Mishneh_Torah,_First_Fruits.4.15",
-  "Rambam Hilchos Shekalim 1:2":            "https://www.sefaria.org/Mishneh_Torah,_Shekalim.1.2",
   "Shemos 30:13":     "https://www.sefaria.org/Exodus.30.13",
   "Devarim 16:16":    "https://www.sefaria.org/Deuteronomy.16.16",
   "Devarim 27:7":     "https://www.sefaria.org/Deuteronomy.27.7",
@@ -605,23 +604,15 @@ const CITE_LINKS = {
   "Vayikra 23:15-21":  "https://www.sefaria.org/Leviticus.23.15",
   "Vayikra 16:3":      "https://www.sefaria.org/Leviticus.16.3",
   "Vayikra 16:5":      "https://www.sefaria.org/Leviticus.16.5",
-  "Vayikra 4:27-35":   "https://www.sefaria.org/Leviticus.4.27",
-  "Vayikra 5:1-13":    "https://www.sefaria.org/Leviticus.5.1",
-  "Vayikra 12:6-8":    "https://www.sefaria.org/Leviticus.12.6",
-  "Vayikra 14:10-32":  "https://www.sefaria.org/Leviticus.14.10",
   "Vayikra 1:2-17":    "https://www.sefaria.org/Leviticus.1.2",
   "Vayikra 3:1-17":    "https://www.sefaria.org/Leviticus.3.1",
-  "Vayikra 7:11-15":   "https://www.sefaria.org/Leviticus.7.11",
   "Vayikra 2:2":       "https://www.sefaria.org/Leviticus.2.2",
   "Shemos 29:40":      "https://www.sefaria.org/Exodus.29.40",
   "Shemos 32:29":      "https://www.sefaria.org/Exodus.32.29",
   "Shemos 27:20":      "https://www.sefaria.org/Exodus.27.20",
   "Shemos 30:7-8":     "https://www.sefaria.org/Exodus.30.7",
   "Shemos 12:6":       "https://www.sefaria.org/Exodus.12.6",
-  "Devarim 26:1-11":   "https://www.sefaria.org/Deuteronomy.26.1",
   "Bamidbar 18:15-16": "https://www.sefaria.org/Numbers.18.15",
-  "Bamidbar 6:13-20":  "https://www.sefaria.org/Numbers.6.13",
-  "Bamidbar 9:9-12":   "https://www.sefaria.org/Numbers.9.9",
   "Pesachim 70a-71a":  "https://www.sefaria.org/Pesachim.70a",
   "Yoma 26b":          "https://www.sefaria.org/Yoma.26b",
   "Kerisos 6a":        "https://www.sefaria.org/Keritot.6a",
@@ -636,7 +627,6 @@ const CITE_LINKS = {
   "Mishnah Bikkurim 3:8": "https://www.sefaria.org/Mishnah_Bikkurim.3.8",
   "Sukkah 55b":           "https://www.sefaria.org/Sukkah.55b",
   "Avos 5:5":             "https://www.sefaria.org/Pirkei_Avot.5.5",
-  "Kerisos 6a":           "https://www.sefaria.org/Keritot.6a",
   "Yoma 32a":             "https://www.sefaria.org/Yoma.32a",
   "Pesachim 58a":         "https://www.sefaria.org/Pesachim.58a",
   "Vayikra 7:8":          "https://www.sefaria.org/Leviticus.7.8",
@@ -1894,6 +1884,7 @@ export default function korbanosCalculator() {
             )}
             {disclaimer}
           </div>
+
         )}
 
         {/* ══ PRICES & SOURCES ══ */}
@@ -1988,45 +1979,7 @@ export default function korbanosCalculator() {
       </div>
 
       {/* ── Print Modal ─────────────────────────────────────────────────── */}
-      {showTodayPrint&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setShowTodayPrint(false)}>
-          <div onClick={e=>e.stopPropagation()} style={{background:"#fff",color:"#111",maxWidth:620,width:"100%",maxHeight:"90vh",overflowY:"auto",padding:"2.5rem",fontFamily:"Georgia,serif",fontSize:"14px",lineHeight:1.7}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem",borderBottom:"2px solid #111",paddingBottom:"1rem"}}>
-              <div>
-                <div style={{fontSize:"20px",fontWeight:700,fontFamily:"'Cinzel',serif",letterSpacing:"0.05em"}}>KORBANOS CALCULATOR</div>
-                <div style={{fontSize:"13px",color:"#555"}}>Today's Communal Costs — korbancalculator.com</div>
-              </div>
-              <div style={{textAlign:"right",fontSize:"12px",color:"#777"}}>
-                <div>{hebrewStr}</div>
-                <div>{gregDate}</div>
-                <div>Shiur: {shiur.labelShort}</div>
-              </div>
-            </div>
-            {blocks.map((b,bi)=>(
-              <div key={bi} style={{marginBottom:"1rem"}}>
-                <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #ccc",paddingBottom:"0.2rem",marginBottom:"0.3rem"}}>
-                  <strong style={{fontSize:"12px",letterSpacing:"0.06em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>{b.title}</strong>
-                  <strong>{fmtC(bTotal(b))}</strong>
-                </div>
-                {b.offerings.map((o,oi)=>(
-                  <div key={oi} style={{display:"flex",justifyContent:"space-between",padding:"0.1rem 0",color:"#444",fontSize:"13px"}}>
-                    <span>{o.label}{o.count>1?" × "+o.count:""}</span>
-                    <span>{fmtC(compCost(o.key,o.count,P))}</span>
-                  </div>
-                ))}
-              </div>
-            ))}
-            <div style={{borderTop:"2px solid #111",paddingTop:"0.75rem",display:"flex",justifyContent:"space-between",fontSize:"17px",fontWeight:700,fontFamily:"'Cinzel',serif",marginBottom:"1rem"}}>
-              <span>Total</span><span>{fmtC(dayTotal)}</span>
-            </div>
-            <div style={{fontSize:"11px",color:"#888",borderTop:"1px solid #ddd",paddingTop:"0.6rem",lineHeight:1.6}}>For educational purposes only. All prices are Jerusalem market rates. Shiur: {shiur.labelShort}.</div>
-            <div style={{display:"flex",gap:"0.75rem",marginTop:"1rem",justifyContent:"flex-end"}}>
-              <button onClick={()=>window.print()} style={{padding:"0.5rem 1.25rem",background:"#111",color:"#fff",border:"none",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Print / Save PDF</button>
-              <button onClick={()=>setShowTodayPrint(false)} style={{padding:"0.5rem 1.25rem",background:"transparent",color:"#555",border:"1px solid #999",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Close</button>
-            </div>
-          </div>
-        </div>
-      )}
+
       {showPrint&&(
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setShowPrint(false)}>
           <div onClick={e=>e.stopPropagation()} style={{background:"#fff",color:"#111",maxWidth:680,width:"100%",maxHeight:"90vh",overflowY:"auto",padding:"2.5rem",fontFamily:"Georgia,serif",fontSize:"14px",lineHeight:1.7}}>
@@ -2080,9 +2033,9 @@ export default function korbanosCalculator() {
 }
 
 function GlossaryTerm({term, children}){
-  const [show, setShow] = React.useState(false);
-  const [pos, setPos] = React.useState({top:0,left:0});
-  const ref = React.useRef(null);
+  const [show, setShow] = useState(false);
+  const [pos, setPos] = useState({top:0,left:0});
+  const ref = useRef(null);
   const def = GLOSSARY[term.toLowerCase()];
   if(!def) return children;
   const handleEnter = ()=>{
@@ -2113,3 +2066,42 @@ function GlossaryTerm({term, children}){
 }
 
 function qBtn(e){return{width:38,height:38,background:e?"#7a4f20":"#2a1a08",border:"1px solid "+(e?"#c9a45a":"#5a3a1a"),color:e?"#f0ddb0":"#5a3a1a",cursor:e?"pointer":"not-allowed",fontSize:"1.2rem",fontFamily:"inherit",opacity:e?1:0.4};}
+            {showTodayPrint&&(
+              <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setShowTodayPrint(false)}>
+                <div onClick={e=>e.stopPropagation()} style={{background:"#fff",color:"#111",maxWidth:620,width:"100%",maxHeight:"90vh",overflowY:"auto",padding:"2.5rem",fontFamily:"Georgia,serif",fontSize:"14px",lineHeight:1.7}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem",borderBottom:"2px solid #111",paddingBottom:"1rem"}}>
+                    <div>
+                      <div style={{fontSize:"20px",fontWeight:700,fontFamily:"'Cinzel',serif",letterSpacing:"0.05em"}}>KORBANOS CALCULATOR</div>
+                      <div style={{fontSize:"13px",color:"#555"}}>Today's Communal Costs — korbancalculator.com</div>
+                    </div>
+                    <div style={{textAlign:"right",fontSize:"12px",color:"#777"}}>
+                      <div>{hebrewStr}</div>
+                      <div>{gregDate}</div>
+                      <div>Shiur: {shiur.labelShort}</div>
+                    </div>
+                  </div>
+                  {blocks.map((b,bi)=>(
+                    <div key={bi} style={{marginBottom:"1rem"}}>
+                      <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #ccc",paddingBottom:"0.2rem",marginBottom:"0.3rem"}}>
+                        <strong style={{fontSize:"12px",letterSpacing:"0.06em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>{b.title}</strong>
+                        <strong>{fmtC(bTotal(b))}</strong>
+                      </div>
+                      {b.offerings.map((o,oi)=>(
+                        <div key={oi} style={{display:"flex",justifyContent:"space-between",padding:"0.1rem 0",color:"#444",fontSize:"13px"}}>
+                          <span>{o.label}{o.count>1?" × "+o.count:""}</span>
+                          <span>{fmtC(compCost(o.key,o.count,P))}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                  <div style={{borderTop:"2px solid #111",paddingTop:"0.75rem",display:"flex",justifyContent:"space-between",fontSize:"17px",fontWeight:700,fontFamily:"'Cinzel',serif",marginBottom:"1rem"}}>
+                    <span>Total</span><span>{fmtC(dayTotal)}</span>
+                  </div>
+                  <div style={{fontSize:"11px",color:"#888",borderTop:"1px solid #ddd",paddingTop:"0.6rem",lineHeight:1.6}}>For educational purposes only. All prices are Jerusalem market rates. Shiur: {shiur.labelShort}.</div>
+                  <div style={{display:"flex",gap:"0.75rem",marginTop:"1rem",justifyContent:"flex-end"}}>
+                    <button onClick={()=>window.print()} style={{padding:"0.5rem 1.25rem",background:"#111",color:"#fff",border:"none",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Print / Save PDF</button>
+                    <button onClick={()=>setShowTodayPrint(false)} style={{padding:"0.5rem 1.25rem",background:"transparent",color:"#555",border:"1px solid #999",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Close</button>
+                  </div>
+                </div>
+              </div>
+            )}
