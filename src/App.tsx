@@ -60,7 +60,7 @@ function compCost(key,count,P){
 }
 function offeringTotal(o,P){return o.components.reduce((s,c)=>s+compCost(c.key,c.count,P),0);}
 const fmt    = n=>"$"+n.toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:0});
-const fmtNIS = n=>"NIS "+n.toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:0});
+const fmtNIS = n=>"₪"+n.toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:0});
 
 // ── Catalog ───────────────────────────────────────────────────────────────────
 const CATALOG = [
@@ -93,7 +93,7 @@ const CATALOG = [
   {id:"yoledet",group:"Individual Offerings",hebrew:"יוֹלֶדֶת",name:"Yoledet - After Childbirth",subtitle:"Purification offering of a new mother",source:"Vayikra 12:6-8",description:"A yearling male lamb as olah + a bird as chatas, after the days of purification.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 bird (chatas)",key:"bird",count:1}]},
   {id:"nazir",group:"Individual Offerings",hebrew:"נָזִיר",name:"Korbanos Nazir - End of Nazirite Vow",subtitle:"At the completion of the vow",source:"Bamidbar 6:13-20",description:"1 male lamb (olah), 1 ewe-lamb (chatas), 1 ram (shelamim), basket of matzos.",components:[{label:"1 male lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 ewe-lamb (chatas)",key:"lamb",count:1},{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1},{label:"Basket of matzos (~6 issaron)",key:"issaron_flour",count:6},{label:"Oil (~2 log)",key:"log_oil",count:2}]},
 ];
-const GROUPS = ["Daily & Weekly","Pilgrimage Festivals","Individual Offerings"];
+const GROUPS = [{id:"Daily & Weekly",tkey:"grp_daily"},{id:"Pilgrimage Festivals",tkey:"grp_pilgrimage"},{id:"Individual Offerings",tkey:"grp_individual"}];
 
 // ── Communal offerings (funded by chatzi shekel pool) ─────────────────────────
 const COMMUNAL_OFFERINGS = [
@@ -117,16 +117,15 @@ const V = {
     kareis:[
       {act:"Pushed a stroller outside the valid eruv boundary",detail:"Eruv route assumed valid; later found posul"},
       {act:"Tore along a perforated line on Shabbos",detail:"Kore'a - a common toladah not widely known"},
-      {act:"Picked an apple from a tree on Shabbos", detail:"Tolesh — Detaching a fruit from its source is a toladah of Kotzer (reaping)"},
+      {act:"Squeezed a lemon into a drink on Shabbos",detail:"Sechita - toladah of dash (threshing)"},
       {act:"Wrote a note, forgetting it was Shabbos",detail:"Kotev - shogeg Shabbos, classic case"},
       {act:"Switched on a light momentarily forgetting Shabbos",detail:"Mav'ir - shogeg Shabbos"},
       {act:"Sorted items on Shabbos not knowing borer applies",detail:"Borer - very common unknowing violation"},
       {act:"Smeared ointment on Shabbos not knowing memareiach applies",detail:"Toladah of memachek; often unknown"},
       {act:"Physical contact b'shogeg with a niddah",detail:"Niddah carries kareis; inadvertent contact"},
       {act:"Relations during a period later confirmed as niddah",detail:"Common circumstance; kareis violation b'shogeg"},
+      {act:"Ate a dish containing meat cooked with butter b'shogeg",detail:"D'oraisa basar b'chalav; thought it was pareve"},
       {act:"Alone in an elevator with female colleague - door closed",detail:"If the underlying arayos issur was crossed b'shogeg"},
-      {act:"Ate chelev (forbidden fats)"},
-
     ],
     nonKareis:[
       {act:"Handled muktzeh on Shabbos",detail:"Rabbinic - no chatas"},
@@ -140,7 +139,7 @@ const V = {
   asham_talui:{
     kareis:[
       {act:"Unsure whether an elevator yichud situation went further",detail:"Classic asham toluy case - genuine doubt about whether the arayos issur was violated"},
-      {act:"Ate something at an event - unsure if it was chelev",detail:"Could not identify ingredients; genuine uncertainty about a kareis prohibition"},
+      {act:"Ate something at an event - unsure if it was basar b'chalav",detail:"Could not identify ingredients; genuine uncertainty about a kareis prohibition"},
       {act:"Uncertain whether relations with wife occurred during niddah",detail:"Genuine doubt about a kareis violation generates an asham toluy"},
       {act:"Performed a melacha - uncertain of exact mental state at the time",detail:"Doubt about whether it constituted shogeg generates an asham toluy"},
       {act:"Kissed a relative - uncertain whether the relationship falls under arayos",detail:"Some relationships are disputed; genuine doubt triggers an asham toluy"},
@@ -198,11 +197,221 @@ function absToHebrew(abs){
   return{year,month:hm,day:hd,dow:abs%7,isLeap:isHLeap(year)};
 }
 // Nisan-first month number to name
-const H_MONTH_NAMES=['','Nisan','Iyyar','Sivan','Tammuz','Av','Elul','Tishrei','Cheshvan','Kislev','Tevet','Shevat','Adar','Adar II'];
+const LANG_LOCALE={en:"en-US",he:"he-IL",es:"es-ES",fr:"fr-FR",ru:"ru-RU"};
+const H_MONTH_NAMES_EN=['','Nisan','Iyyar','Sivan','Tammuz','Av','Elul','Tishrei','Cheshvan','Kislev','Tevet','Shevat','Adar','Adar II'];
+const H_MONTH_NAMES_HE=['','ניסן','אייר','סיון','תמוז','אב','אלול','תשרי','חשון','כסלו','טבת','שבט','אדר','אדר ב'];
+const H_MONTH_NAMES_ES=['','Nisán','Iyar','Siván','Tamuz','Av','Elul','Tishrei','Jeshván','Kislev','Tevet','Shvat','Adar','Adar II'];
+const H_MONTH_NAMES_FR=['','Nissan','Iyar','Sivane','Tamouz','Av','Eloul','Tichri','Hechvane','Kislev','Tevet','Chevat','Adar','Adar II'];
+const H_MONTH_NAMES_RU=['','Нисан','Ияр','Сиван','Тамуз','Ав','Элул','Тишрей','Хешван','Кислев','Тевет','Шват','Адар','Адар II'];
 // Month constants (Nisan=1)
 const HM={NISAN:1,IYYAR:2,SIVAN:3,TAMMUZ:4,AV:5,ELUL:6,TISHREI:7,CHESHVAN:8,KISLEV:9,TEVET:10,SHEVAT:11,ADAR:12,ADAR_II:13};
 
 // ── Categories ────────────────────────────────────────────────────────────────
+
+// ── Translations ──────────────────────────────────────────────────────────────
+const TR = {
+  header_sub:    {en:"A modern-day price calculator for the sacrifices of the Temple. All prices based on Jerusalem market rates.", he:"מחשבון מחירים עדכני לקרבנות בית המקדש. כל המחירים על פי שערי השוק בירושלים.", es:"Una calculadora de precios moderna para los sacrificios del Templo. Precios basados en tarifas de mercado de Jerusalén.", fr:"Un calculateur de prix moderne pour les sacrifices du Temple. Tous les prix basés sur les tarifs du marché de Jérusalem.", ru:"Современный калькулятор цен жертвоприношений Храма. Все цены основаны на рыночных ценах Иерусалима."},
+  tab_annual:    {en:"My Annual Bill",           he:"החשבון השנתי שלי",      es:"Mi Presupuesto Anual",       fr:"Mon Budget Annuel",          ru:"Мой Годовой Счёт"},
+  tab_communal:  {en:"Annual Communal Budget",   he:"תקציב הציבור השנתי",    es:"Presupuesto Comunal Anual",  fr:"Budget Communautaire Annuel", ru:"Годовой Общественный Бюджет"},
+  tab_today:     {en:"Today's Communal Costs",   he:"עלות הקרבנות היום",     es:"Costos Comunales de Hoy",    fr:"Coûts Communautaires Aujourd'hui", ru:"Сегодняшние Общественные Расходы"},
+  tab_catalog:   {en:"Full Catalog",             he:"קטלוג מלא",             es:"Catálogo Completo",          fr:"Catalogue Complet",          ru:"Полный Каталог"},
+  tab_prices:    {en:"Prices & Sources",         he:"מחירים ומקורות",        es:"Precios y Fuentes",          fr:"Prix et Sources",             ru:"Цены и Источники"},
+  strip_live:    {en:"Live:",    he:"מיקום:",      es:"En vivo:",   fr:"En direct:",  ru:"Онлайн:"},
+  strip_ey:      {en:"Eretz Yisroel", he:"ארץ ישראל",  es:"Eretz Yisroel", fr:"Eretz Yisroel", ru:"Эрец Исраэль"},
+  strip_cla:     {en:"Chutz L'Aretz", he:"חוץ לארץ",  es:"Diáspora",       fr:"Diaspora",       ru:"Диаспора"},
+  strip_standing:{en:"Standing:", he:"מעמד:",    es:"Nivel:",     fr:"Niveau:",     ru:"Уровень:"},
+  strip_shiur:   {en:"Shiur:",   he:"שיעור:",    es:"Shiur:",     fr:"Shiur:",      ru:"Шиур:"},
+  strip_silver:  {en:"Silver:",  he:"כסף:",      es:"Plata:",     fr:"Argent:",     ru:"Серебро:"},
+  strip_rate:    {en:"Rate:",    he:"שע׳׳ח:",    es:"Cambio:",    fr:"Taux:",       ru:"Курс:"},
+  strip_close:   {en:"Close",   he:"סגור",       es:"Cerrar",     fr:"Fermer",      ru:"Закрыть"},
+  strip_assumptions:{en:"Assumptions", he:"הגדרות",  es:"Supuestos",  fr:"Hypothèses",  ru:"Настройки"},
+  set_location:  {en:"Location",      he:"מיקום",    es:"Ubicación",  fr:"Localisation",ru:"Местоположение"},
+  set_ey_check:  {en:"I live in Eretz Yisroel", he:"אני גר בארץ ישראל", es:"Vivo en Eretz Yisroel", fr:"Je vis en Eretz Yisroel", ru:"Я живу в Эрец Исраэль"},
+  set_ey_note:   {en:"Travel costs and travel-related todaos removed.", he:"עלויות נסיעה ותודות הוסרו.", es:"Costos de viaje eliminados.", fr:"Frais de voyage supprimés.", ru:"Транспортные расходы удалены."},
+  set_landowner: {en:"I own agricultural land (obligated in Bikkurim)", he:"יש לי שדות חקלאיים (חייב בביכורים)", es:"Tengo tierras agrícolas (obligado en Bikkurim)", fr:"Je possède des terres agricoles (Bikkourim)", ru:"Я владею сельскохозяйственными землями (Бикурим)"},
+  set_standing:  {en:"Financial Standing", he:"מעמד כלכלי",   es:"Situación Económica", fr:"Situation Financière", ru:"Финансовое Положение"},
+  set_shiur:     {en:"Shiur - Halachic Measurement Standard", he:"שיעור — מידות הלכתיות", es:"Shiur - Medida Halachica", fr:"Shiur - Mesure Halakhique", ru:"Шиур — Алахический Стандарт"},
+  set_silver:    {en:"Silver Price (Chatzi Shekel & Pidyon HaBen)", he:"מחיר הכסף (מחצית השקל ופדיון הבן)", es:"Precio de la Plata", fr:"Prix de l'Argent", ru:"Цена Серебра"},
+  set_rate:      {en:"USD / NIS Exchange Rate", he:"שער דולר / שקל", es:"Tipo de Cambio USD/NIS", fr:"Taux de Change USD/NIS", ru:"Курс USD/NIS"},
+  set_travel:    {en:"Travel Assumptions", he:"הגדרות נסיעה", es:"Supuestos de Viaje", fr:"Hypothèses de Voyage", ru:"Настройки Поездки"},
+  set_include_travel:{en:"Include travel in total", he:"כלול נסיעות בסכום", es:"Incluir viaje en total", fr:"Inclure le voyage", ru:"Включить поездку"},
+  set_reset:     {en:"Reset Defaults", he:"אפס",  es:"Restablecer",  fr:"Réinitialiser", ru:"Сбросить"},
+  regalim_q:     {en:"Which of the Shalosh Regalim are you ascending to Yerushalayim?", he:"לאילו מן השלוש רגלים אתה עולה לירושלים?", es:"¿A cuáles de los tres regalim asciende a Jerusalén?", fr:"Auxquels des trois Regalim montez-vous à Jérusalem?", ru:"На какие из трёх Регалим вы восходите в Иерусалим?"},
+  regalim_all:   {en:"All three regalim — travel and korbanos included.", he:"שלושת הרגלים — נסיעות וקרבנות כלולים.", es:"Los tres regalim — viaje y korbanot incluidos.", fr:"Les trois regalim — voyages et korbanot inclus.", ru:"Все три Регалим — поездки и корбанот включены."},
+  bitul_title:   {en:"Bitul Aseh — Torah Obligation Not Fulfilled", he:"ביטול עשה", es:"Bitul Aseh — Obligación No Cumplida", fr:"Bitul Aseh — Obligation Non Accomplie", ru:"Битул Асэ — Невыполненная Обязанность"},
+  cat_fixed:     {en:"Non-negotiable obligations. Every adult male owes the chatzi shekel and regalim offerings annually.", he:"חובות קבועות. כל גבר בוגר חייב במחצית השקל ובקרבנות הרגלים.", es:"Obligaciones fijas. Todo hombre adulto debe el chatzi shekel y las ofrendas de los regalim.", fr:"Obligations fixes. Tout homme adulte doit le chatzi shekel et les offrandes des regalim.", ru:"Постоянные обязанности. Каждый взрослый мужчина обязан чаци-шекелем и жертвами рагалим."},
+  cat_personal:  {en:"Inadvertent violations of kareis prohibitions. Set the scrutiny slider, then adjust as needed.", he:"עבירות שגגה של איסורי כרת.", es:"Violaciones inadvertidas de prohibiciones de kareis.", fr:"Violations involontaires des interdits passibles de kareis.", ru:"Непреднамеренные нарушения запретов карет."},
+  cat_todah:     {en:"Baseline of 2 for illness and other travel. Optionally add 2 per regel.", he:"בסיס של 2 למחלה ונסיעות.", es:"Base de 2 por enfermedad y viaje.", fr:"Base de 2 pour maladie et voyage.", ru:"Базово 2 за болезнь и поездку."},
+  cat_life:      {en:"Not obligatory every year — brought as life events occur. All default to zero.", he:"אינן חובה כל שנה — מובאות עם אירועי חיים.", es:"No obligatorio cada año — según eventos de vida.", fr:"Pas obligatoire chaque année — selon les événements.", ru:"Необязательно каждый год — по жизненным событиям."},
+  cat_travel:    {en:"Round-trips New York to Jerusalem for the regalim.", he:"נסיעות הלוך-חזור מניו יורק לירושלים.", es:"Viajes de ida y vuelta Nueva York-Jerusalén.", fr:"Allers-retours New York-Jérusalem pour les regalim.", ru:"Перелёты Нью-Йорк — Иерусалим туда и обратно."},
+  estimated_total:{en:"Estimated Annual Total", he:"סכום שנתי משוער", es:"Total Anual Estimado", fr:"Total Annuel Estimé", ru:"Расчётный Годовой Итог"},
+  cost_breakdown: {en:"Cost Breakdown",          he:"פירוט עלויות",   es:"Desglose de Costos", fr:"Ventilation des Coûts", ru:"Разбивка по Расходам"},
+  reset:         {en:"RESET",  he:"אפס",  es:"REINICIAR", fr:"RÉINITIALISER", ru:"СБРОСИТЬ"},
+  why_number:    {en:"why this number?", he:"למה המספר הזה?", es:"¿por qué este número?", fr:"pourquoi ce nombre?", ru:"почему это число?"},
+  hide_rationale:{en:"hide rationale",  he:"הסתר הסבר",     es:"ocultar explicación", fr:"masquer l'explication", ru:"скрыть объяснение"},
+  sample_violations:{en:"sample violations", he:"דוגמאות לעבירות", es:"ejemplos de violaciones", fr:"exemples de violations", ru:"примеры нарушений"},
+  hide_examples: {en:"hide examples",   he:"הסתר דוגמאות",  es:"ocultar ejemplos",   fr:"masquer les exemples",  ru:"скрыть примеры"},
+  set_by_regalim:{en:"set by regalim",  he:"נקבע לפי הרגל", es:"según los regalim",  fr:"selon les regalim",     ru:"по регалим"},
+  scrutiny_lbl:  {en:"Level of Self-Scrutiny", he:"רמת בדיקה עצמית", es:"Nivel de Autoexamen", fr:"Niveau d'Examen", ru:"Уровень Самопроверки"},
+  scrutiny_min:  {en:"Minimal",   he:"מינימלי", es:"Mínimo",    fr:"Minimal",    ru:"Минимальный"},
+  scrutiny_avg:  {en:"Average",   he:"ממוצע",   es:"Promedio",  fr:"Moyen",      ru:"Средний"},
+  scrutiny_careful:{en:"Careful", he:"זהיר",    es:"Cuidadoso", fr:"Prudent",    ru:"Осторожный"},
+  scrutiny_yerei:{en:"Yerei Shomayim", he:"ירא שמים", es:"Yerei Shomayim", fr:"Yerei Shomayim", ru:"Йерей Шамаим"},
+  scrutiny_exc:  {en:"Exceptional", he:"יוצא מן הכלל", es:"Excepcional", fr:"Exceptionnel", ru:"Исключительный"},
+  today_total:   {en:"Total —",  he:"סך הכל —", es:"Total —",  fr:"Total —",   ru:"Итого —"},
+  today_public:  {en:"Public korbanos only · current Jerusalem prices", he:"קרבנות ציבוריים בלבד · מחירי ירושלים", es:"Solo korbanot públicos · precios de Jerusalén", fr:"Korbanot publics uniquement · prix de Jérusalem", ru:"Только общественные корбанот · цены Иерусалима"},
+  jump_to:       {en:"Jump to next", he:"קפוץ ל", es:"Ir a", fr:"Aller au", ru:"Перейти к"},
+  today_btn:     {en:"Today",    he:"היום",     es:"Hoy",     fr:"Aujourd'hui", ru:"Сегодня"},
+  maarachah:     {en:"Ma'arachah — overnight fire:", he:"מערכה — אש הלילה:", es:"Ma'arachah — fuego nocturno:", fr:"Ma'arachah — feu de nuit:", ru:"Маарахá — ночной огонь:"},
+  chatzi_pool:   {en:"The Chatzi Shekel Pool", he:"קופת מחצית השקל", es:"El Fondo del Chatzi Shekel", fr:"Le Fonds du Chatzi Shekel", ru:"Фонд Чаци-Шекеля"},
+  annual_offerings:{en:"Annual Communal Offerings", he:"קרבנות ציבוריים שנתיים", es:"Ofrendas Comunales Anuales", fr:"Offrandes Communautaires Annuelles", ru:"Ежегодные Общественные Жертвоприношения"},
+  total_annual:  {en:"Total Annual Communal Cost", he:"עלות ציבורית שנתית כוללת", es:"Costo Comunal Anual Total", fr:"Coût Communautaire Annuel Total", ru:"Общий Годовой Общественный Расход"},
+  per_capita:    {en:"Per Capita Cost",   he:"עלות לנפש",         es:"Costo Per Cápita",   fr:"Coût Par Personne",   ru:"На душу населения"},
+  actual_chatzi: {en:"Actual Chatzi Shekel", he:"מחצית השקל בפועל", es:"Chatzi Shekel Real",  fr:"Chatzi Shekel Réel",  ru:"Реальный Чаци-Шекель"},
+  subsidy:       {en:"Subsidy per Person", he:"סובסידיה לנפש",    es:"Subsidio por Persona",fr:"Subvention par Personne", ru:"Субсидия на Человека"},
+  show_components:{en:"show components", he:"הצג רכיבים",  es:"mostrar componentes", fr:"voir les composants", ru:"показать компоненты"},
+  hide_breakdown:{en:"hide breakdown",   he:"הסתר פירוט",  es:"ocultar desglose",    fr:"masquer le détail",   ru:"скрыть разбивку"},
+
+  // Catalog tab
+
+  // Jump group headers
+  jmp_regular:   {en:"Regular",       he:"רגיל",          es:"Regular",         fr:"Régulier",        ru:"Обычные"},
+  jmp_yamim:     {en:"Yamim Noraim",  he:"ימים נוראים",   es:"Yamim Noraim",    fr:"Yamim Noraïm",    ru:"Ямим Нораим"},
+  jmp_next_wkdy: {en:"Next Weekday",  he:"יום חול הבא",   es:"Próximo día hábil",fr:"Prochain jour ouvrable",ru:"Следующий будний день"},
+  jmp_next_shab: {en:"Next Shabbos",  he:"שבת הבאה",      es:"Próximo Shabat",   fr:"Prochain Chabbat", ru:"Следующий Шаббат"},
+  jmp_next_rc:   {en:"Next Rosh Chodesh",he:"ראש חודש הבא",es:"Próximo Rosh Jodesh",fr:"Prochain Roch Hachôdech",ru:"Следующий Рош Ходеш"},
+  jmp_14nisan:   {en:"14 Nisan",      he:"י״ד ניסן",      es:"14 Nisán",         fr:"14 Nissan",        ru:"14 Нисана"},
+  jmp_omer:      {en:"Day 2 / Omer",  he:"יום ב / עומר",  es:"Día 2 / Omer",     fr:"Jour 2 / Omer",    ru:"День 2 / Омер"},
+  jmp_day:       {en:"Day",           he:"יום",            es:"Día",              fr:"Jour",             ru:"День"},
+  // Avodah offering labels
+  off_tamid_am:  {en:"Tamid (morning) — 1 lamb + nesachim",   he:"תמיד (שחרית) — כבש + נסכים",  es:"Tamid (mañana) — 1 cordero + nesajim",   fr:"Tamid (matin) — 1 agneau + nesakhim",    ru:"Тамид (утро) — 1 ягнёнок + несахим"},
+  off_tamid_pm:  {en:"Tamid (afternoon) — 1 lamb + nesachim", he:"תמיד (מנחה) — כבש + נסכים",   es:"Tamid (tarde) — 1 cordero + nesajim",    fr:"Tamid (après-midi) — 1 agneau + nesakhim",ru:"Тамид (день) — 1 ягнёнок + несахим"},
+  off_ketores_am:{en:"Ketores (morning)",   he:"קטורת (שחרית)",   es:"Ketores (mañana)",   fr:"Ketores (matin)",   ru:"Кторет (утро)"},
+  off_ketores_pm:{en:"Ketores (afternoon)", he:"קטורת (מנחה)",    es:"Ketores (tarde)",    fr:"Ketores (après-midi)",ru:"Кторет (день)"},
+  off_menorah:   {en:"Menorah oil — 3.5 log",he:"שמן המנורה — 3.5 לוג",es:"Aceite de la Menorá — 3.5 log",fr:"Huile de la Ménorah — 3.5 log",ru:"Масло меноры — 3.5 лог"},
+  off_lechem:    {en:"Lechem HaPanim placed — 24 issaron flour",he:"לחם הפנים — 24 עשרון קמח",es:"Lechem HaPanim — 24 isarón harina",fr:"Lechem HaPanim — 24 issaron farine",ru:"Лехем а-Паним — 24 иссарона муки"},
+  off_omer_bar:  {en:"1 issaron barley flour (wave offering)", he:"עשרון קמח שעורים (תנופה)",es:"1 isarón de harina de cebada",fr:"1 issaron de farine d'orge",ru:"1 иссарон ячменной муки"},
+  off_lamb_olah: {en:"1 lamb (olah) with nesachim",  he:"כבש עולה + נסכים",  es:"1 cordero (olá) con nesajim",  fr:"1 agneau (ola) avec nesakhim",  ru:"1 ягнёнок (ола) с несахим"},
+  off_bull_olah: {en:"bulls (olah) with nesachim",   he:"פרים עולה + נסכים", es:"toros (olá) con nesajim",      fr:"taureaux (ola) avec nesakhim",  ru:"быков (ола) с несахим"},
+  off_ram_olah:  {en:"rams (olah) with nesachim",    he:"אילים עולה + נסכים",es:"carneros (olá) con nesajim",   fr:"béliers (ola) avec nesakhim",   ru:"баранов (ола) с несахим"},
+  off_lambs_olah:{en:"lambs (olah) with nesachim",   he:"כבשים עולה + נסכים",es:"corderos (olá) con nesajim",   fr:"agneaux (ola) avec nesakhim",   ru:"ягнят (ола) с несахим"},
+  off_goat:      {en:"1 goat (chatas)",              he:"שעיר חטאת",         es:"1 cabra (jatát)",              fr:"1 chèvre (hatat)",              ru:"1 козёл (хатат)"},
+  off_goats2:    {en:"2 goats — chatas & Azazel",    he:"שני שעירים — חטאת ועזאזל",es:"2 cabras — jatát y Azazel", fr:"2 chèvres — hatat et Azazel",  ru:"2 козла — хатат и Азазель"},
+  off_ketores2:  {en:"Ketores — special machta offering (×2)", he:"קטורת — מחתה מיוחדת (×2)", es:"Ketores — ofrenda especial (×2)", fr:"Ketores — offrande spéciale (×2)", ru:"Кторет — особое приношение (×2)"},
+  off_shtei_lech:{en:"Shtei HaLechem — 2 wheat loaves (4 issaron)",he:"שתי הלחם — 4 עשרון חיטה",es:"Shtei HaLechem — 4 isarón trigo",fr:"Shtei HaLechem — 4 issaron blé",ru:"Штей а-Лехем — 4 иссарона пшеницы"},
+  off_lambs_sht: {en:"2 lambs (shelamim, accompany Shtei HaLechem)",he:"2 כבשים שלמים עם שתי הלחם",es:"2 corderos (shelamim) con Shtei HaLechem",fr:"2 agneaux (shelamim) avec Shtei HaLechem",ru:"2 ягнёнка (шеламим) с Штей а-Лехем"},
+  off_rams_olah: {en:"rams (olah) with nesachim",he:"אילים עולה + נסכים",es:"carneros (olá) con nesajim",fr:"béliers (ola) avec nesakhim",ru:"баранов (ола) с несахим"},
+  off_goats2_cht:{en:"2 goats (chatas)",he:"שני שעירי חטאת",es:"2 cabras (jatát)",fr:"2 chèvres (hatat)",ru:"2 козла (хатат)"},
+  grp_daily:     {en:"Daily & Weekly",         he:"יומי ושבועי",       es:"Diario y Semanal",        fr:"Quotidien et Hebdomadaire", ru:"Ежедневные и Еженедельные"},
+  grp_pilgrimage:{en:"Pilgrimage Festivals",   he:"שלוש רגלים",        es:"Festividades de Peregrinación", fr:"Fêtes de Pèlerinage",  ru:"Праздники Паломничества"},
+  grp_individual:{en:"Individual Offerings",   he:"קרבנות יחיד",       es:"Ofrendas Individuales",   fr:"Offrandes Individuelles",   ru:"Индивидуальные Жертвы"},
+
+
+  chatzi_lbl:    {en:"Chatzi shekel:", he:"מחצית השקל:", es:"Chatzi shekel:", fr:"Chatzi shekel:", ru:"Чаци-шекель:"},
+  pidyon_lbl:    {en:"Pidyon haben:",  he:"פדיון הבן:",  es:"Pidyon haben:",  fr:"Pidyon haben:",  ru:"Пидьон а-бен:"},
+
+
+  refresh_lbl:   {en:"Refresh",      he:"רענן",          es:"Actualizar",   fr:"Actualiser",    ru:"Обновить"},
+  live_lbl:      {en:"live",         he:"חי",             es:"en vivo",      fr:"en direct",     ru:"онлайн"},
+  est_lbl:       {en:"est.",         he:"משוער",          es:"est.",         fr:"est.",           ru:"приблиз."},
+  manual_lbl:    {en:"manual",       he:"ידני",           es:"manual",       fr:"manuel",         ru:"вручную"},
+  fetch_fail:    {en:"fetch failed — using manual rate", he:"הבאה נכשלה — משתמש בשיעור ידני", es:"error al obtener — usando tasa manual", fr:"échec — taux manuel utilisé", ru:"ошибка загрузки — используется ручной курс"},
+  edit_override: {en:"Edit above to override.", he:"ערוך למעלה לשינוי.", es:"Edite arriba para anular.", fr:"Modifiez ci-dessus pour remplacer.", ru:"Отредактируйте выше для замены."},
+  bikkurim_auto: {en:"Bikkurim set automatically", he:"ביכורים מוגדרים אוטומטית", es:"Bikkurim configurados automáticamente", fr:"Bikkourim définis automatiquement", ru:"Бикурим установлены автоматически"},
+  bikkurim_based:{en:"based on your financial standing:", he:"על פי מעמדך הכלכלי:", es:"según su situación económica:", fr:"selon votre situation financière:", ru:"на основе вашего финансового положения:"},
+  at_current:    {en:"at current silver prices", he:"במחירי כסף עדכניים", es:"a precios actuales de plata", fr:"aux prix actuels de l'argent", ru:"по текущим ценам серебра"},
+  bitul_note:    {en:"The person who violated a Shabbos prohibition and brings a chatas has a cleaner ledger at year's end than the person who stayed home and saved the airfare, which generally cannot be fixed.", he:"מי שעבר על איסור שבת ומביא חטאת, חשבונו נקי יותר בסוף השנה ממי שנשאר בבית וחסך בדמי הטיסה, שבדרך כלל לא ניתן לתקנם.", es:"La persona que violó una prohibición de Shabat y trae una chatas tiene un registro más limpio al final del año que la persona que se quedó en casa y ahorró el pasaje aéreo, que generalmente no se puede corregir.", fr:"La personne qui a violé une interdiction de Chabbat et apporte une 'hatat a un registre plus propre en fin d'année que celle qui est restée chez elle et a économisé le billet d'avion, ce qui en général ne peut être réparé.", ru:"Человек, нарушивший запрет Шаббата и принёсший хатат, имеет более чистый счёт в конце года, чем тот, кто остался дома и сэкономил на билете, — ведь это, как правило, нельзя исправить."},
+  lodging_lbl:   {en:"lodging", he:"לינה", es:"alojamiento", fr:"hébergement", ru:"проживание"},
+  nights_lbl:    {en:"nights",  he:"לילות", es:"noches",     fr:"nuits",        ru:"ночей"},
+  slider_desc:   {en:"Slider sets the starting quantities below. Adjust freely with +/- after.", he:"המחוון קובע את הכמויות ההתחלתיות למטה. ניתן לשנות בחופשיות עם +/-.", es:"El control deslizante establece las cantidades iniciales. Ajuste libremente con +/-.", fr:"Le curseur définit les quantités initiales. Ajustez librement avec +/-.", ru:"Ползунок задаёт начальные количества. Корректируйте свободно с помощью +/-."},
+  travel_excl:   {en:"Travel costs not included —", he:"עלויות נסיעה לא כלולות —", es:"Costos de viaje no incluidos —", fr:"Frais de voyage non inclus —", ru:"Расходы на поездку не включены —"},
+  excl_suffix:   {en:"excluded", he:"לא כלול", es:"excluidos", fr:"exclus", ru:"исключено"},
+  set_in_assumptions: {en:"set in assumptions", he:"מוגדר בהנחות",    es:"definido en supuestos",   fr:"défini dans les hypothèses", ru:"задано в настройках"},
+  auto_lbl:           {en:"auto",               he:"אוטומטי",         es:"auto",                    fr:"auto",                       ru:"авто"},
+  baseline_lbl:       {en:"baseline",           he:"בסיס",             es:"base",                    fr:"base",                       ru:"базовый"},
+  travel_todah_lbl:   {en:"for", he:"עבור", es:"para", fr:"pour", ru:"за"},
+  travel_todah_suf:   {en:"travel", he:"נסיעות", es:"viaje", fr:"voyage", ru:"поездку"},
+  offering_lbl:  {en:"offering",               he:"קרבן",              es:"ofrenda",                 fr:"offrande",                  ru:"жертва"},
+  offerings_lbl: {en:"offerings",              he:"קרבנות",            es:"ofrendas",                fr:"offrandes",                 ru:"жертвы"},
+  cat_total_lbl: {en:"Total —",                he:"סך הכל —",          es:"Total —",                 fr:"Total —",                   ru:"Итого —"},
+  per_offering:  {en:"Per Offering",     he:"לקרבן",        es:"Por Ofrenda",         fr:"Par Offrande",        ru:"За Жертву"},
+  details:       {en:"details",          he:"פרטים",        es:"detalles",            fr:"détails",             ru:"детали"},
+  hide:          {en:"hide",             he:"הסתר",         es:"ocultar",             fr:"masquer",             ru:"скрыть"},
+  clear:         {en:"CLEAR",            he:"נקה",           es:"LIMPIAR",             fr:"EFFACER",             ru:"ОЧИСТИТЬ"},
+
+  // Prices tab
+  prices_intro:  {en:"All prices are Jerusalem market rates.", he:"כל המחירים על פי שערי השוק בירושלים.", es:"Todos los precios son precios de mercado de Jerusalén.", fr:"Tous les prix sont des prix du marché de Jérusalem.", ru:"Все цены основаны на рыночных ценах Иерусалима."},
+  prices_conv:   {en:"korbanos are brought in Jerusalem. NIS prices converted to USD at $1 = NIS", he:"קרבנות מובאים בירושלים. מחירים בשקל מומרים לדולר בשיעור $1 = שקל", es:"Los korbanot se traen en Jerusalén. Precios en NIS convertidos a USD a $1 = NIS", fr:"Les korbanot sont apportés à Jérusalem. Prix en NIS convertis en USD à $1 = NIS", ru:"Корбанот приносятся в Иерусалиме. Цены в NIS конвертированы в USD по курсу $1 = NIS"},
+  shiur_impact:  {en:"Shiur impact:", he:"השפעת השיעור:", es:"Impacto del Shiur:", fr:"Impact du Shiur:", ru:"Влияние Шиура:"},
+  agr_mult:      {en:"Agricultural items (flour, oil, wine) are x", he:"פריטים חקלאיים (קמח, שמן, יין) הם x", es:"Los artículos agrícolas (harina, aceite, vino) son x", fr:"Les articles agricoles (farine, huile, vin) sont x", ru:"Сельскохозяйственные товары (мука, масло, вино) — x"},
+  agr_baseline:  {en:"the R' Naeh baseline.", he:"הבסיס של רב נאה.", es:"la línea de base de R' Naeh.", fr:"la base de référence de R' Naeh.", ru:"относительно базового значения р. Наэ."},
+  source_lbl:    {en:"Source", he:"מקור", es:"Fuente", fr:"Source", ru:"Источник"},
+  notes_lbl:     {en:"Notes",  he:"הערות", es:"Notas", fr:"Notes",  ru:"Примечания"},
+  per_lbl:       {en:"per",    he:"לפי",   es:"por",   fr:"par",    ru:"по"},
+  active_shita:  {en:"ACTIVE SHITA:",    he:"שיטה פעילה:",   es:"SHITA ACTIVA:",       fr:"SHITA ACTIVE:",       ru:"АКТИВНАЯ ШИТА:"},
+  livestock:     {en:"Livestock",        he:"בהמות",          es:"Ganado",              fr:"Bétail",              ru:"Скот"},
+  agricultural:  {en:"Agricultural",     he:"חקלאי",          es:"Agrícola",            fr:"Agricole",            ru:"Сельскохозяйственное"},
+  shiur_dep:     {en:"SHIUR-DEPENDENT",  he:"תלוי בשיעור",    es:"DEPENDE DEL SHIUR",   fr:"DÉPEND DU SHIUR",     ru:"ЗАВИСИТ ОТ ШИУРА"},
+  fixed_formula: {en:"FIXED FORMULA",    he:"נוסחה קבועה",    es:"FÓRMULA FIJA",        fr:"FORMULE FIXE",        ru:"ФИКСИРОВАННАЯ ФОРМУЛА"},
+  halachic_meas: {en:"Halachic Measurement Conversions", he:"המרות מידות הלכתיות", es:"Conversiones de Medidas Halájicas", fr:"Conversions de Mesures Halakhiques", ru:"Перевод Алахических Мер"},
+  sources_btn:   {en:"sources",          he:"מקורות",         es:"fuentes",             fr:"sources",             ru:"источники"},
+  disclaimer_body:  {en:"Do not rely on anything here for any halachic decision whatsoever. The violation examples, korban obligations, shiur conversions, and price estimates presented here have not been reviewed by any rabbinic authority and may contain errors, oversimplifications, or outright mistakes. All halachic questions must be addressed to a qualified posek.", he:"אין להסתמך על כל מה שמופיע כאן לכל פסיקה הלכתית. הדוגמאות, החיובים, המידות והמחירים לא נבדקו על ידי כל רשות רבנית ועלולים להכיל טעויות. כל שאלה הלכתית יש להפנות לפוסק מוסמך.", es:"No se base en nada aquí para ninguna decisión halájica. Los ejemplos, obligaciones, conversiones de medidas y estimaciones de precios no han sido revisados por ninguna autoridad rabínica y pueden contener errores. Todas las preguntas halájicas deben dirigirse a un posek calificado.", fr:"Ne vous fiez à rien ici pour toute décision halakhique. Les exemples, obligations, conversions de mesures et estimations de prix n'ont pas été examinés par une autorité rabbinique et peuvent contenir des erreurs. Toutes les questions halakhiques doivent être adressées à un posek qualifié.", ru:"Не полагайтесь ни на что здесь для каких-либо алахических решений. Примеры, обязанности, единицы измерения и оценки цен не проверялись раввинскими авторитетами и могут содержать ошибки. Все алахические вопросы следует адресовать квалифицированному поску."},
+  disclaimer_title:{en:"For Educational Purposes Only", he:"למטרות חינוכיות בלבד", es:"Solo con Fines Educativos", fr:"À des Fins Éducatives Uniquement", ru:"Только в Образовательных Целях"},
+
+  // Category names (short, for summary bar and headings)
+  cat_name_fixed:    {en:"Fixed Obligations",       he:"חובות קבועות",   es:"Obligaciones Fijas",       fr:"Obligations Fixes",          ru:"Постоянные Обязанности"},
+  cat_name_personal: {en:"Personal Violations",     he:"עבירות אישיות",  es:"Violaciones Personales",   fr:"Violations Personnelles",    ru:"Личные Нарушения"},
+  cat_name_todah:    {en:"Thanksgiving",             he:"תודה",           es:"Acción de Gracias",        fr:"Action de Grâce",            ru:"Благодарность"},
+  cat_name_life:     {en:"Life Events & Voluntary",  he:"אירועי חיים",   es:"Eventos de Vida",          fr:"Événements de Vie",          ru:"Жизненные События"},
+  cat_name_travel:   {en:"Aliyah L'Regel - Travel",  he:"עלייה לרגל",    es:"Aliyá LaRéguel - Viaje",   fr:"Aliya LaRegel - Voyage",     ru:"Алия Ле-Регель - Поездка"},
+  each_lbl:      {en:"each",     he:"כל אחד",  es:"cada uno",  fr:"chaque",  ru:"каждый"},
+
+  // Regalim buttons
+  rgl_pesach:    {en:"Pesach",    he:"פֶּסַח",       es:"Pesaj",     fr:"Pessa'h",    ru:"Песах"},
+  rgl_shavuos:   {en:"Shavuos",  he:"שָׁבֻעוֹת",     es:"Shavuot",   fr:"Chavouot",   ru:"Шавуот"},
+  rgl_sukkos:    {en:"Sukkos",   he:"סֻכּוֹת",        es:"Sucot",     fr:"Soukot",     ru:"Суккот"},
+  // Travel settings
+  trav_flight:   {en:"Flight / person",  he:"טיסה / אדם",     es:"Vuelo / persona",  fr:"Vol / personne",    ru:"Перелёт / чел."},
+  trav_hotel:    {en:"Nightly hotel",    he:"לינה ללילה",     es:"Hotel por noche",   fr:"Hôtel par nuit",    ru:"Отель / ночь"},
+  trav_extra:    {en:"Extra travelers",  he:"מטיילים נוספים", es:"Viajeros extra",    fr:"Voyageurs supp.",   ru:"Доп. путешественники"},
+  trav_beyond:   {en:"beyond self",      he:"מעבר לעצמך",     es:"aparte de uno mismo",fr:"en plus de soi",   ru:"кроме себя"},
+  trav_pesach_n: {en:"Pesach nights",    he:"לילות פסח",      es:"Noches de Pesaj",  fr:"Nuits de Pessa'h",  ru:"Ночи Песаха"},
+  trav_shavuos_n:{en:"Shavuos nights",   he:"לילות שבועות",   es:"Noches de Shavuot",fr:"Nuits de Chavouot", ru:"Ночи Шавуота"},
+  trav_sukkos_n: {en:"Sukkos nights",    he:"לילות סוכות",    es:"Noches de Sucot",  fr:"Nuits de Soukot",   ru:"Ночи Суккота"},
+  // Financial tiers
+  tier_average:  {en:"Average",          he:"בינוני",          es:"Promedio",          fr:"Moyen",             ru:"Средний"},
+  tier_poor:     {en:"Poor (Ani)",       he:"עני",             es:"Pobre (Ani)",       fr:"Pauvre (Ani)",      ru:"Бедный (Ани)"},
+  tier_avg:      {en:"Average",          he:"בינוני",          es:"Promedio",          fr:"Moyen",             ru:"Средний"},
+  tier_wealthy:  {en:"Wealthy (Ashir)",  he:"עשיר",            es:"Rico (Ashir)",      fr:"Riche (Ashir)",     ru:"Богатый (Ашир)"},
+  // Today tab day labels
+  day_weekday:   {en:"Weekday",          he:"יום חול",         es:"Día de semana",     fr:"Jour de semaine",   ru:"Будний день"},
+  day_shabbos:   {en:"Shabbos",          he:"שַׁבָּת",          es:"Shabat",            fr:"Chabbat",           ru:"Шаббат"},
+  day_rc:        {en:"Rosh Chodesh",     he:"רֹאשׁ חֹדֶשׁ",   es:"Rosh Jodesh",       fr:"Roch Hachôdech",    ru:"Рош Ходеш"},
+  day_shabbos_rc:{en:"Shabbos Rosh Chodesh", he:"שבת ראש חודש", es:"Shabat Rosh Jodesh",fr:"Chabbat Roch Hachôdech",ru:"Шаббат Рош Ходеш"},
+  day_14nisan:   {en:"14 Nisan — Erev Pesach", he:"י׳׳ד ניסן — ערב פסח", es:"14 Nisán — Erev Pesaj",fr:"14 Nissan — Erev Pessa'h",ru:"14 Нисана — Канун Песаха"},
+  day_yomkippur: {en:"Yom Kippur",       he:"יוֹם כִּפּוּר",  es:"Yom Kipur",         fr:"Yom Kippour",       ru:"Йом Кипур"},
+  day_shemini:   {en:"Shemini Atzeres",  he:"שְׁמִינִי עֲצֶרֶת",es:"Shemini Atzeret", fr:"Chemini Atseret",   ru:"Шмини Ацерет"},
+  day_rh:        {en:"Rosh Hashana",     he:"רֹאשׁ הַשָּׁנָה", es:"Rosh Hashaná",     fr:"Roch Hachana",      ru:"Рош а-Шана"},
+  day_rh_shab:   {en:"Rosh Hashana & Shabbos", he:"ראש השנה ושבת", es:"Rosh Hashaná y Shabat",fr:"Roch Hachana et Chabbat",ru:"Рош а-Шана и Шаббат"},
+  day_shavuos:   {en:"Shavuos",          he:"שָׁבֻעוֹת",       es:"Shavuot",           fr:"Chavouot",          ru:"Шавуот"},
+  // Today block titles
+  blk_shacharit: {en:"Shacharit",        he:"שַׁחֲרִית",        es:"Shajarit",          fr:"Chaharit",          ru:"Шахарит"},
+  blk_omer:      {en:"Korban HaOmer",    he:"קָרְבַּן הָעֹמֶר", es:"Korban HaOmer",    fr:"Korban HaOmer",     ru:"Корбан а-Омер"},
+  blk_mussaf:    {en:"Mussaf",   he:"מוסף",  es:"Mussaf",   fr:"Moussaf",  ru:"Мусаф"},
+  blk_mincha:    {en:"Mincha / Afternoon",he:"מִנְחָה",         es:"Minjá / Tarde",     fr:"Minha / Après-midi",ru:"Минха / Послеполуденная"},
+  // Bikkurim basket types
+  bik_straw:     {en:"straw basket",     he:"סל קש",           es:"cesta de paja",     fr:"panier de paille",  ru:"соломенная корзина"},
+  bik_silver:    {en:"silver basket",    he:"סל כסף",          es:"cesta de plata",    fr:"panier en argent",  ru:"серебряная корзина"},
+  bik_gold:      {en:"gold basket + doves",he:"סל זהב + יונים",es:"cesta de oro + palomas",fr:"panier en or + colombes",ru:"золотая корзина + голуби"},
+  // Shalmei / todah auto notes
+  auto_regalim:  {en:"auto:",            he:"אוטומטי:",        es:"auto:",              fr:"auto:",              ru:"авто:"},
+  reset_auto:    {en:"reset to auto",    he:"אפס לאוטומטי",   es:"restablecer a auto",fr:"réinitialiser auto", ru:"сбросить на авто"},
+  regalim_word:  {en:"regel",            he:"רגל",             es:"regalim",           fr:"règle",              ru:"регель"},
+  regalim_pl:    {en:"regalim",          he:"רגלים",           es:"regalim",           fr:"regalim",            ru:"регалим"},
+  overridden:    {en:"You have overridden one or more values above.", he:"שינית ערכים אחדים.", es:"Ha anulado uno o más valores.", fr:"Vous avez remplacé certaines valeurs.", ru:"Вы изменили одно или несколько значений."},
+  ashir_note:    {en:"ASHIR DEFAULTS — Business class flights and luxury hotel set automatically.", he:"הגדרות עשיר — טיסות מחלקת עסקים ומלון יוקרה.", es:"VALORES ASHIR — Vuelos en clase ejecutiva y hotel de lujo.", fr:"VALEURS ASHIR — Vols en classe affaires et hôtel de luxe.", ru:"НАСТРОЙКИ АШИРА — Бизнес-класс и люкс-отель."},
+};
+
 const CAT = {
   FIXED:    "Fixed Obligations",
   PERSONAL: "Personal Violations",
@@ -302,20 +511,23 @@ function fixedPriceFor(id, silverUsdPerGram=SILVER_USD_PER_GRAM_FALLBACK, financ
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function korbanosCalculator() {
   const [activeTab,        setActiveTab]        = useState("annual");
+  const [lang,             setLang]             = useState("en");
+  const [langOpen,         setLangOpen]         = useState(false);
+  const [currency,         setCurrency]         = useState<"usd"|"nis">("usd");
   const [todayAbs,         setTodayAbs]         = useState<number>(()=>gregToAbs(new Date()));
-  const [counts,           setCounts]           = useState({});
-  const [expanded,         setExpanded]         = useState({});
+  const [counts,           setCounts]           = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
+  const [expanded,         setExpanded]         = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
   const [activeGroup,      setActiveGroup]      = useState("Daily & Weekly");
   const [profileQtys,      setProfileQtys]      = useState(Object.fromEntries(ANNUAL_ASSUMPTIONS.map(a=>[a.id,a.defaultQty])));
-  const [showRationale,    setShowRationale]    = useState({});
-  const [showExamples,     setShowExamples]     = useState({});
+  const [showRationale,    setShowRationale]    = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
+  const [showExamples,     setShowExamples]     = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
   const [regalimAttending, setRegalimAttending] = useState({pesach:true,shavuot:true,sukkot:true});
-  const [expandedPrice,    setExpandedPrice]    = useState({});
-  const [expandedCommune,  setExpandedCommune]  = useState({});
+  const [expandedPrice,    setExpandedPrice]    = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
+  const [expandedCommune,  setExpandedCommune]  = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
   const [showSettings,     setShowSettings]     = useState(false);
   const [shiurId,          setShiurId]          = useState("naeh");
   const [usdPerNis,        setUsdPerNis]        = useState(1/2.96);
-  const [rateStatus,       setRateStatus]       = useState("idle");
+  const [rateStatus,       setRateStatus]       = useState<"idle"|"loading"|"live"|"error">("idle");
   const [silverUsdPerGram, setSilverUsdPerGram] = useState(SILVER_USD_PER_GRAM_FALLBACK);
   const [silverStatus,     setSilverStatus]     = useState<"idle"|"loading"|"live"|"error">("idle");
   const [silverInputVal,   setSilverInputVal]   = useState((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));
@@ -366,6 +578,16 @@ export default function korbanosCalculator() {
     fetchSilverPrice().then(ok=>{ if(!ok) setSilverStatus("error"); });
   },[]);
 
+  // Close language dropdown on outside click
+  useEffect(()=>{
+    if(!langOpen) return;
+    const handler=(e)=>{
+      if(!e.target.closest("#lang-dropdown")) setLangOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return ()=>document.removeEventListener("mousedown", handler);
+  },[langOpen]);
+
   // Refresh NIS rate only
   const fetchRate=async()=>{
     setRateStatus("loading");
@@ -384,6 +606,26 @@ export default function korbanosCalculator() {
   const silverPerTroyOz = (silverUsdPerGram*31.1035).toFixed(2);
 
   const shiur        = SHIURIM[shiurId];
+  const isHe         = lang==="he";
+  const H_MONTH_NAMES = lang==="he"?H_MONTH_NAMES_HE:lang==="es"?H_MONTH_NAMES_ES:lang==="fr"?H_MONTH_NAMES_FR:lang==="ru"?H_MONTH_NAMES_RU:H_MONTH_NAMES_EN;
+  const T            = (key) => (TR[key]&&TR[key][lang]) || (TR[key]&&TR[key]["en"]) || key;
+  const LANGS = [{code:"en",label:"English"},{code:"he",label:"עברית"},{code:"es",label:"Español"},{code:"fr",label:"Français"},{code:"ru",label:"Русский"}];
+  const fmtC = (usdVal) => currency==="nis" ? fmtNIS(usdVal/usdPerNis) : fmt(usdVal);
+  const dir          = isHe ? "rtl" : "ltr";
+  const CAT_NAMES    = {
+    [CAT.FIXED]:    T("cat_name_fixed"),
+    [CAT.PERSONAL]: T("cat_name_personal"),
+    [CAT.TODAH]:    T("cat_name_todah"),
+    [CAT.LIFE]:     T("cat_name_life"),
+    [CAT.TRAVEL]:   T("cat_name_travel"),
+  };
+  const CAT_NOTES_L  = {
+    [CAT.FIXED]:    T("cat_fixed"),
+    [CAT.PERSONAL]: T("cat_personal"),
+    [CAT.TODAH]:    T("cat_todah"),
+    [CAT.LIFE]:     T("cat_life"),
+    [CAT.TRAVEL]:   T("cat_travel"),
+  };
   const tier         = FINANCIAL_TIERS[financialTier];
   const currentLevel = STRICTNESS_LEVELS[strictness-1];
   const nisPerUsd    = usdPerNis>0?(1/usdPerNis).toFixed(2):"–";
@@ -493,8 +735,8 @@ export default function korbanosCalculator() {
 
   const disclaimer=(
     <div style={{padding:"1.1rem 1.4rem",background:"rgba(139,0,0,.15)",border:"1px solid #aa3030",borderLeft:"4px solid #e04040",fontSize:"1rem",lineHeight:1.8,color:"#f0c0a0",marginTop:"1.5rem"}}>
-      <div style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.1em",color:"#e04040",marginBottom:"0.5rem",fontWeight:700}}>For Educational Purposes Only</div>
-      <strong style={{color:"#f0ddb0"}}>Do not rely on anything here for any halachic decision whatsoever.</strong> The violation examples, korban obligations, shiur conversions, and price estimates presented here have not been reviewed by any rabbinic authority and may contain errors, oversimplifications, or outright mistakes. All halachic questions must be addressed to a qualified posek.
+      <div style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.1em",color:"#e04040",marginBottom:"0.5rem",fontWeight:700}}>{T("disclaimer_title")}</div>
+      <strong style={{color:"#f0ddb0"}}>{T("disclaimer_body")}</strong>
     </div>
   );
 
@@ -519,7 +761,7 @@ export default function korbanosCalculator() {
   };
 
   return(
-    <div style={{minHeight:"100vh",background:"radial-gradient(ellipse at top,#1e0e06 0%,#120a04 50%,#080402 100%)",color:"#f0ddb0",fontFamily:"'EB Garamond',Georgia,serif",padding:"2rem 1rem",fontSize:"17px",lineHeight:1.6}}>
+    <div dir={dir} style={{minHeight:"100vh",background:"radial-gradient(ellipse at top,#1e0e06 0%,#120a04 50%,#080402 100%)",color:"#f0ddb0",fontFamily:"'EB Garamond',Georgia,serif",padding:"2rem 1rem",fontSize:"17px",lineHeight:1.6}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap');
         .df{font-family:'Cinzel',serif;letter-spacing:0.05em}
@@ -538,7 +780,23 @@ export default function korbanosCalculator() {
       <div style={{maxWidth:1000,margin:"0 auto"}}>
 
         {/* HEADER */}
-        <header style={{textAlign:"center",marginBottom:"2rem"}}>
+        <header style={{textAlign:"center",marginBottom:"2rem",position:"relative"}}>
+          <div style={{position:"absolute",top:0,left:0,display:"flex",gap:"0.25rem"}}><button onClick={()=>setCurrency("usd")} style={{padding:"0.28rem 0.6rem",background:currency==="usd"?"rgba(240,192,96,.18)":"transparent",border:"1px solid "+(currency==="usd"?"#f0c060":"#3a2010"),color:currency==="usd"?"#f0c060":"#5a3a1a",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.78rem",letterSpacing:"0.06em",borderRadius:2}}>$</button><button onClick={()=>setCurrency("nis")} style={{padding:"0.28rem 0.6rem",background:currency==="nis"?"rgba(240,192,96,.18)":"transparent",border:"1px solid "+(currency==="nis"?"#f0c060":"#3a2010"),color:currency==="nis"?"#f0c060":"#5a3a1a",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.78rem",letterSpacing:"0.06em",borderRadius:2}}>₪</button></div>
+          <div id="lang-dropdown" style={{position:"absolute",top:0,right:0,zIndex:100}}>
+            <button onClick={()=>setLangOpen(o=>!o)} style={{display:"flex",alignItems:"center",gap:"0.4rem",padding:"0.35rem 0.75rem",background:langOpen?"rgba(240,192,96,.15)":"transparent",border:"1px solid "+(langOpen?"#f0c060":"#5a3a1a"),color:langOpen?"#f0c060":"#7a5030",cursor:"pointer",fontFamily:lang==="he"?"'Frank Ruhl Libre',serif":"'Cinzel',serif",fontSize:"0.8rem",letterSpacing:lang==="he"?"0":"0.08em",borderRadius:2}}>
+              {LANGS.find(l=>l.code===lang).label}
+              <span style={{fontSize:"0.6rem",opacity:0.7,marginLeft:2}}>{langOpen?"▲":"▼"}</span>
+            </button>
+            {langOpen&&(
+              <div style={{position:"absolute",top:"calc(100% + 4px)",right:0,minWidth:140,background:"#1a0a02",border:"1px solid #7a4f20",boxShadow:"0 8px 32px rgba(0,0,0,.7)",overflow:"hidden"}}>
+                {LANGS.map((l,i)=>(
+                  <button key={l.code} onClick={()=>{setLang(l.code);setLangOpen(false);}} style={{display:"block",width:"100%",padding:"0.55rem 1rem",background:lang===l.code?"rgba(240,192,96,.12)":"transparent",border:"none",borderBottom:i<LANGS.length-1?"1px solid #2a1404":"none",color:lang===l.code?"#f0c060":"#a08050",cursor:"pointer",fontFamily:l.code==="he"?"'Frank Ruhl Libre',serif":l.code==="ru"?"Georgia,serif":"'Cinzel',serif",fontSize:"0.85rem",letterSpacing:l.code==="he"||l.code==="ru"?"0":"0.06em",textAlign:"left"}}>
+                    {lang===l.code&&<span style={{color:"#f0c060",marginRight:6,fontSize:"0.65rem"}}>✦</span>}{l.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <div style={{display:"inline-flex",alignItems:"center",gap:"0.75rem",color:"#f0c060",marginBottom:"0.5rem"}} className="fl">
             <div style={{width:40,height:1,background:"#f0c060"}}/>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2s4 4 4 8a4 4 0 1 1-8 0c0-1.5.5-2.5 1-3.5C10 8 10 10 11 10c.5 0 1-.5 1-1 0-2-1-4 0-7z"/></svg>
@@ -546,55 +804,55 @@ export default function korbanosCalculator() {
           </div>
           <h1 className="df" style={{fontSize:"clamp(2rem,4vw,3rem)",fontWeight:700,margin:"0.4rem 0",color:"#f0ddb0",textShadow:"0 2px 20px rgba(240,192,96,.3)"}}>KORBANOS</h1>
           <div className="hf" style={{fontSize:"clamp(1.4rem,3vw,2.2rem)",color:"#f0c060",marginBottom:"0.5rem"}}>קָרְבְּנוֹת בֵּית הַמִּקְדָּשׁ</div>
-          <p style={{fontStyle:"italic",color:"#c9a45a",maxWidth:560,margin:"0 auto",fontSize:"1rem",lineHeight:1.6}}>A modern-day price calculator for the sacrifices of the Temple. All prices based on Jerusalem market rates.</p>
+          <p style={{fontStyle:"italic",color:"#c9a45a",maxWidth:560,margin:"0 auto",fontSize:"1rem",lineHeight:1.6}}>{T("header_sub")}</p>
         </header>
 
         {/* TABS */}
         <div style={{display:"flex",gap:"0.4rem",marginBottom:"1.5rem",flexWrap:"wrap"}}>
-          {TAB("annual","My Annual Bill")}{TAB("communal","Annual Communal Budget")}{TAB("today","Today's Communal Costs")}{TAB("catalog","Full Catalog")}{TAB("prices","Prices & Sources")}
+          {TAB("annual",T("tab_annual"))}{TAB("communal",T("tab_communal"))}{TAB("today",T("tab_today"))}{TAB("catalog",T("tab_catalog"))}{TAB("prices",T("tab_prices"))}
         </div>
 
         {/* SETTINGS STRIP */}
         <div style={{marginBottom:"1.5rem",background:"rgba(20,10,2,.95)",border:"1px solid #7a4f20"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"0.5rem",padding:"0.75rem 1.1rem",borderBottom:showSettings?"1px solid #5a3a1a":"none"}}>
             <div style={{display:"flex",alignItems:"center",gap:"0.75rem 1.5rem",flexWrap:"wrap",fontSize:"0.9rem",color:"#c9a45a"}}>
-              <span><span style={{color:"#8a6030"}}>Live: </span><span style={{color:"#f0ddb0"}}>{livesInEY?"Eretz Yisroel":"Chutz L'Aretz"}</span></span>
+              <span><span style={{color:"#8a6030"}}>{T("strip_live")} </span><span style={{color:"#f0ddb0"}}>{livesInEY?T("strip_ey"):T("strip_cla")}</span></span>
               <span style={{color:"#5a3a1a"}}>|</span>
-              <span><span style={{color:"#8a6030"}}>Standing: </span><span style={{color:"#f0ddb0"}}>{tier.label}</span></span>
+              <span><span style={{color:"#8a6030"}}>{T("strip_standing")} </span><span style={{color:"#f0ddb0"}}>{T("tier_"+financialTier)}</span></span>
               <span style={{color:"#5a3a1a"}}>|</span>
-              <span><span style={{color:"#8a6030"}}>Shiur: </span><span style={{color:"#f0ddb0"}}>{shiur.labelShort}</span>{shiurId!=="naeh"&&<span style={{color:"#b070e0",marginLeft:"0.3rem"}}>x{shiur.multiplier}</span>}</span>
+              <span><span style={{color:"#8a6030"}}>{T("strip_shiur")} </span><span style={{color:"#f0ddb0"}}>{shiur.labelShort}</span>{shiurId!=="naeh"&&<span style={{color:"#b070e0",marginLeft:"0.3rem"}}>x{shiur.multiplier}</span>}</span>
               <span style={{color:"#5a3a1a"}}>|</span>
-              <span><span style={{color:"#8a6030"}}>Silver: </span><span style={{color:"#f0ddb0"}}>${silverInputVal}/oz</span>{silverStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{silverStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
+              <span><span style={{color:"#8a6030"}}>{T("strip_silver")} </span><span style={{color:"#f0ddb0"}}>${silverInputVal}/oz</span>{silverStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>{T("live_lbl")}</span>}{silverStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>{T("manual_lbl")}</span>}</span>
               <span style={{color:"#5a3a1a"}}>|</span>
-              <span><span style={{color:"#8a6030"}}>Rate: </span><span style={{color:"#f0ddb0"}}>$1 = NIS {nisPerUsd}</span>{rateStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>}{rateStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>manual</span>}</span>
+              <span><span style={{color:"#8a6030"}}>{T("strip_rate")} </span><span style={{color:"#f0ddb0"}}>{currency==="usd"?"$1 = NIS "+nisPerUsd:"₪1 = $"+(usdPerNis).toFixed(3)}</span>{rateStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>{T("live_lbl")}</span>}{rateStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>{T("manual_lbl")}</span>}</span>
             </div>
             <button onClick={()=>setShowSettings(s=>!s)} style={{padding:"0.5rem 1rem",background:showSettings?"rgba(240,192,96,.15)":"transparent",border:"1px solid "+(showSettings?"#f0c060":"#7a4f20"),color:"#f0c060",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",whiteSpace:"nowrap"}}>
-              {showSettings?"Close":"Assumptions"}
+              {showSettings?T("strip_close"):T("strip_assumptions")}
             </button>
           </div>
           {showSettings&&(
             <div className="fi" style={{padding:"1.25rem",borderTop:"1px solid #5a3a1a"}}>
               {/* Location / Eretz Yisroel */}
               <div style={{marginBottom:"1.25rem"}}>
-                <div style={lbl}>Location</div>
+                <div style={lbl}>{T("set_location")}</div>
                 <label style={{display:"flex",alignItems:"center",gap:"0.6rem",cursor:"pointer",fontSize:"0.95rem",color:"#f0ddb0",marginBottom:"0.6rem"}}>
                   <input type="checkbox" checked={livesInEY} onChange={e=>{setLivesInEY(e.target.checked);if(!e.target.checked) setIsLandowner(false);}} style={{width:16,height:16,accentColor:"#f0c060",cursor:"pointer"}}/>
-                  I live in Eretz Yisroel
+                  {T("set_ey_check")}
                 </label>
                 {livesInEY&&(
                   <div className="fi">
-                    <div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic",marginBottom:"0.75rem",lineHeight:1.6}}>Travel costs and travel-related todaos removed from your annual total.</div>
+                    <div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic",marginBottom:"0.75rem",lineHeight:1.6}}>{T("set_ey_note")}</div>
                     <label style={{display:"flex",alignItems:"center",gap:"0.6rem",cursor:"pointer",fontSize:"0.95rem",color:"#f0ddb0",marginBottom:"0.4rem"}}>
                       <input type="checkbox" checked={isLandowner} onChange={e=>setIsLandowner(e.target.checked)} style={{width:16,height:16,accentColor:"#f0c060",cursor:"pointer"}}/>
-                      I own agricultural land in Eretz Yisroel (obligated in Bikkurim)
+                      {T("set_landowner")}
                     </label>
                     {isLandowner&&(
                       <div style={{marginTop:"0.4rem",padding:"0.5rem 0.75rem",background:"rgba(192,122,216,.07)",border:"1px solid #7a4090",borderLeft:"3px solid #c07ad8",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
-                        <strong style={{color:"#f0ddb0"}}>Bikkurim set automatically</strong> based on your financial standing:{" "}
+                        <strong style={{color:"#f0ddb0"}}>{T("bikkurim_auto")}</strong> {T("bikkurim_based")}{" "}
                         {financialTier==="poor"&&"straw basket with produce (~$150)"}
                         {financialTier==="average"&&"silver basket with produce and decorations (~$450)"}
                         {financialTier==="wealthy"&&"gold basket kept by the Kohen, doves tied to handles, elaborate produce display (~$1,200)"}
-                        {" "}— <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("bikkurim",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>.{" "}
+                        {" "}— <strong style={{color:"#f0ddb0"}}>{fmtC(fixedPriceFor("bikkurim",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>.{" "}
                         Change your financial standing above to update.
                       </div>
                     )}
@@ -603,7 +861,7 @@ export default function korbanosCalculator() {
               </div>
               {/* Financial Standing */}
               <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
-                <div style={lbl}>Financial Standing</div>
+                <div style={lbl}>{T("set_standing")}</div>
                 <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",marginBottom:"0.6rem"}}>
                   {Object.values(FINANCIAL_TIERS).map(t=>(
                     <button key={t.id} onClick={()=>{
@@ -616,8 +874,7 @@ export default function korbanosCalculator() {
                         if(!travelUserEdited.nightlyRate) setTravelCfg(c=>({...c,nightlyRate:DEFAULT_TRAVEL.nightlyRate}));
                       }
                     }} style={{display:"flex",alignItems:"center",gap:"0.5rem",padding:"0.55rem 1rem",background:financialTier===t.id?"rgba(240,192,96,.18)":"transparent",color:financialTier===t.id?"#f0c060":"#c9a45a",border:"1px solid "+(financialTier===t.id?"#f0c060":"#5a3a1a"),cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
-                      <span style={{fontFamily:"'Cinzel',serif",fontWeight:600}}>{t.label}</span>
-                      <span className="hf" style={{fontSize:"1.1rem",color:financialTier===t.id?"#f0c060":"#7a5030"}}>{t.hebrew}</span>
+                      <span style={{fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",fontWeight:600}}>{T("tier_"+t.id)}</span>
                     </button>
                   ))}
                 </div>
@@ -625,12 +882,12 @@ export default function korbanosCalculator() {
               </div>
               {/* Shiur */}
               <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
-                <div style={lbl}>Shiur - Halachic Measurement Standard</div>
+                <div style={lbl}>{T("set_shiur")}</div>
                 <div style={{display:"flex",flexWrap:"wrap",gap:"0.4rem",marginBottom:"0.5rem"}}>
                   {Object.values(SHIURIM).map(s=>(
                     <button key={s.id} onClick={()=>setShiurId(s.id)} style={{padding:"0.45rem 0.9rem",background:shiurId===s.id?"rgba(240,192,96,.15)":"transparent",color:shiurId===s.id?"#f0c060":"#c9a45a",border:"1px solid "+(shiurId===s.id?"#f0c060":"#5a3a1a"),cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
                       <span style={{fontFamily:"'Cinzel',serif",fontWeight:600}}>{s.labelShort}</span>
-                      <span style={{marginLeft:"0.4rem",opacity:.75,fontSize:"0.8rem"}}>{s.multiplier===1?"baseline":"x"+(s.multiplier)}</span>
+                      <span style={{marginLeft:"0.4rem",opacity:.75,fontSize:"0.8rem"}}>{s.multiplier===1?T("baseline_lbl"):"x"+(s.multiplier)}</span>
                     </button>
                   ))}
                 </div>
@@ -638,7 +895,7 @@ export default function korbanosCalculator() {
               </div>
               {/* Silver price */}
               <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
-                <div style={lbl}>Silver Price (Chatzi Shekel & Pidyon HaBen)</div>
+                <div style={lbl}>{T("set_silver")}</div>
                 <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>Used to price silver-weight obligations. Weight scales with shiur — chatzi shekel = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g ({shiur.labelShort}); pidyon haben = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier*5/2).toFixed(1)}g.</div>
                 <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
                   <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>$</span>
@@ -659,66 +916,65 @@ export default function korbanosCalculator() {
                   />
                   <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>/troy oz</span>
                   <span style={{fontSize:"0.85rem",color:"#7a5030"}}>(= ${silverUsdPerGram.toFixed(4)}/g)</span>
-                  <button onClick={fetchSilver} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>Refresh</button>
+                  <button onClick={fetchSilver} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>{T("refresh_lbl")}</button>
                   {silverStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
                   {silverStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
-                  {silverStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>fetch failed — using manual rate</span>}
-                  {silverStatus==="idle"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>estimated</span>}
+                  {silverStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>{T("fetch_fail")}</span>}
+                  {silverStatus==="idle"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>{T("est_lbl")}</span>}
                 </div>
                 <div style={{marginTop:"0.6rem",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
-                  Chatzi shekel: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>
+                  {T("chatzi_lbl")} <strong style={{color:"#f0ddb0"}}>{fmtC(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>
                   <span style={{margin:"0 0.5rem",color:"#5a3a1a"}}>·</span>
-                  Pidyon haben: <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("pidyon_haben",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>
+                  {T("pidyon_lbl")} <strong style={{color:"#f0ddb0"}}>{fmtC(fixedPriceFor("pidyon_haben",silverUsdPerGram,financialTier,shiur.multiplier))}</strong>
                 </div>
               </div>
               {/* Exchange rate */}
               <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
-                <div style={lbl}>USD / NIS Exchange Rate</div>
+                <div style={lbl}>{T("set_rate")}</div>
                 <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>All prices are Jerusalem NIS rates, converted to USD for display.</div>
                 <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
                   <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>$1 =</span>
                   <input type="number" step="0.01" min="0.1" value={parseFloat(nisPerUsd)} onChange={e=>setUsdPerNis(1/(parseFloat(e.target.value)||2.96))} style={{width:70,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
                   <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>NIS</span>
-                  <button onClick={fetchRate} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>Refresh</button>
+                  <button onClick={fetchRate} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>{T("refresh_lbl")}</button>
                   {rateStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
                   {rateStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
-                  {rateStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>fetch failed - using manual rate</span>}
+                  {rateStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>{T("fetch_fail")}</span>}
                 </div>
               </div>
               {/* Travel — hidden for EY residents */}
               {!livesInEY&&(
               <div style={{paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"0.75rem"}}>
-                  <div style={{fontSize:"0.82rem",color:"#5aabdf",letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>Travel Assumptions</div>
+                  <div style={{fontSize:"0.82rem",color:"#5aabdf",letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>{T("set_travel")}</div>
                   <label style={{display:"flex",alignItems:"center",gap:"0.5rem",cursor:"pointer",fontSize:"0.9rem",color:"#c9a45a"}}>
                     <input type="checkbox" checked={includeTravel} onChange={e=>setIncludeTravel(e.target.checked)} style={{width:16,height:16,accentColor:"#f0c060",cursor:"pointer"}}/>
                     Include travel in total
                   </label>
                 </div>
                 <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:"0.75rem",marginBottom:"0.9rem"}}>
-                  {[{label:"Flight / person",key:"flightCost",prefix:"$",step:50},{label:"Nightly hotel",key:"nightlyRate",prefix:"$",step:25},{label:"Extra travelers",key:"familyMembers",step:1,suffix:"beyond self"},{label:"Pesach nights",key:"pesachNights",step:1},{label:"Shavuos nights",key:"shavuotNights",step:1},{label:"Sukkos nights",key:"sukkotNights",step:1}].map(({label,key,prefix,step,suffix})=>(
+                  {[{tkey:"trav_flight",key:"flightCost",prefix:"$",step:50},{tkey:"trav_hotel",key:"nightlyRate",prefix:"$",step:25},{tkey:"trav_extra",key:"familyMembers",step:1,suffix:"trav_beyond"},{tkey:"trav_pesach_n",key:"pesachNights",step:1},{tkey:"trav_shavuos_n",key:"shavuotNights",step:1},{tkey:"trav_sukkos_n",key:"sukkotNights",step:1}].map(({tkey,key,prefix,step,suffix})=>(
                     <div key={key}>
-                      <div style={{...lbl,fontSize:"0.7rem",letterSpacing:"0.06em",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{label}</div>
+                      <div style={{...lbl,fontSize:"0.7rem",letterSpacing:"0.06em",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{T(tkey)}</div>
                       <div style={{display:"flex",alignItems:"center",gap:"0.3rem"}}>
                         {prefix&&<span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>{prefix}</span>}
                         <input type="number" min="0" step={step} value={travelCfg[key]} onChange={e=>setTravel(key,parseFloat(e.target.value)||0)} style={{...inp,fontSize:"0.9rem"}}/>
-                        {suffix&&<span style={{fontSize:"0.72rem",color:"#7a5030",whiteSpace:"nowrap"}}>{suffix}</span>}
+                        {suffix&&<span style={{fontSize:"0.72rem",color:"#7a5030",whiteSpace:"nowrap"}}>{suffix?T(suffix):""}</span>}
                       </div>
                     </div>
                   ))}
                 </div>
                 {financialTier==="wealthy"&&(
                   <div style={{marginBottom:"0.75rem",padding:"0.6rem 0.9rem",background:"rgba(240,192,96,.06)",border:"1px solid #7a4f20",borderLeft:"3px solid #f0c060",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
-                    <span style={{color:"#f0ddb0",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.06em"}}>ASHIR DEFAULTS — </span>
-                    Business class flights ($5,000/person) and luxury hotel ($1,000/night) set automatically.{" "}
-                    {(travelUserEdited.flightCost||travelUserEdited.nightlyRate)&&<span style={{color:"#4ec98a"}}>You have overridden one or more values above.</span>}
-                    {(!travelUserEdited.flightCost&&!travelUserEdited.nightlyRate)&&<span style={{color:"#a08050",fontStyle:"italic"}}>Edit above to override.</span>}
+                    <span style={{color:"#f0ddb0",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.06em"}}>{T("ashir_note")}</span>{" "}
+                    {(travelUserEdited.flightCost||travelUserEdited.nightlyRate)&&<span style={{color:"#4ec98a"}}>{T("overridden")||"You have overridden one or more values above."}</span>}
+                    {(!travelUserEdited.flightCost&&!travelUserEdited.nightlyRate)&&<span style={{color:"#a08050",fontStyle:"italic"}}>{T("edit_override")}</span>}
                   </div>
                 )}
               </div>
               )}
               <div style={{display:"flex",justifyContent:"flex-end",paddingTop:"1rem",marginTop:"0.75rem",borderTop:"1px solid #5a3a1a"}}>
-                <button onClick={doReset} style={{padding:"0.5rem 1rem",background:"transparent",border:"1px solid #5a3a1a",color:"#8a6030",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.1em"}}>Reset Defaults</button>
+                <button onClick={doReset} style={{padding:"0.5rem 1rem",background:"transparent",border:"1px solid #5a3a1a",color:"#8a6030",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.1em"}}>{T("set_reset")}</button>
               </div>
             </div>
           )}
@@ -729,30 +985,29 @@ export default function korbanosCalculator() {
           <div className="fi">
             {/* Regalim selector */}
             <div style={{marginBottom:"1.75rem",padding:"1.25rem",background:"rgba(20,10,2,.8)",border:"1px solid #7a4f20"}}>
-              <div style={{fontSize:"0.9rem",color:"#f0c060",letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.85rem"}}>Which of the Shalosh Regalim are you ascending to Yerushalayim?</div>
+              <div style={{fontSize:"0.9rem",color:"#f0c060",letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.85rem"}}>{T("regalim_q")}</div>
               <div style={{display:"flex",gap:"0.85rem",flexWrap:"wrap",marginBottom:"0.9rem"}}>
-                {[{id:"pesach",label:"Pesach",hebrew:"פֶּסַח"},{id:"shavuot",label:"Shavuos",hebrew:"שָׁבֻעוֹת"},{id:"sukkot",label:"Sukkos",hebrew:"סֻכּוֹת"}].map(({id,label,hebrew})=>{
+                {[{id:"pesach",tkey:"rgl_pesach"},{id:"shavuot",tkey:"rgl_shavuos"},{id:"sukkot",tkey:"rgl_sukkos"}].map(({id,tkey})=>{
                   const going=regalimAttending[id];
                   return(<button key={id} onClick={()=>setRegalimAttending(r=>({...r,[id]:!r[id]}))} style={{display:"flex",alignItems:"center",gap:"0.6rem",padding:"0.65rem 1.2rem",background:going?"rgba(240,192,96,.15)":"rgba(30,14,6,.8)",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),color:going?"#f0ddb0":"#7a5030",cursor:"pointer",fontFamily:"inherit"}}>
                     <div style={{width:16,height:16,borderRadius:"50%",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),background:going?"#f0c060":"transparent",flexShrink:0}}/>
-                    <span style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400}}>{label}</span>
-                    <span className="hf" style={{color:going?"#f0c060":"#5a3a1a",fontSize:"1.15rem"}}>{hebrew}</span>
+                    <span style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{T(tkey)}</span>
                   </button>);
                 })}
               </div>
               {Object.values(regalimAttending).some(v=>!v)&&(
                 <div style={{padding:"1rem 1.1rem",background:"rgba(160,40,40,.12)",border:"1px solid #aa3030",borderLeft:"4px solid #e04040",lineHeight:1.75,color:"#f0a0a0"}}>
-                  <div style={{fontFamily:"'Cinzel',serif",fontSize:"1rem",letterSpacing:"0.08em",color:"#e04040",marginBottom:"0.6rem",fontWeight:700}}>Bitul Aseh — Torah Obligation Not Fulfilled</div>
-                  {[{id:"pesach",label:"Pesach"},{id:"shavuot",label:"Shavuos"},{id:"sukkot",label:"Sukkos"}].filter(r=>!regalimAttending[r.id]).map(r=>(
+                  <div style={{fontFamily:"'Cinzel',serif",fontSize:"1rem",letterSpacing:"0.08em",color:"#e04040",marginBottom:"0.6rem",fontWeight:700}}>{T("bitul_title")}</div>
+                  {[{id:"pesach",tkey:"rgl_pesach"},{id:"shavuot",tkey:"rgl_shavuos"},{id:"sukkot",tkey:"rgl_sukkos"}].filter(r=>!regalimAttending[r.id]).map(r=>(
                     <div key={r.id} style={{marginBottom:"0.5rem",fontSize:"1rem"}}>
-                      <strong style={{color:"#ffb0b0",fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.05em"}}>{r.label}: </strong>
+                      <strong style={{color:"#ffb0b0",fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.05em"}}>{T(r.tkey)}: </strong>
                       <span style={{color:"#f0c0c0"}}>You have violated the positive commandment of aliyah l'regel (Devarim 16:16). The olas re'iyah and chagigah for this regel are permanently lost. There is no korban to bring. The only recourse is teshuvah.</span>
                     </div>
                   ))}
-                  <div style={{marginTop:"0.7rem",fontSize:"0.95rem",color:"#d4a060",fontStyle:"italic",borderTop:"1px dashed #aa3030",paddingTop:"0.6rem",lineHeight:1.7}}>The person who violated a Shabbos prohibition and brings a chatas has a cleaner ledger at year's end than the person who stayed home and saved the airfare, which generally cannot be fixed.</div>
+                  <div style={{marginTop:"0.7rem",fontSize:"0.95rem",color:"#d4a060",fontStyle:"italic",borderTop:"1px dashed #aa3030",paddingTop:"0.6rem",lineHeight:1.7}}>{T("bitul_note")}</div>
                 </div>
               )}
-              {Object.values(regalimAttending).every(v=>v)&&<div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic"}}>All three regalim — travel and korbanos included in your annual total below.</div>}
+              {Object.values(regalimAttending).every(v=>v)&&<div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic"}}>{T("regalim_all")}</div>}
             </div>
 
             {byCategory.map(({cat,items,subtotal,isTravel})=>{
@@ -762,24 +1017,24 @@ export default function korbanosCalculator() {
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",borderBottom:"2px solid "+(CATEGORY_COLORS[cat])+"55",paddingBottom:"0.5rem",marginBottom:"0.3rem"}}>
                   <div style={{display:"flex",alignItems:"center",gap:"0.6rem"}}>
                     <div style={{width:4,height:18,background:CATEGORY_COLORS[cat],borderRadius:2}}/>
-                    <h2 className="df" style={{margin:0,fontSize:"0.95rem",color:CATEGORY_COLORS[cat],letterSpacing:"0.15em",textTransform:"uppercase"}}>{cat}</h2>
+                    <h2 className="df" style={{margin:0,fontSize:"0.95rem",color:CATEGORY_COLORS[cat],letterSpacing:"0.15em",textTransform:"uppercase"}}>{CAT_NAMES[cat]||cat}</h2>
                   </div>
-                  <span className="df" style={{fontSize:"1.1rem",color:CATEGORY_COLORS[cat],fontWeight:700}}>{fmt(subtotal)}</span>
+                  <span className="df" style={{fontSize:"1.1rem",color:CATEGORY_COLORS[cat],fontWeight:700}}>{fmtC(subtotal)}</span>
                 </div>
-                <p style={{fontSize:"0.95rem",color:"#e8d4a0",fontStyle:"italic",margin:"0.3rem 0 0.9rem",lineHeight:1.7}}>{CATEGORY_NOTES[cat]}</p>
+                <p style={{fontSize:"0.95rem",color:"#e8d4a0",fontStyle:"italic",margin:"0.3rem 0 0.9rem",lineHeight:1.7}}>{CAT_NOTES_L[cat]||CATEGORY_NOTES[cat]}</p>
 
                 {cat===CAT.PERSONAL&&(
                   <div style={{marginBottom:"1rem",padding:"1rem 1.1rem",background:"rgba(212,136,74,.07)",border:"1px solid #8a5030",borderLeft:"4px solid #d4884a"}}>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"0.5rem"}}>
-                      <div style={lbl}>Level of Self-Scrutiny</div>
+                      <div style={lbl}>{T("scrutiny_lbl")}</div>
                       <div style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",color:"#d4884a",fontWeight:700}}>{currentLevel.label}</div>
                     </div>
                     <input type="range" min="1" max="5" value={strictness} onChange={e=>handleStrictnessChange(parseInt(e.target.value))} style={{cursor:"pointer",marginBottom:"0.4rem"}}/>
                     <div style={{display:"flex",justifyContent:"space-between",fontSize:"0.82rem",color:"#c9a45a",fontFamily:"'EB Garamond',Georgia,serif",marginBottom:"0.5rem"}}>
-                      <span>Minimal</span><span>Average</span><span>Careful</span><span>Yerei Shomayim</span><span>Exceptional</span>
+                      <span>{T("scrutiny_min")}</span><span>{T("scrutiny_avg")}</span><span>{T("scrutiny_careful")}</span><span>{T("scrutiny_yerei")}</span><span>{T("scrutiny_exc")}</span>
                     </div>
                     <div style={{fontSize:"1rem",color:"#e8d4a0",fontStyle:"italic",lineHeight:1.6}}>{currentLevel.desc}</div>
-                    <div style={{marginTop:"0.4rem",fontSize:"0.92rem",color:"#c9a45a",lineHeight:1.6}}>Slider sets the starting quantities below. Adjust freely with +/- after.</div>
+                    <div style={{marginTop:"0.4rem",fontSize:"0.92rem",color:"#c9a45a",lineHeight:1.6}}>{T("slider_desc")}</div>
                   </div>
                 )}
 
@@ -789,12 +1044,11 @@ export default function korbanosCalculator() {
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"0.5rem"}}>
                       <div>
                         <div style={{display:"flex",alignItems:"baseline",gap:"0.5rem"}}>
-                          <span style={{fontWeight:700,fontSize:"1.1rem",color:"#f0ddb0"}}>{t.label}{nights>0?" + "+(nights)+" nights":""}</span>
-                          <span className="hf" style={{color:"#5aabdf",fontSize:"1.2rem"}}>{t.hebrew}</span>
+                          <span style={{fontWeight:700,fontSize:"1.1rem",color:"#f0ddb0",fontFamily:isHe?"'Frank Ruhl Libre',serif":"inherit"}}>{isHe?t.hebrew:t.label}{nights>0?" + "+(nights)+" "+T("nights_lbl"):""}</span>
                         </div>
-                        <div style={{fontSize:"0.88rem",color:"#a08050",fontStyle:"italic",marginTop:"0.1rem"}}>{1+travelCfg.familyMembers}x ${travelCfg.flightCost}{nights>0?" + "+(nights)+"x $"+(travelCfg.nightlyRate)+" lodging":""}</div>
+                        <div style={{fontSize:"0.88rem",color:"#a08050",fontStyle:"italic",marginTop:"0.1rem"}}>{1+travelCfg.familyMembers}x ${travelCfg.flightCost}{nights>0?" + "+(nights)+"x $"+(travelCfg.nightlyRate)+" "+T("lodging_lbl"):""}</div>
                       </div>
-                      <div className="df" style={{fontSize:"1.3rem",color:going?"#5aabdf":"#4a2a08",fontWeight:700}}>{fmt(travelCosts[t.id])}</div>
+                      <div className="df" style={{fontSize:"1.3rem",color:going?"#5aabdf":"#4a2a08",fontWeight:700}}>{fmtC(travelCosts[t.id])}</div>
                     </div>
                   </div>);
                 }) : items.map(item=>{
@@ -818,18 +1072,17 @@ export default function korbanosCalculator() {
                       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem",flexWrap:"wrap"}}>
                         <div style={{flex:"1 1 260px"}}>
                           <div style={{display:"flex",alignItems:"baseline",gap:"0.6rem",flexWrap:"wrap"}}>
-                            <span style={{fontWeight:700,fontSize:"1.15rem",color:qty>0?"#f0ddb0":"#c0a870"}}>{item.label}</span>
-                            <span className="hf" style={{color:ac,fontSize:"1.4rem"}}>{item.hebrew}</span>
+                            <span style={{fontWeight:700,fontSize:"1.15rem",color:qty>0?"#f0ddb0":"#c0a870",fontFamily:isHe?"'Frank Ruhl Libre',serif":"inherit"}}>{isHe?(item.hebrew||item.label):item.label}</span>
                             {isRegalimLock&&catEntry&&<span style={{fontSize:"0.85rem",color:"#7a5030",fontStyle:"italic"}}>{catEntry.subtitle}</span>}
                           </div>
                           {isLife||isChatziFixed
-                            ? <div style={{marginTop:"0.5rem",fontSize:"0.95rem",color:"#e8d4a0",lineHeight:1.7}}>{getRationale(item)}</div>
+                            ? <div style={{marginTop:"0.5rem",fontSize:"0.95rem",color:"#e8d4a0",lineHeight:1.7}}>{getRationale(item)}{lang!=="en"&&<span style={{display:"block",marginTop:"0.3rem",fontSize:"0.8rem",color:"#5a3a1a",fontStyle:"italic"}}>{lang==="he"?"הסברים מפורטים זמינים באנגלית בלבד.":lang==="es"?"Notas detalladas disponibles solo en inglés.":lang==="fr"?"Notes détaillées disponibles en anglais uniquement.":"Подробные примечания доступны только на английском."}</span>}</div>
                             : <>
                                 <div style={{display:"flex",gap:"0.75rem",marginTop:"0.4rem",flexWrap:"wrap"}}>
-                                  <button onClick={()=>setShowRationale(r=>({...r,[item.id]:!r[item.id]}))} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.88rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>{showR?"hide rationale":"why this number?"}</button>
-                                  {item.violations&&<button onClick={()=>setShowExamples(e=>({...e,[item.id]:!e[item.id]}))} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.88rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>{showEx?"hide examples":"sample violations"}</button>}
+                                  <button onClick={()=>setShowRationale(r=>({...r,[item.id]:!r[item.id]}))} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.88rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>{showR?T("hide_rationale"):T("why_number")}</button>
+                                  {item.violations&&<button onClick={()=>setShowExamples(e=>({...e,[item.id]:!e[item.id]}))} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.88rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>{showEx?T("hide_examples"):T("sample_violations")}</button>}
                                 </div>
-                                {showR&&<div className="fi" style={{marginTop:"0.5rem",padding:"0.65rem 0.9rem",background:"rgba(240,192,96,.06)",border:"1px dashed #7a4f20",fontSize:"0.92rem",color:"#d4c090",lineHeight:1.7}}>{getRationale(item)}</div>}
+                                {showR&&<div className="fi" style={{marginTop:"0.5rem",padding:"0.65rem 0.9rem",background:"rgba(240,192,96,.06)",border:"1px dashed #7a4f20",fontSize:"0.92rem",color:"#d4c090",lineHeight:1.7}}>{getRationale(item)}{lang!=="en"&&<span style={{display:"block",marginTop:"0.3rem",fontSize:"0.8rem",color:"#5a3a1a",fontStyle:"italic"}}>{lang==="he"?"הסברים מפורטים זמינים באנגלית בלבד.":lang==="es"?"Notas detalladas disponibles solo en inglés.":lang==="fr"?"Notes détaillées disponibles en anglais uniquement.":"Подробные примечания доступны только на английском."}</span>}</div>}
                               </>
                           }
                           {item.violations&&showEx&&(
@@ -861,20 +1114,20 @@ export default function korbanosCalculator() {
                         </div>
                         <div style={{display:"flex",alignItems:"center",gap:"0.75rem",flexShrink:0}}>
                           <div style={{textAlign:"right",minWidth:110}}>
-                            <div style={{fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.06em",textTransform:"uppercase",marginBottom:"0.2rem"}}>{fmt(unitCost)} each</div>
-                            <div className="df" style={{fontSize:"1.5rem",color:qty>0?ac:"#5a3a1a",fontWeight:700}}>{fmt(lineCost)}</div>
+                            <div style={{fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.06em",textTransform:"uppercase",marginBottom:"0.2rem"}}>{fmtC(unitCost)} {T("each_lbl")}</div>
+                            <div className="df" style={{fontSize:"1.5rem",color:qty>0?ac:"#5a3a1a",fontWeight:700}}>{fmtC(lineCost)}</div>
                           </div>
                           {isRegalimLock
-                            ? <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #5a3a1a",color:"#c9a45a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>{qty} — set by regalim</div>
+                            ? <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #5a3a1a",color:"#c9a45a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>{qty+" — "+T("set_by_regalim")}</div>
                             : isChatziFixed
                               ? <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #5a3a1a",color:"#c9a45a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>fixed</div>
                             : isBikkurim
                               ? <div style={{textAlign:"right"}}>
                                   <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid "+(isLandowner?"#7a4090":"#5a3a1a"),color:isLandowner?"#c07ad8":"#5a3a1a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>
-                                    {isLandowner?"1 — auto":"0 — set in assumptions"}
+                                    {isLandowner?"1 — "+T("auto_lbl"):("0 — "+T("set_in_assumptions"))}
                                   </div>
                                   {isLandowner&&<div style={{fontSize:"0.8rem",color:"#c07ad8",marginTop:"0.25rem",fontStyle:"italic",maxWidth:160,textAlign:"right",lineHeight:1.4}}>
-                                    {financialTier==="poor"?"straw basket":financialTier==="wealthy"?"gold basket + doves":"silver basket"}
+                                    {financialTier==="poor"?T("bik_straw"):financialTier==="wealthy"?T("bik_gold"):T("bik_silver")}
                                   </div>}
                                 </div>
                             : isShalmei
@@ -884,15 +1137,15 @@ export default function korbanosCalculator() {
                                     <input type="number" min="0" value={qty} onChange={e=>{const v=parseInt(e.target.value);setShalmeiOverride(isNaN(v)?0:Math.max(0,v));}} style={{width:52,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
                                     <button onClick={()=>setShalmeiOverride((shalmeiOverride!=null?shalmeiOverride:regalimCount)+1)} style={qBtn(true)}>+</button>
                                   </div>
-                                  {shalmeiOverride!==null&&<button onClick={()=>setShalmeiOverride(null)} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.82rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>reset to auto ({regalimCount})</button>}
-                                  {shalmeiOverride===null&&<div style={{fontSize:"0.8rem",color:"#f0c060",fontStyle:"italic"}}>auto: {regalimCount} regel{regalimCount!==1?"im":""}</div>}
+                                  {shalmeiOverride!==null&&<button onClick={()=>setShalmeiOverride(null)} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.82rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>{T("reset_auto")+" ("+(regalimCount)+")"}</button>}
+                                  {shalmeiOverride===null&&<div style={{fontSize:"0.8rem",color:"#f0c060",fontStyle:"italic"}}>{T("auto_regalim")+" "+(regalimCount)+" "+(regalimCount!==1?T("regalim_pl"):T("regalim_word"))}</div>}
                                 </div>
                             : isTodah
                               ? <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"0.4rem",minWidth:200}}>
                                   {/* Travel todah checkbox */}
                                   <label style={{display:"flex",alignItems:"center",gap:"0.5rem",cursor:"pointer",fontSize:"0.88rem",color:"#4ec98a",whiteSpace:"nowrap"}}>
                                     <input type="checkbox" checked={includeTravelTodah} onChange={e=>{setIncludeTravelTodah(e.target.checked);setTodahOverride(null);}} style={{width:15,height:15,accentColor:"#4ec98a",cursor:"pointer"}}/>
-                                    +{regalimCount*2} for {regalimCount} regel{regalimCount!==1?"im":""} travel
+                                    +{regalimCount*2} {T("travel_todah_lbl")} {regalimCount} {regalimCount!==1?T("regalim_pl"):T("regalim_word")} {T("travel_todah_suf")}
                                   </label>
                                   {/* Manual qty spinner */}
                                   <div style={{display:"flex",alignItems:"center",gap:"0.4rem"}}>
@@ -901,8 +1154,8 @@ export default function korbanosCalculator() {
                                     <button onClick={()=>setTodahOverride((todahOverride!=null?todahOverride:todahAuto)+1)} style={qBtn(true)}>+</button>
                                   </div>
                                   {/* Reset to auto link */}
-                                  {todahOverride!==null&&<button onClick={resetTodah} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.82rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>reset to auto ({todahAuto})</button>}
-                                  {todahOverride===null&&<div style={{fontSize:"0.8rem",color:"#4ec98a",fontStyle:"italic"}}>auto: 2 baseline{includeTravelTodah&&regalimCount>0?" + "+(regalimCount*2)+" travel":""}</div>}
+                                  {todahOverride!==null&&<button onClick={resetTodah} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.82rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>{T("reset_auto")+" ("+(todahAuto)+")"}  </button>}
+                                  {todahOverride===null&&<div style={{fontSize:"0.8rem",color:"#4ec98a",fontStyle:"italic"}}>{T("auto_regalim")+" 2 "+T("baseline_lbl")+(includeTravelTodah&&regalimCount>0?" + "+(regalimCount*2)+" "+T("travel_todah_suf"):"")}</div>}
                                 </div>
                             : isPersonal
                               ? <PersonalCtrl id={item.id}/>
@@ -919,15 +1172,15 @@ export default function korbanosCalculator() {
 
             {/* Breakdown bar */}
             <div style={{marginBottom:"1.5rem"}}>
-              <div style={{fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:"0.5rem",fontFamily:"'Cinzel',serif"}}>Cost Breakdown</div>
+              <div style={{fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:"0.5rem",fontFamily:"'Cinzel',serif"}}>{T("cost_breakdown")}</div>
               <div style={{display:"flex",height:14,borderRadius:3,overflow:"hidden",gap:1}}>
-                {byCategory.filter(x=>includeTravel||!x.isTravel).map(({cat,subtotal})=>{const pct=(subtotal/annualTotal)*100;if(pct<0.5||!annualTotal)return null;return <div key={cat} title={(cat)+": "+(fmt(subtotal))} style={{width:(pct)+"%",background:CATEGORY_COLORS[cat]}}/>;})}</div>
+                {byCategory.filter(x=>includeTravel||!x.isTravel).map(({cat,subtotal})=>{const pct=(subtotal/annualTotal)*100;if(pct<0.5||!annualTotal)return null;return <div key={cat} title={(CAT_NAMES[cat]||cat)+": "+(fmtC(subtotal))} style={{width:(pct)+"%",background:CATEGORY_COLORS[cat]}}/>;})}</div>
               <div style={{display:"flex",flexWrap:"wrap",gap:"0.5rem 1.2rem",marginTop:"0.6rem"}}>
                 {byCategory.filter(x=>includeTravel||!x.isTravel).map(({cat,subtotal})=>(
                   <div key={cat} style={{display:"flex",alignItems:"center",gap:"0.4rem",fontSize:"0.9rem",color:"#c9a45a"}}>
                     <div style={{width:10,height:10,borderRadius:"50%",background:CATEGORY_COLORS[cat],flexShrink:0}}/>
-                    <span style={{color:"#e8d4a0"}}>{cat}</span>
-                    <span style={{color:CATEGORY_COLORS[cat],fontFamily:"'Cinzel',serif",fontWeight:700}}>{fmt(subtotal)}</span>
+                    <span style={{color:"#e8d4a0"}}>{CAT_NAMES[cat]||cat}</span>
+                    <span style={{color:CATEGORY_COLORS[cat],fontFamily:"'Cinzel',serif",fontWeight:700}}>{fmtC(subtotal)}</span>
                   </div>
                 ))}
               </div>
@@ -936,11 +1189,11 @@ export default function korbanosCalculator() {
             {/* Grand total */}
             <div style={{padding:"1.4rem 1.6rem",background:"linear-gradient(135deg,#6a3010,#4a2008,#2a1004)",border:"2px solid #f0c060",boxShadow:"0 8px 40px rgba(240,192,96,.2)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div>
-                <div style={{fontSize:"0.9rem",color:"#f0ddb0",letterSpacing:"0.15em",textTransform:"uppercase",opacity:.85,marginBottom:"0.15rem"}}>Estimated Annual Total</div>
-                <div className="df" style={{fontSize:"2.8rem",color:"#f0c060",fontWeight:900,textShadow:"0 2px 12px rgba(240,192,96,.4)"}}>{fmt(annualTotal)}</div>
-                {!includeTravel&&<div style={{fontSize:"0.9rem",color:"#5aabdf",marginTop:"0.25rem",fontStyle:"italic"}}>Travel costs not included — {fmt(travelSubtotal)} excluded</div>}
+                <div style={{fontSize:"0.9rem",color:"#f0ddb0",letterSpacing:"0.15em",textTransform:"uppercase",opacity:.85,marginBottom:"0.15rem"}}>{T("estimated_total")}</div>
+                <div className="df" style={{fontSize:"2.8rem",color:"#f0c060",fontWeight:900,textShadow:"0 2px 12px rgba(240,192,96,.4)"}}>{fmtC(annualTotal)}</div>
+                {!includeTravel&&<div style={{fontSize:"0.9rem",color:"#5aabdf",marginTop:"0.25rem",fontStyle:"italic"}}>{T("travel_excl")} {fmtC(travelSubtotal)} {T("excl_suffix")}</div>}
               </div>
-              <button onClick={doReset} style={{background:"transparent",border:"2px solid #f0ddb0",color:"#f0ddb0",padding:"0.55rem 1.1rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.85rem",letterSpacing:"0.1em",fontWeight:600}}>RESET</button>
+              <button onClick={doReset} style={{background:"transparent",border:"2px solid #f0ddb0",color:"#f0ddb0",padding:"0.55rem 1.1rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.85rem",letterSpacing:"0.1em",fontWeight:600}}>{T("reset")}</button>
             </div>
             {disclaimer}
           </div>
@@ -950,21 +1203,21 @@ export default function korbanosCalculator() {
         {activeTab==="communal"&&(
           <div className="fi">
             <div style={{marginBottom:"1.5rem",padding:"1.25rem",background:"rgba(240,192,96,.06)",border:"1px solid #7a4f20",borderLeft:"4px solid #f0c060"}}>
-              <div style={{fontSize:"1rem",color:"#f0c060",fontFamily:"'Cinzel',serif",letterSpacing:"0.08em",marginBottom:"0.75rem",fontWeight:700}}>The Chatzi Shekel Pool</div>
+              <div style={{fontSize:"1rem",color:"#f0c060",fontFamily:"'Cinzel',serif",letterSpacing:"0.08em",marginBottom:"0.75rem",fontWeight:700}}>{T("chatzi_pool")}</div>
               <p style={{fontSize:"1rem",color:"#e8d4a0",lineHeight:1.8,margin:"0 0 0.75rem"}}>Every adult Jewish male contributed exactly half a shekel annually — no more, no less. These funds paid for every communal korban: the tamid, all mussaf offerings, the Yom Kippur service, the Shtei HaLechem, and more. The wealthy and the poor were equal before the altar.</p>
-              <p style={{fontSize:"0.95rem",color:"#c9a45a",fontStyle:"italic",lineHeight:1.7,margin:0}}>Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. Half a shekel hakodesh = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g silver ({shiur.labelShort}; shekel = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier).toFixed(1)}g = 320 barley grains) = <strong style={{color:"#f0ddb0"}}>{fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier))}</strong> at current silver prices (~${silverUsdPerGram.toFixed(2)}/gram{silverStatus==="live"?<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>live</span>:<span style={{color:"#c9a45a",marginLeft:"0.3rem"}}>est.</span>}).</p>
+              <p style={{fontSize:"0.95rem",color:"#c9a45a",fontStyle:"italic",lineHeight:1.7,margin:0}}>Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. Half a shekel hakodesh = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g silver ({shiur.labelShort}; shekel = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier).toFixed(1)}g = 320 barley grains) = <strong style={{color:"#f0ddb0"}}>{fmtC(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier))}</strong> {T("at_current")} (~${silverUsdPerGram.toFixed(2)}/gram{silverStatus==="live"?<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>{T("live_lbl")}</span>:<span style={{color:"#c9a45a",marginLeft:"0.3rem"}}>{T("est_lbl")}</span>}).</p>
             </div>
 
             {/* Summary cards */}
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:"1rem",marginBottom:"2rem"}}>
               {[
-                {label:"Total Annual Communal Cost",value:fmt(communalTotal),sub:"all public korbanos combined",color:"#f0c060"},
-                {label:"Per Capita Cost",value:fmt(perCapitaCommunal),sub:"assuming "+((ASSUMED_POPULATION/1000).toFixed(0))+"k adult males",color:"#4ec98a"},
-                {label:"Actual Chatzi Shekel",value:fmt(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)),sub:((SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1))+"g silver • "+(shiur.labelShort)+" • "+(silverStatus==="live"?"live price":"est. price"),color:"#c07ad8"},
-                {label:"Subsidy per Person",value:fmt(Math.max(0,fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)-perCapitaCommunal)),sub:"chatzi shekel minus per-capita cost",color:"#5aabdf"},
-              ].map(({label,value,sub,color})=>(
-                <div key={label} style={{padding:"1.1rem 1.25rem",background:"rgba(24,12,4,.8)",border:"1px solid "+(color)+"44",borderTop:"3px solid "+(color)}}>
-                  <div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.4rem"}}>{label}</div>
+                {tkey:"total_annual",value:fmtC(communalTotal),sub:"all public korbanos combined",color:"#f0c060"},
+                {tkey:"per_capita",value:fmtC(perCapitaCommunal),sub:"assuming "+((ASSUMED_POPULATION/1000).toFixed(0))+"k adult males",color:"#4ec98a"},
+                {tkey:"actual_chatzi",value:fmtC(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)),sub:((SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1))+"g silver • "+(shiur.labelShort)+" • "+(silverStatus==="live"?"live price":"est. price"),color:"#c07ad8"},
+                {tkey:"subsidy",value:fmtC(Math.max(0,fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)-perCapitaCommunal)),sub:"chatzi shekel minus per-capita cost",color:"#5aabdf"},
+              ].map(({tkey,value,sub,color})=>(
+                <div key={tkey} style={{padding:"1.1rem 1.25rem",background:"rgba(24,12,4,.8)",border:"1px solid "+(color)+"44",borderTop:"3px solid "+(color)}}>
+                  <div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.4rem"}}>{T(tkey)}</div>
                   <div className="df" style={{fontSize:"1.8rem",color:color,fontWeight:900}}>{value}</div>
                   <div style={{fontSize:"0.85rem",color:"#c9a45a",fontStyle:"italic",marginTop:"0.2rem"}}>{sub}</div>
                 </div>
@@ -972,7 +1225,7 @@ export default function korbanosCalculator() {
             </div>
 
             <div style={{borderBottom:"2px solid #f0c06044",paddingBottom:"0.5rem",marginBottom:"1rem",display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
-              <h2 className="df" style={{margin:0,fontSize:"0.95rem",color:"#f0c060",letterSpacing:"0.15em",textTransform:"uppercase"}}>Annual Communal Offerings</h2>
+              <h2 className="df" style={{margin:0,fontSize:"0.95rem",color:"#f0c060",letterSpacing:"0.15em",textTransform:"uppercase"}}>{T("annual_offerings")}</h2>
               <span style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic"}}>at current Jerusalem prices</span>
             </div>
 
@@ -991,11 +1244,11 @@ export default function korbanosCalculator() {
                         {o.count>1&&<span style={{fontSize:"0.85rem",color:"#7a5030",fontStyle:"italic"}}>x{o.count}</span>}
                       </div>
                       <div style={{fontSize:"0.9rem",color:"#c9a45a",marginTop:"0.25rem",lineHeight:1.6}}>{o.note}</div>
-                      <button onClick={()=>setExpandedCommune(e=>({...e,[o.id]:!e[o.id]}))} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"inherit",fontStyle:"italic",padding:"0.2rem 0 0",textDecoration:"underline",textUnderlineOffset:"3px"}}>{isExp?"hide breakdown":"show components"}</button>
+                      <button onClick={()=>setExpandedCommune(e=>({...e,[o.id]:!e[o.id]}))} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"inherit",fontStyle:"italic",padding:"0.2rem 0 0",textDecoration:"underline",textUnderlineOffset:"3px"}}>{isExp?T("hide_breakdown"):T("show_components")}</button>
                     </div>
                     <div style={{textAlign:"right",flexShrink:0,minWidth:130}}>
-                      {o.count>1&&<div style={{fontSize:"0.82rem",color:"#a08050"}}>{fmt(unitCost)} x {o.count}</div>}
-                      <div className="df" style={{fontSize:"1.5rem",color:"#f0c060",fontWeight:700}}>{fmt(totalCost)}</div>
+                      {o.count>1&&<div style={{fontSize:"0.82rem",color:"#a08050"}}>{fmtC(unitCost)} x {o.count}</div>}
+                      <div className="df" style={{fontSize:"1.5rem",color:"#f0c060",fontWeight:700}}>{fmtC(totalCost)}</div>
                     </div>
                   </div>
                   {isExp&&entry&&(
@@ -1004,7 +1257,7 @@ export default function korbanosCalculator() {
                         <tbody>{entry.components.map((c,i)=>(
                           <tr key={i} style={{borderBottom:"1px dotted #5a3a1a"}}>
                             <td style={{padding:"0.3rem 0",color:"#e8d4a0"}}>{c.label}</td>
-                            <td style={{padding:"0.3rem 0",textAlign:"right",color:"#f0c060",fontFamily:"'Cinzel',serif",fontSize:"0.88rem",whiteSpace:"nowrap"}}>{fmt(compCost(c.key,c.count,P))}</td>
+                            <td style={{padding:"0.3rem 0",textAlign:"right",color:"#f0c060",fontFamily:"'Cinzel',serif",fontSize:"0.88rem",whiteSpace:"nowrap"}}>{fmtC(compCost(c.key,c.count,P))}</td>
                           </tr>
                         ))}</tbody>
                       </table>
@@ -1054,88 +1307,88 @@ export default function korbanosCalculator() {
           const isMussafDay    = isYomTov||isShabbat||isRC;
 
           const getDayLabel=()=>{
-            if(isYK)      return "Yom Kippur";
-            if(is14Nisan) return "14 Nisan — Erev Pesach";
-            if(isShemini) return "Shemini Atzeres";
-            if(isSukkos)  return isCholHamoed?"Sukkos Day "+(sukkosDay)+" — Chol HaMoed":"Sukkos Day "+(sukkosDay);
-            if(isRH)      return isShabbat?"Rosh Hashana & Shabbos":"Rosh Hashana Day "+(hday);
-            if(isShavuos) return "Shavuos";
-            if(isPesach)  return isCholHamoed?"Pesach Day "+(pesachDay)+" — Chol HaMoed":"Pesach Day "+(pesachDay);
-            if(isShabbat && isRC) return "Shabbos Rosh Chodesh";
-            if(isShabbat) return "Shabbos";
-            if(isRC)      return "Rosh Chodesh "+(H_MONTH_NAMES[hday===1?hm:(hm%13)+1]||"");
-            return "Weekday";
+            if(isYK)      return T("day_yomkippur");
+            if(is14Nisan) return T("day_14nisan");
+            if(isShemini) return T("day_shemini");
+            if(isSukkos)  return T("rgl_sukkos")+" "+T("tab_today").slice(0,0)+(sukkosDay)+(isCholHamoed?" — Chol HaMoed":"");
+            if(isRH)      return isShabbat?T("day_rh_shab"):T("day_rh")+" "+(hday);
+            if(isShavuos) return T("day_shavuos");
+            if(isPesach)  return T("rgl_pesach")+" "+(pesachDay)+(isCholHamoed?" — Chol HaMoed":"");
+            if(isShabbat && isRC) return T("day_shabbos_rc");
+            if(isShabbat) return T("day_shabbos");
+            if(isRC)      return T("day_rc")+" "+(H_MONTH_NAMES[hday===1?hm:(hm%13)+1]||"");
+            return T("day_weekday");
           };
 
           
           const blocks=[];
 
           const tamidMorning=[
-            {label:"Tamid (morning) — 1 lamb + nesachim",key:"lamb_olah",count:1},
-            {label:"Ketores (morning)",key:"ketores",count:1},
-            {label:"Menorah oil — 3.5 log",key:"log_oil",count:3.5},
+            {label:T("off_tamid_am"),key:"lamb_olah",count:1},
+            {label:T("off_ketores_am"),key:"ketores",count:1},
+            {label:T("off_menorah"),key:"log_oil",count:3.5},
           ];
           const tamidAfternoon=[
-            {label:"Tamid (afternoon) — 1 lamb + nesachim",key:"lamb_olah",count:1},
-            {label:"Ketores (afternoon)",key:"ketores",count:1},
+            {label:T("off_tamid_pm"),key:"lamb_olah",count:1},
+            {label:T("off_ketores_pm"),key:"ketores",count:1},
           ];
 
           // SHACHARIT
           const shaOff=[...tamidMorning];
-          if(isShabbat) shaOff.push({label:"Lechem HaPanim placed — 24 issaron flour",key:"issaron_flour",count:24});
-          blocks.push({title:"Shacharit",color:"#f0c060",offerings:shaOff,
+          if(isShabbat) shaOff.push({label:T("off_lechem"),key:"issaron_flour",count:24});
+          blocks.push({title:T("blk_shacharit"),color:"#f0c060",offerings:shaOff,
             note:isShabbat?"The Lechem HaPanim (12 loaves) is placed on the golden table; the previous week's loaves are distributed to the kohanim. Source: Vayikra 24:5–9.":undefined});
 
           // OMER — own block 16 Nisan
           if(is16Nisan){
-            blocks.push({title:"Korban HaOmer",color:"#4ec98a",
-              offerings:[{label:"1 issaron barley flour (wave offering)",key:"issaron_flour",count:1},{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}],
+            blocks.push({title:T("blk_omer"),color:"#4ec98a",
+              offerings:[{label:T("off_omer_bar"),key:"issaron_flour",count:1},{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}],
               note:"Brought after the morning Tamid on 16 Nisan. Barley wave-offering that permits the new grain harvest. Source: Vayikra 23:9–14."});
           }
 
           // MUSAF
           if(isYK){
-            blocks.push({title:"Mussaf — Yom Kippur",color:"#d4884a",
+            blocks.push({title:T("blk_mussaf")+" — "+T("day_yomkippur"),color:"#d4884a",
               offerings:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
               note:"Communal mussaf only. Source: Bamidbar 29:7–11."});
             blocks.push({title:"Avodas Yom Kippur — Public Korbanos",color:"#c07ad8",
-              offerings:[{label:"2 goats — chatas & Azazel",key:"goat",count:2},{label:"Ketores — special machta offering (×2)",key:"ketores",count:2}],
+              offerings:[{label:T("off_goats2"),key:"goat",count:2},{label:T("off_ketores2"),key:"ketores",count:2}],
               note:"The two goats are from the public fund. The Kohen Gadol's personal bull (brought at his own expense) is excluded from this communal total. Source: Vayikra 16."});
           } else if(isShemini){
-            blocks.push({title:"Mussaf — Shemini Atzeres",color:"#5aabdf",
+            blocks.push({title:T("blk_mussaf")+" — "+T("day_shemini"),color:"#5aabdf",
               offerings:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
               note:"A modest intimate offering after the abundance of Sukkos — one of each. Source: Bamidbar 29:35–38."});
           } else if(isSukkos){
-            blocks.push({title:"Mussaf — Sukkos Day "+(sukkosDay),color:"#5aabdf",
-              offerings:[{label:(sukkosBulls)+" bulls (olah) with nesachim",key:"bull_olah",count:sukkosBulls},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 lambs (olah) with nesachim",key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}],
+            blocks.push({title:T("blk_mussaf")+" — "+T("rgl_sukkos")+" "+(sukkosDay),color:"#5aabdf",
+              offerings:[{label:(sukkosBulls)+" "+T("off_bull_olah"),key:"bull_olah",count:sukkosBulls},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 "+T("off_lambs_olah"),key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}],
               note:"Bull count decreases by one each day (13→7). 70 bulls total over all 7 days represent atonement for the 70 nations. Source: Bamidbar 29:12–34."});
           } else if(isRH){
             const off=[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}];
             if(isShabbat) off.unshift({label:"2 lambs (olah) — Mussaf Shabbos",key:"lamb_olah",count:2});
-            blocks.push({title:"Mussaf — Rosh Hashana"+(isShabbat?" & Shabbos":""),color:"#f0a060",offerings:off,note:"Source: Bamidbar 29:1–6."+(isShabbat?" Both mussafim are brought; Shabbos mussaf listed first.":"")});
+            blocks.push({title:T("blk_mussaf")+" — "+T("day_rh")+(isShabbat?" & "+T("day_shabbos"):""),color:"#f0a060",offerings:off,note:"Source: Bamidbar 29:1–6."+(isShabbat?" Both mussafim are brought; Shabbos mussaf listed first.":"")});
           } else if(isShavuos){
-            blocks.push({title:"Mussaf — Shavuos",color:"#4ec98a",
-              offerings:[{label:"Shtei HaLechem — 2 wheat loaves (4 issaron)",key:"issaron_flour",count:4},{label:"2 lambs (shelamim, accompany Shtei HaLechem)",key:"lamb_olah",count:2},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"2 goats (chatas)",key:"goat",count:2}],
+            blocks.push({title:T("blk_mussaf")+" — "+T("rgl_shavuos"),color:"#4ec98a",
+              offerings:[{label:T("off_shtei_lech"),key:"issaron_flour",count:4},{label:T("off_lambs_sht"),key:"lamb_olah",count:2},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"2 goats (chatas)",key:"goat",count:2}],
               note:"The only day leavened bread is offered in the Mikdash (Shtei HaLechem). The two loaves and their lambs are the public shelamim. Source: Vayikra 23:15–21; Bamidbar 28:26–31."});
           } else if(isPesach){
-            blocks.push({title:"Mussaf — Pesach Day "+(pesachDay)+(isCholHamoed?" (Chol HaMoed)":""),color:"#e0a060",
+            blocks.push({title:T("blk_mussaf")+" — "+T("rgl_pesach")+" "+(pesachDay)+(isCholHamoed?" (Chol HaMoed)":""),color:"#e0a060",
               offerings:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
               note:"Same mussaf on all 7 days of Pesach. Source: Bamidbar 28:19–24."});
           } else {
             if(isShabbat){
-              blocks.push({title:"Mussaf — Shabbos",color:"#f0c060",
+              blocks.push({title:T("blk_mussaf")+" — "+T("day_shabbos"),color:"#f0c060",
                 offerings:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2}],
                 note:"Source: Bamidbar 28:9–10."});
             }
             if(isRC){
-              blocks.push({title:"Mussaf — Rosh Chodesh",color:"#c9a45a",
+              blocks.push({title:T("blk_mussaf")+" — "+T("day_rc"),color:"#c9a45a",
                 offerings:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
                 note:"Source: Bamidbar 28:11–15."});
             }
           }
 
           // MINCHA — always
-          blocks.push({title:"Mincha / Afternoon",color:"#f0c060",offerings:tamidAfternoon});
+          blocks.push({title:T("blk_mincha"),color:"#f0c060",offerings:tamidAfternoon});
 
           // Pricing
           const oCost=(key,count)=>compCost(key,count,P);
@@ -1166,43 +1419,44 @@ export default function korbanosCalculator() {
             while(true){const d=absToHebrew(t).dow;if(d!==6&&d!==0)return t;t++;}
           };
 
+          const D=(n)=>T("jmp_day")+" "+n;
           const JUMP_GROUPS=[
-            {label:"Regular",col:"#c9a45a",items:[
-              {label:"Next Weekday",abs:nextWeekday()},
-              {label:"Next Shabbos",abs:nextShabbos()},
-              {label:"Next Rosh Chodesh",abs:nextRC()},
+            {tkey:"jmp_regular",col:"#c9a45a",items:[
+              {tkey:"jmp_next_wkdy",abs:nextWeekday()},
+              {tkey:"jmp_next_shab",abs:nextShabbos()},
+              {tkey:"jmp_next_rc",  abs:nextRC()},
             ]},
-            {label:"Pesach",col:"#e0a060",items:[
-              {label:"14 Nisan",abs:nextOcc(HM.NISAN,14)},
-              {label:"Day 1",abs:nextOcc(HM.NISAN,15)},
-              {label:"Day 2 / Omer",abs:nextOcc(HM.NISAN,16)},
-              {label:"Day 3",abs:nextOcc(HM.NISAN,17)},
-              {label:"Day 4",abs:nextOcc(HM.NISAN,18)},
-              {label:"Day 5",abs:nextOcc(HM.NISAN,19)},
-              {label:"Day 6",abs:nextOcc(HM.NISAN,20)},
-              {label:"Day 7",abs:nextOcc(HM.NISAN,21)},
+            {tkey:"rgl_pesach",col:"#e0a060",items:[
+              {tkey:"jmp_14nisan",abs:nextOcc(HM.NISAN,14)},
+              {label:D(1),abs:nextOcc(HM.NISAN,15)},
+              {tkey:"jmp_omer",   abs:nextOcc(HM.NISAN,16)},
+              {label:D(3),abs:nextOcc(HM.NISAN,17)},
+              {label:D(4),abs:nextOcc(HM.NISAN,18)},
+              {label:D(5),abs:nextOcc(HM.NISAN,19)},
+              {label:D(6),abs:nextOcc(HM.NISAN,20)},
+              {label:D(7),abs:nextOcc(HM.NISAN,21)},
             ]},
-            {label:"Sukkos",col:"#5aabdf",items:[
-              {label:"Day 1",abs:nextOcc(HM.TISHREI,15)},
-              {label:"Day 2",abs:nextOcc(HM.TISHREI,16)},
-              {label:"Day 3",abs:nextOcc(HM.TISHREI,17)},
-              {label:"Day 4",abs:nextOcc(HM.TISHREI,18)},
-              {label:"Day 5",abs:nextOcc(HM.TISHREI,19)},
-              {label:"Day 6",abs:nextOcc(HM.TISHREI,20)},
-              {label:"Day 7",abs:nextOcc(HM.TISHREI,21)},
-              {label:"Shemini Atzeres",abs:nextOcc(HM.TISHREI,22)},
+            {tkey:"rgl_sukkos",col:"#5aabdf",items:[
+              {label:D(1),abs:nextOcc(HM.TISHREI,15)},
+              {label:D(2),abs:nextOcc(HM.TISHREI,16)},
+              {label:D(3),abs:nextOcc(HM.TISHREI,17)},
+              {label:D(4),abs:nextOcc(HM.TISHREI,18)},
+              {label:D(5),abs:nextOcc(HM.TISHREI,19)},
+              {label:D(6),abs:nextOcc(HM.TISHREI,20)},
+              {label:D(7),abs:nextOcc(HM.TISHREI,21)},
+              {tkey:"day_shemini",abs:nextOcc(HM.TISHREI,22)},
             ]},
-            {label:"Shavuos",col:"#4ec98a",items:[
-              {label:"Shavuos",abs:nextOcc(HM.SIVAN,6)},
+            {tkey:"rgl_shavuos",col:"#4ec98a",items:[
+              {tkey:"rgl_shavuos",abs:nextOcc(HM.SIVAN,6)},
             ]},
-            {label:"Yamim Noraim",col:"#d4884a",items:[
-              {label:"Rosh Hashana",abs:nextOcc(HM.TISHREI,1)},
-              {label:"Yom Kippur",abs:nextOcc(HM.TISHREI,10)},
+            {tkey:"jmp_yamim",col:"#d4884a",items:[
+              {tkey:"day_rh",abs:nextOcc(HM.TISHREI,1)},
+              {tkey:"day_yomkippur",abs:nextOcc(HM.TISHREI,10)},
             ]},
           ];
 
           const hebrewStr=(hday)+" "+(H_MONTH_NAMES[hm]||"")+" "+(hy);
-          const gregDate=absToGreg(todayAbs).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+          const gregDate=absToGreg(todayAbs).toLocaleDateString(LANG_LOCALE[lang]||"en-US",{month:"long",day:"numeric",year:"numeric"});
           const isActualToday=todayAbs===todayAbsNow;
 
           return(
@@ -1219,20 +1473,20 @@ export default function korbanosCalculator() {
                   <button onClick={()=>setTodayAbs(a=>a+1)} style={{width:36,height:36,background:"#2a1a08",border:"1px solid #7a4f20",color:"#f0c060",cursor:"pointer",fontSize:"1.3rem",fontFamily:"inherit",lineHeight:1}}>›</button>
                 </div>
                 <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
-                  {!isActualToday&&<button onClick={()=>setTodayAbs(todayAbsNow)} style={{padding:"0.4rem 0.9rem",background:"transparent",border:"1px solid #4ec98a",color:"#4ec98a",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.08em"}}>Today</button>}
+                  {!isActualToday&&<button onClick={()=>setTodayAbs(todayAbsNow)} style={{padding:"0.4rem 0.9rem",background:"transparent",border:"1px solid #4ec98a",color:"#4ec98a",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.08em"}}>{T("today_btn")}</button>}
                   <div style={{padding:"0.35rem 0.8rem",background:"rgba(240,192,96,.1)",border:"1px solid #7a4f20",color:"#f0c060",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",letterSpacing:"0.06em"}}>{getDayLabel()}</div>
                 </div>
               </div>
               {/* Jump buttons */}
               <div style={{borderTop:"1px solid #3a2010",paddingTop:"0.85rem"}}>
-                <div style={{fontSize:"0.75rem",color:"#5a3a1a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.55rem"}}>Jump to next</div>
+                <div style={{fontSize:"0.75rem",color:"#5a3a1a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.55rem"}}>{T("jump_to")}</div>
                 <div style={{display:"flex",flexDirection:"column",gap:"0.45rem"}}>
                   {JUMP_GROUPS.map(g=>(
-                    <div key={g.label} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
-                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{g.label}</span>
+                    <div key={g.tkey||g.label} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
+                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{g.tkey?T(g.tkey):g.label}</span>
                       {g.items.map(item=>{
                         const active=item.abs===todayAbs;
-                        return(<button key={item.label} onClick={()=>setTodayAbs(item.abs)} style={{padding:"0.28rem 0.6rem",background:active?"rgba(240,192,96,.12)":"transparent",border:"1px solid "+(active?g.col:"#3a2010"),color:active?g.col:"#7a5030",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.76rem",letterSpacing:"0.05em",whiteSpace:"nowrap"}}>{item.label}</button>);
+                        return(<button key={item.tkey||item.label} onClick={()=>setTodayAbs(item.abs)} style={{padding:"0.28rem 0.6rem",background:active?"rgba(240,192,96,.12)":"transparent",border:"1px solid "+(active?g.col:"#3a2010"),color:active?g.col:"#7a5030",cursor:"pointer",fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",fontSize:"0.76rem",letterSpacing:"0.05em",whiteSpace:"nowrap"}}>{item.tkey?T(item.tkey):item.label}</button>);
                       })}
                     </div>
                   ))}
@@ -1247,14 +1501,14 @@ export default function korbanosCalculator() {
               <div key={bi} style={{marginBottom:"1.1rem",background:"rgba(24,12,4,.7)",border:"1px solid #5a3a1a",borderLeft:"4px solid "+(block.color)}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",padding:"0.65rem 1rem",borderBottom:"1px solid #3a2010"}}>
                   <span style={{fontFamily:"'Cinzel',serif",fontSize:"0.88rem",color:block.color,letterSpacing:"0.1em",textTransform:"uppercase",fontWeight:700}}>{block.title}</span>
-                  <span style={{fontFamily:"'Cinzel',serif",fontSize:"1.15rem",color:block.color,fontWeight:700}}>{fmt(bt)}</span>
+                  <span style={{fontFamily:"'Cinzel',serif",fontSize:"1.15rem",color:block.color,fontWeight:700}}>{fmtC(bt)}</span>
                 </div>
                 <table style={{width:"100%",borderCollapse:"collapse",fontSize:"0.91rem"}}>
                   <tbody>
                     {block.offerings.map((o,oi)=>(
                       <tr key={oi} style={{borderBottom:"1px dotted #2a1404"}}>
                         <td style={{padding:"0.35rem 1rem",color:"#e8d4a0"}}>{o.label}</td>
-                        <td style={{padding:"0.35rem 1rem",textAlign:"right",color:block.color,fontFamily:"'Cinzel',serif",fontSize:"0.86rem",whiteSpace:"nowrap"}}>{fmt(oCost(o.key,o.count))}</td>
+                        <td style={{padding:"0.35rem 1rem",textAlign:"right",color:block.color,fontFamily:"'Cinzel',serif",fontSize:"0.86rem",whiteSpace:"nowrap"}}>{fmtC(oCost(o.key,o.count))}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -1267,10 +1521,10 @@ export default function korbanosCalculator() {
             {/* Day total */}
             <div style={{padding:"1.1rem 1.4rem",background:"linear-gradient(135deg,#4a2808,#2a1404)",border:"2px solid #f0c060",display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1.1rem"}}>
               <div>
-                <div style={{fontSize:"0.85rem",color:"#f0ddb0",letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.1rem"}}>Total — {getDayLabel()}</div>
-                <div style={{fontSize:"0.8rem",color:"#a08050",fontStyle:"italic"}}>Public korbanos only · current Jerusalem prices</div>
+                <div style={{fontSize:"0.85rem",color:"#f0ddb0",letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.1rem"}}>{T("today_total")} {getDayLabel()}</div>
+                <div style={{fontSize:"0.8rem",color:"#a08050",fontStyle:"italic"}}>{T("today_public")}</div>
               </div>
-              <div style={{fontFamily:"'Cinzel',serif",fontSize:"2.2rem",color:"#f0c060",fontWeight:900}}>{fmt(dayTotal)}</div>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"2.2rem",color:"#f0c060",fontWeight:900}}>{fmtC(dayTotal)}</div>
             </div>
 
             {/* Ma'arachah note */}
@@ -1287,7 +1541,7 @@ export default function korbanosCalculator() {
         {activeTab==="catalog"&&(
           <div className="fi">
             <div style={{display:"flex",justifyContent:"center",gap:"0.5rem",flexWrap:"wrap",marginBottom:"1.5rem"}}>
-              {GROUPS.map(g=><button key={g} onClick={()=>setActiveGroup(g)} style={{padding:"0.55rem 1.1rem",background:activeGroup===g?"#daa520":"transparent",color:activeGroup===g?"#1a0f08":"#f0c060",border:"1px solid "+(activeGroup===g?"#daa520":"#7a4f20"),cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase"}}>{g}</button>)}
+              {GROUPS.map(g=><button key={g.id} onClick={()=>setActiveGroup(g.id)} style={{padding:"0.55rem 1.1rem",background:activeGroup===g.id?"#daa520":"transparent",color:activeGroup===g.id?"#1a0f08":"#f0c060",border:"1px solid "+(activeGroup===g.id?"#daa520":"#7a4f20"),cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase"}}>{T(g.tkey)}</button>)}
             </div>
             <div style={{display:"flex",flexDirection:"column",gap:"0.9rem"}}>
               {filtered.map(s=>{
@@ -1296,15 +1550,14 @@ export default function korbanosCalculator() {
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem",marginBottom:"0.7rem",flexWrap:"wrap"}}>
                     <div style={{flex:"1 1 260px"}}>
                       <div style={{display:"flex",alignItems:"baseline",gap:"0.6rem",flexWrap:"wrap"}}>
-                        <h3 className="df" style={{margin:0,fontSize:"1.1rem",color:"#f0ddb0",fontWeight:700}}>{s.name}</h3>
-                        <span className="hf" style={{color:"#f0c060",fontSize:"1.25rem"}}>{s.hebrew}</span>
+                        <h3 className="df" style={{margin:0,fontSize:"1.1rem",color:"#f0ddb0",fontWeight:700,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{isHe?(s.hebrew||s.name):s.name}</h3>
                       </div>
                       <div style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic",marginTop:"0.15rem"}}>{s.subtitle}</div>
                     </div>
                     <div style={{textAlign:"right"}}>
-                      <div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase"}}>Per Offering</div>
-                      <div className="df" style={{fontSize:"1.5rem",color:"#f0c060",fontWeight:700}}>{fmt(cost)}</div>
-                      <div style={{fontSize:"0.82rem",color:"#7a5030"}}>{fmtNIS(cost/usdPerNis)}</div>
+                      <div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase"}}>{T("per_offering")}</div>
+                      <div className="df" style={{fontSize:"1.5rem",color:"#f0c060",fontWeight:700}}>{fmtC(cost)}</div>
+                      {currency==="usd"&&<div style={{fontSize:"0.82rem",color:"#7a5030"}}>{fmtNIS(cost/usdPerNis)}</div>}
                     </div>
                   </div>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"1rem",flexWrap:"wrap"}}>
@@ -1312,9 +1565,9 @@ export default function korbanosCalculator() {
                       <button onClick={()=>setCount(s.id,count-1)} style={qBtn(count>0)}>-</button>
                       <input type="number" min="0" value={count} onChange={e=>setCount(s.id,parseInt(e.target.value)||0)} style={{width:52,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
                       <button onClick={()=>setCount(s.id,count+1)} style={qBtn(true)}>+</button>
-                      <button onClick={()=>setExpanded(e=>({...e,[s.id]:!e[s.id]}))} style={{marginLeft:"0.5rem",background:"transparent",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.9rem",fontFamily:"inherit",fontStyle:"italic",textDecoration:"underline",textUnderlineOffset:"3px"}}>{isExp?"hide":"details"}</button>
+                      <button onClick={()=>setExpanded(e=>({...e,[s.id]:!e[s.id]}))} style={{marginLeft:"0.5rem",background:"transparent",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.9rem",fontFamily:"inherit",fontStyle:"italic",textDecoration:"underline",textUnderlineOffset:"3px"}}>{isExp?T("hide"):T("details")}</button>
                     </div>
-                    {count>0&&<div className="df" style={{fontSize:"1.1rem",color:"#f0ddb0",fontWeight:700}}>= {fmt(count*cost)}</div>}
+                    {count>0&&<div className="df" style={{fontSize:"1.1rem",color:"#f0ddb0",fontWeight:700}}>= {fmtC(count*cost)}</div>}
                   </div>
                   {isExp&&(<div className="fi" style={{marginTop:"0.9rem",paddingTop:"0.9rem",borderTop:"1px dashed #5a3a1a"}}>
                     <div style={{fontSize:"0.95rem",lineHeight:1.7,color:"#e8d4a0",marginBottom:"0.6rem"}}>{s.description}</div>
@@ -1323,7 +1576,7 @@ export default function korbanosCalculator() {
                       <tbody>{s.components.map((c,i)=>(
                         <tr key={i} style={{borderBottom:"1px dotted #5a3a1a"}}>
                           <td style={{padding:"0.3rem 0",color:"#e8d4a0"}}>{c.label}</td>
-                          <td style={{padding:"0.3rem 0",textAlign:"right",color:"#f0c060",fontFamily:"'Cinzel',serif",fontSize:"0.88rem",whiteSpace:"nowrap"}}>{fmt(compCost(c.key,c.count,P))}</td>
+                          <td style={{padding:"0.3rem 0",textAlign:"right",color:"#f0c060",fontFamily:"'Cinzel',serif",fontSize:"0.88rem",whiteSpace:"nowrap"}}>{fmtC(compCost(c.key,c.count,P))}</td>
                         </tr>
                       ))}</tbody>
                     </table>
@@ -1334,10 +1587,10 @@ export default function korbanosCalculator() {
             {catalogSelected>0&&(
               <div className="fi" style={{position:"sticky",bottom:"1rem",marginTop:"1.5rem",background:"linear-gradient(135deg,#6a3010,#4a2008,#2a1004)",border:"2px solid #f0c060",padding:"1rem 1.5rem",boxShadow:"0 8px 32px rgba(240,192,96,.25)",display:"flex",justifyContent:"space-between",alignItems:"center",zIndex:10}}>
                 <div>
-                  <div style={{fontSize:"0.82rem",color:"#f0ddb0",letterSpacing:"0.2em",textTransform:"uppercase",opacity:.8}}>Total — {catalogSelected} {catalogSelected===1?"offering":"offerings"}</div>
-                  <div className="df" style={{fontSize:"2rem",color:"#f0c060",fontWeight:900}}>{fmt(catalogTotal)}</div>
+                  <div style={{fontSize:"0.82rem",color:"#f0ddb0",letterSpacing:"0.2em",textTransform:"uppercase",opacity:.8}}>{T("cat_total_lbl")} {catalogSelected} {catalogSelected===1?T("offering_lbl"):T("offerings_lbl")}</div>
+                  <div className="df" style={{fontSize:"2rem",color:"#f0c060",fontWeight:900}}>{fmtC(catalogTotal)}</div>
                 </div>
-                <button onClick={()=>setCounts({})} style={{background:"transparent",border:"2px solid #f0ddb0",color:"#f0ddb0",padding:"0.5rem 1rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.85rem",letterSpacing:"0.1em",fontWeight:600}}>CLEAR</button>
+                <button onClick={()=>setCounts({})} style={{background:"transparent",border:"2px solid #f0ddb0",color:"#f0ddb0",padding:"0.5rem 1rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.85rem",letterSpacing:"0.1em",fontWeight:600}}>{T("clear")}</button>
               </div>
             )}
             {disclaimer}
@@ -1348,26 +1601,26 @@ export default function korbanosCalculator() {
         {activeTab==="prices"&&(
           <div className="fi">
             <div style={{marginBottom:"1.5rem",padding:"1rem 1.25rem",background:"rgba(90,171,223,.07)",border:"1px solid #3a7aaa",borderLeft:"3px solid #5aabdf",fontSize:"1rem",lineHeight:1.7,color:"#e8d4a0"}}>
-              <strong style={{color:"#f0ddb0"}}>All prices are Jerusalem market rates.</strong> korbanos are brought in Jerusalem. NIS prices converted to USD at $1 = NIS {nisPerUsd}.
+              <strong style={{color:"#f0ddb0"}}>{T("prices_intro")}</strong> {T("prices_conv")} {nisPerUsd}.
             </div>
             <div style={{marginBottom:"1.5rem",padding:"1rem 1.25rem",background:"rgba(240,192,96,.06)",border:"1px solid #7a4f20",borderLeft:"3px solid #f0c060"}}>
               <div style={{marginBottom:"0.4rem"}}>
-                <span className="df" style={{fontSize:"0.85rem",color:"#f0c060",letterSpacing:"0.1em"}}>ACTIVE SHITA: </span>
+                <span className="df" style={{fontSize:"0.85rem",color:"#f0c060",letterSpacing:"0.1em"}}>{T("active_shita")} </span>
                 <span style={{fontSize:"1rem",color:"#f0ddb0",fontWeight:700}}>{shiur.labelShort}</span>
                 <span className="hf" style={{marginLeft:"0.6rem",color:"#f0c060",fontSize:"1.15rem"}}>{shiur.hebrew}</span>
                 <span style={{marginLeft:"0.75rem",fontSize:"0.88rem",color:"#a08050",fontStyle:"italic"}}>{shiur.source}</span>
               </div>
               <div style={{fontSize:"0.95rem",color:"#c9a45a",lineHeight:1.65}}>{shiur.notes}</div>
-              {shiurId!=="naeh"&&<div style={{marginTop:"0.4rem",fontSize:"0.9rem",color:"#b070e0"}}>Agricultural items (flour, oil, wine) are x{shiur.multiplier} the R' Naeh baseline.</div>}
+              {shiurId!=="naeh"&&<div style={{marginTop:"0.4rem",fontSize:"0.9rem",color:"#b070e0"}}>{T("agr_mult")}{shiur.multiplier} {T("agr_baseline")}</div>}
             </div>
 
             {[
-              {category:"Livestock",   keys:["bull","ram","lamb","goat","bird"],                              isAgr:false},
-              {category:"Agricultural",keys:["issaron_flour","log_oil","log_wine","frankincense","ketores","wood","salt"],isAgr:true},
-            ].map(({category,keys,isAgr})=>(
-              <div key={category} style={{marginBottom:"2rem"}}>
+              {tkey:"livestock",   keys:["bull","ram","lamb","goat","bird"],                              isAgr:false},
+              {tkey:"agricultural",keys:["issaron_flour","log_oil","log_wine","frankincense","ketores","wood","salt"],isAgr:true},
+            ].map(({tkey,keys,isAgr})=>(
+              <div key={tkey} style={{marginBottom:"2rem"}}>
                 <div style={{borderBottom:"1px solid #5a3a1a",paddingBottom:"0.5rem",marginBottom:"0.75rem"}}>
-                  <h2 className="df" style={{margin:0,fontSize:"0.9rem",color:"#f0c060",letterSpacing:"0.15em",textTransform:"uppercase"}}>{category}</h2>
+                  <h2 className="df" style={{margin:0,fontSize:"0.9rem",color:"#f0c060",letterSpacing:"0.15em",textTransform:"uppercase"}}>{T(tkey)}</h2>
                 </div>
                 {keys.map(key=>{
                   const isFixed=key==="ketores"||key==="frankincense"||key==="wood"||key==="salt";
@@ -1378,22 +1631,22 @@ export default function korbanosCalculator() {
                       <div style={{flex:"1 1 200px"}}>
                         <div style={{display:"flex",alignItems:"baseline",gap:"0.5rem",flexWrap:"wrap"}}>
                           <span style={{fontWeight:700,fontSize:"1rem",color:"#f0ddb0",textTransform:"capitalize"}}>{key==="ketores"?"Ketores (per offering)":key.replace(/_/g," ")}</span>
-                          {isAgr&&!isFixed&&<span style={{fontSize:"0.72rem",color:"#b070e0",border:"1px solid #b070e0",padding:"0.1rem 0.35rem",letterSpacing:"0.08em"}}>SHIUR-DEPENDENT</span>}
-                          {key==="ketores"&&<span style={{fontSize:"0.72rem",color:"#4ec98a",border:"1px solid #4ec98a",padding:"0.1rem 0.35rem",letterSpacing:"0.08em"}}>FIXED FORMULA</span>}
+                          {isAgr&&!isFixed&&<span style={{fontSize:"0.72rem",color:"#b070e0",border:"1px solid #b070e0",padding:"0.1rem 0.35rem",letterSpacing:"0.08em"}}>{T("shiur_dep")}</span>}
+                          {key==="ketores"&&<span style={{fontSize:"0.72rem",color:"#4ec98a",border:"1px solid #4ec98a",padding:"0.1rem 0.35rem",letterSpacing:"0.08em"}}>{T("fixed_formula")}</span>}
                         </div>
                       </div>
                       <div style={{display:"flex",alignItems:"center",gap:"1rem",flexShrink:0}}>
                         <div style={{textAlign:"right"}}>
-                          <div style={{fontSize:"0.82rem",color:"#a08050"}}>NIS {adjNIS.toFixed(1)}{isAgr&&!isFixed&&shiurId!=="naeh"&&<span style={{color:"#b070e0"}}> x{shiur.multiplier}</span>}</div>
-                          <div className="df" style={{fontSize:"1.5rem",color:"#f0c060",fontWeight:700}}>{fmt(usdPrice)}</div>
+                          {currency==="usd"&&<div style={{fontSize:"0.82rem",color:"#a08050"}}>NIS {adjNIS.toFixed(1)}{isAgr&&!isFixed&&shiurId!=="naeh"&&<span style={{color:"#b070e0"}}> x{shiur.multiplier}</span>}</div>}
+                          <div className="df" style={{fontSize:"1.5rem",color:"#f0c060",fontWeight:700}}>{fmtC(usdPrice)}</div>
                         </div>
-                        <button onClick={()=>setExpandedPrice(e=>({...e,[key]:!e[key]}))} style={{background:"transparent",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.9rem",fontFamily:"inherit",fontStyle:"italic",textDecoration:"underline",textUnderlineOffset:"3px",whiteSpace:"nowrap"}}>{isExp?"hide":"sources"}</button>
+                        <button onClick={()=>setExpandedPrice(e=>({...e,[key]:!e[key]}))} style={{background:"transparent",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.9rem",fontFamily:"inherit",fontStyle:"italic",textDecoration:"underline",textUnderlineOffset:"3px",whiteSpace:"nowrap"}}>{isExp?T("hide"):T("sources_btn")}</button>
                       </div>
                     </div>
                     {isExp&&(<div className="fi" style={{marginTop:"0.85rem",paddingTop:"0.85rem",borderTop:"1px dashed #5a3a1a",display:"flex",flexDirection:"column",gap:"0.5rem"}}>
-                      {isAgr&&!isFixed&&shiurId!=="naeh"&&<div style={{padding:"0.4rem 0.75rem",background:"rgba(176,112,224,.08)",border:"1px solid rgba(176,112,224,.27)",fontSize:"0.9rem",color:"#c9a45a",lineHeight:1.6}}><strong style={{color:"#f0ddb0"}}>Shiur impact:</strong> Base (R' Naeh x1.0) = NIS {baseNIS} — {shiur.labelShort} x{shiur.multiplier} = NIS {adjNIS.toFixed(1)} = <strong style={{color:"#f0c060"}}>{fmt(usdPrice)}</strong></div>}
-                      <div><div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:"0.2rem"}}>Source</div><div style={{fontSize:"0.95rem",color:"#e8d4a0",lineHeight:1.6}}>{src}{url&&<> — <a href={url} target="_blank" rel="noopener noreferrer" className="sl">{url.replace("https://","")}</a></>}</div></div>
-                      <div><div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:"0.2rem"}}>Notes</div><div style={{fontSize:"0.95rem",color:"#c9a45a",lineHeight:1.6,fontStyle:"italic"}}>{note}</div></div>
+                      {isAgr&&!isFixed&&shiurId!=="naeh"&&<div style={{padding:"0.4rem 0.75rem",background:"rgba(176,112,224,.08)",border:"1px solid rgba(176,112,224,.27)",fontSize:"0.9rem",color:"#c9a45a",lineHeight:1.6}}><strong style={{color:"#f0ddb0"}}>{T("shiur_impact")}</strong> Base (R' Naeh x1.0) = NIS {baseNIS} — {shiur.labelShort} x{shiur.multiplier} = NIS {adjNIS.toFixed(1)} = <strong style={{color:"#f0c060"}}>{fmtC(usdPrice)}</strong></div>}
+                      <div><div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:"0.2rem"}}>{T("source_lbl")}</div><div style={{fontSize:"0.95rem",color:"#e8d4a0",lineHeight:1.6}}>{src}{url&&<> — <a href={url} target="_blank" rel="noopener noreferrer" className="sl">{url.replace("https://","")}</a></>}</div></div>
+                      <div><div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:"0.2rem"}}>{T("notes_lbl")}</div><div style={{fontSize:"0.95rem",color:"#c9a45a",lineHeight:1.6,fontStyle:"italic"}}>{note}</div></div>
                     </div>)}
                   </div>);
                 })}
@@ -1402,8 +1655,8 @@ export default function korbanosCalculator() {
 
             <div style={{marginBottom:"2rem"}}>
               <div style={{borderBottom:"1px solid #5a3a1a",paddingBottom:"0.5rem",marginBottom:"0.75rem",display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
-                <h2 className="df" style={{margin:0,fontSize:"0.9rem",color:"#f0c060",letterSpacing:"0.15em",textTransform:"uppercase"}}>Halachic Measurement Conversions</h2>
-                <span style={{fontSize:"0.88rem",color:"#a08050",fontStyle:"italic"}}>per {shiur.labelShort}</span>
+                <h2 className="df" style={{margin:0,fontSize:"0.9rem",color:"#f0c060",letterSpacing:"0.15em",textTransform:"uppercase"}}>{T("halachic_meas")}</h2>
+                <span style={{fontSize:"0.88rem",color:"#a08050",fontStyle:"italic"}}>{T("per_lbl")} {shiur.labelShort}</span>
               </div>
               {[
                 {unit:"Ephah",   equiv:((shiur.issaron_L*10).toFixed(1))+"L",        basis:"10 x issaron. "+(shiur.labelShort)+": "+(shiur.issaron_L)+"L per issaron."},
@@ -1427,7 +1680,7 @@ export default function korbanosCalculator() {
         )}
       </div>
       <div style={{textAlign:"center",marginTop:"2.5rem",paddingTop:"1.5rem",borderTop:"1px solid #3a2010",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
-        Created by Jeremy Spier and Morris Massel with help from AI. Send questions and comments to info@korbancalculator.com
+        Created by Jeremy Spier and Morris Massel with a lot of help from Claude.ai. Send questions and comments to info@korbancalculator.com
       </div>
       <div style={{textAlign:"center",marginTop:"0.5rem",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
         Code available at <a href="https://github.com/morrismassel/korbanos-site" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>github.com/morrismassel/korbanos-site</a>
