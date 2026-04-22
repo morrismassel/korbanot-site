@@ -16,13 +16,29 @@ This is an educational tool only. Nothing here should be relied upon for any hal
 
 ---
 
+## The Story Behind Korbanos Calculator
+
+One Shabbos afternoon, Jeremy Spier had a thought: wouldn't it be interesting to know what it would actually cost to bring korbanos today? That evening he opened Claude and started building. Meir Bar-David contributed early input and encouragement, and a working prototype took shape.
+
+At yet another one of their sons' hockey games the next day, Spier showed the idea to Morris Massel. Massel ran with it — adding live market prices, shiur opinions, communal budgets, a full offering catalog, and considerably more than either of them originally planned.
+
+They launched korbancalculator.com.
+
+Within 24 hours the response was remarkable. It spread through Torah communities in the US and Israel. Rabbis and educators started using it in shiurim.
+
+The boys lost the hockey game but a small contribution was made to Klal Yisroel.
+
+*Morris Massel and Jeremy Spier*
+
+---
+
 ## Acknowledgments
 
 We are grateful to **Rav Chaim Finkel, shlita**, for his general comments on this project. No responsibility for any of the ideas, assumptions, calculations, or conclusions herein is his. All errors and oversimplifications are entirely our own.
 
 We thank **Alex Massel** for his insights on the Eretz Yisroel-specific obligations, which informed the EY residency feature and Bikkurim implementation.
 
-We are grateful to **Dr. Miller, Meir Meisels, Avi Rother, Aviel Hanasab, Yitzchak Rabinowitz, and Ezra Glass** for their comments, corrections, and encouragement throughout the development of this project.
+We are grateful to **Dr. Miller, Meir Meisels, Avi Rother, Aviel Hanasab, Yitzchak Rabinowitz, Ezra Glass, and Baruch Gilinsky** for their comments, corrections, and encouragement throughout the development of this project.
 
 We owe a special debt of gratitude to **Meir Bar-David**, whose assistance, consolation, and encouragement were invaluable at every stage of this project. This would not have been completed without him.
 
@@ -59,7 +75,26 @@ We owe a special debt of gratitude to **Meir Bar-David**, whose assistance, cons
 **Shalmei Simcha:**
 - Remains in Fixed Obligations (Rambam Hilchos Yom Tov 6:17 — the obligation of simcha for adult males is fulfilled specifically through shelamim).
 - Now has a +/− spinner with "reset to auto" link. Defaults to 1 per regel attended; adjustable freely.
+- Rationale updated to note the dispute: some hold that if the chagigah and re'iyah already provide sufficient meat, a separate shalmei simcha is not required. Consult your posek.
 - No longer hard-locked like chagigah and re'iyah.
+
+**Chagigat 14 Nisan — made adjustable:**
+- Like Shalmei Simcha, this offering is not unconditional. It is only required when additional meat is needed so the Korban Pesach is eaten al hasova (on satiety). If other shelamim or food suffices, it is not needed (Rambam Hilchos Korban Pesach 10:12).
+- Now has a +/− spinner with "reset to auto" link. Defaults to 1 when attending Pesach; set to 0 if not needed.
+- No longer hard-locked.
+
+**Rosh Hashana mussaf corrected:**
+- 1 Tishrei is always Rosh Chodesh. The Today's Communal Costs tab now correctly shows three separate mussaf blocks on Rosh Hashana: Mussaf Shabbos (if applicable), Mussaf Rosh Hashana, and Mussaf Rosh Chodesh Tishrei. Note explaining the *musfei* custom in davening included.
+
+**Chatas violation examples revised:**
+- Removed halachically incorrect examples (lemon squeezing = d'rabbanan; elevator yichud = d'rabbanan; physical contact with niddah alone = no korban).
+- Added four missing kareis categories: chelev, chametz on Pesach, blood in a dish, bishul on Yom Kippur.
+- Replaced electricity example (controversial) with lighting a candle (classic Mav'ir).
+- Tightened niddah and arayos examples to clarify the halachic distinction: lo yada (didn't know her status changed) vs. ta'us (mistaken identity — classic Kerisus 2a case).
+- Basar b'chalav example retained with honest note about the Rishonim dispute on whether eating carries kareis.
+
+**Bug fix — Eretz Yisroel travel:**
+- Travel costs were incorrectly included in the annual total even when "I live in Eretz Yisroel" was checked. Fixed: EY residents now correctly see $0 travel in their total and summary bar.
 
 **Annual Communal Budget renamed:**
 - Tab renamed from "Communal Budget" to "Annual Communal Budget" for clarity.
