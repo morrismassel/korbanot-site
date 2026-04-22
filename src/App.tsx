@@ -519,29 +519,26 @@ export default function korbanosCalculator() {
   const [activeTab,        setActiveTab]        = useState("annual");
   const [lang,             setLang]             = useState("en");
   const [langOpen,         setLangOpen]         = useState(false);
-  const [currency,         setCurrency]         = useState<"usd"|"nis">("usd");
-  const [todayAbs,         setTodayAbs]         = useState<number>(()=>gregToAbs(new Date()));
-  const [counts,           setCounts]           = useState<Record<string,number>>({});
-  const [expanded,         setExpanded]         = useState<Record<string,boolean>>({});
+  const [currency,         setCurrency]         = useState("usd");
+  const [todayAbs,         setTodayAbs]         = useState(()=>gregToAbs(new Date()));
+  const [counts,           setCounts]           = useState({});
+  const [expanded,         setExpanded]         = useState({});
   const [activeGroup,      setActiveGroup]      = useState("Daily & Weekly");
   const [profileQtys,      setProfileQtys]      = useState(Object.fromEntries(ANNUAL_ASSUMPTIONS.map(a=>[a.id,a.defaultQty])));
-  const [showRationale,    setShowRationale]    = useState<Record<string,boolean>>({});
-
-  const [showExamples,     setShowExamples]     = useState<Record<string,boolean>>({});
-
+  const [showRationale,    setShowRationale]    = useState({});
+  const [showExamples,     setShowExamples]     = useState({});
   const [regalimAttending, setRegalimAttending] = useState({pesach:true,shavuot:true,sukkot:true});
-  const [expandedPrice,    setExpandedPrice]    = useState<Record<string,boolean>>({});
-  const [expandedCommune,  setExpandedCommune]  = useState<Record<string,boolean>>({});
-
+  const [expandedPrice,    setExpandedPrice]    = useState({});
+  const [expandedCommune,  setExpandedCommune]  = useState({});
   const [showSettings,     setShowSettings]     = useState(false);
   const [shiurId,          setShiurId]          = useState("naeh");
   const [usdPerNis,        setUsdPerNis]        = useState(1/2.96);
-  const [rateStatus,       setRateStatus]       = useState<"idle"|"loading"|"live"|"error">("idle");
+  const [rateStatus,       setRateStatus]       = useState("idle");
   const [silverUsdPerGram, setSilverUsdPerGram] = useState(SILVER_USD_PER_GRAM_FALLBACK);
-  const [silverStatus,     setSilverStatus]     = useState<"idle"|"loading"|"live"|"error">("idle");
+  const [silverStatus,     setSilverStatus]     = useState("idle");
   const [silverInputVal,   setSilverInputVal]   = useState((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));
   const [travelCfg,        setTravelCfg]        = useState(DEFAULT_TRAVEL);
-  const [travelUserEdited, setTravelUserEdited] = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
+  const [travelUserEdited, setTravelUserEdited] = useState({});
   const [strictness,       setStrictness]       = useState(2);
   const [financialTier,    setFinancialTier]    = useState("average");
   const [personalQtys,     setPersonalQtys]     = useState({chatas_total:7,asham_talui:3});
@@ -549,9 +546,11 @@ export default function korbanosCalculator() {
   const [includeTravelTodah, setIncludeTravelTodah] = useState(true);
   const [livesInEY,        setLivesInEY]        = useState(false);
   const [isLandowner,      setIsLandowner]      = useState(false);
-  const [todahOverride,    setTodahOverride]    = useState<number|null>(null);
-  const [shalmeiOverride,  setShalmeiOverride]  = useState<number|null>(null);
-  const [chagigah14Override, setChagigah14Override] = useState<number|null>(null);
+  const [todahOverride,    setTodahOverride]    = useState(null);
+  const [shalmeiOverride,  setShalmeiOverride]  = useState(null);
+  const [chagigah14Override, setChagigah14Override] = useState(null);
+  const [population,       setPopulation]       = useState(600000);
+  const [showPrint,        setShowPrint]        = useState(false);
 
   // Helper: fetch silver from fawazahmed0 metals API
   // Response: { xag: { usd: <USD_per_troy_oz> } }
@@ -597,6 +596,29 @@ export default function korbanosCalculator() {
     document.addEventListener("mousedown", handler);
     return ()=>document.removeEventListener("mousedown", handler);
   },[langOpen]);
+
+  // Load shared bill from URL on mount
+  useEffect(()=>{
+    try{
+      const params=new URLSearchParams(window.location.search);
+      const bill=params.get("bill");
+      if(!bill) return;
+      const cfg=JSON.parse(atob(decodeURIComponent(bill)));
+      if(cfg.s) setShiurId(cfg.s);
+      if(cfg.t) setFinancialTier(cfg.t);
+      if(cfg.st) setStrictness(cfg.st);
+      if(cfg.r) setRegalimAttending(cfg.r);
+      if(cfg.ey!=null) setLivesInEY(cfg.ey);
+      if(cfg.lo!=null) setIsLandowner(cfg.lo);
+      if(cfg.it!=null) setIncludeTravel(cfg.it);
+      if(cfg.itt!=null) setIncludeTravelTodah(cfg.itt);
+      if(cfg.tc) setTravelCfg(cfg.tc);
+      if(cfg.pq) setPersonalQtys(cfg.pq);
+      if(cfg.to!=null) setTodahOverride(cfg.to);
+      if(cfg.so!=null) setShalmeiOverride(cfg.so);
+      if(cfg.co!=null) setChagigah14Override(cfg.co);
+    }catch(e){}
+  },[]);
 
   // Refresh NIS rate only
   const fetchRate=async()=>{
@@ -723,15 +745,14 @@ export default function korbanosCalculator() {
     const entry=CATALOG.find(c=>c.id===o.catalogId);
     return s+(entry?o.count*offeringTotal(entry,P):0);
   },0),[P]);
-  const ASSUMED_POPULATION = 600000;
-  const perCapitaCommunal  = communalTotal/ASSUMED_POPULATION;
+  const perCapitaCommunal  = communalTotal/population;
 
   const catalogTotal    = useMemo(()=>CATALOG.reduce((s,c)=>s+(counts[c.id]||0)*offeringTotal(c,P),0),[counts,P]);
-  const catalogSelected = useMemo(()=>Object.values(counts).reduce<number>((a,b)=>a+(((b as unknown) as number)||0),0),[counts]);
+  const catalogSelected = useMemo(()=>Object.values(counts).reduce((a,b)=>a+(b||0),0),[counts]);
   const filtered        = CATALOG.filter(s=>s.group===activeGroup);
 
   const lbl = {fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.5rem"};
-  const inp = {width:"100%",padding:"0.5rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center" as const,fontFamily:"inherit",fontSize:"1rem"};
+  const inp = {width:"100%",padding:"0.5rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"};
 
   const doReset=()=>{
     setProfileQtys(Object.fromEntries(ANNUAL_ASSUMPTIONS.map(a=>[a.id,a.defaultQty])));
@@ -1004,7 +1025,7 @@ export default function korbanosCalculator() {
                   const going=regalimAttending[id];
                   return(<button key={id} onClick={()=>setRegalimAttending(r=>({...r,[id]:!r[id]}))} style={{display:"flex",alignItems:"center",gap:"0.6rem",padding:"0.65rem 1.2rem",background:going?"rgba(240,192,96,.15)":"rgba(30,14,6,.8)",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),color:going?"#f0ddb0":"#7a5030",cursor:"pointer",fontFamily:"inherit"}}>
                     <div style={{width:16,height:16,borderRadius:"50%",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),background:going?"#f0c060":"transparent",flexShrink:0}}/>
-                    <span style={{fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{T(tkey)}</span>
+                    <span style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{T(tkey)}</span>
                   </button>);
                 })}
               </div>
@@ -1045,7 +1066,7 @@ export default function korbanosCalculator() {
                     <input type="range" min="1" max="5" value={strictness} onChange={e=>handleStrictnessChange(parseInt(e.target.value))} style={{cursor:"pointer",marginBottom:"0.4rem",width:"100%"}}/>
                     <div style={{position:"relative",height:"1.2rem",marginBottom:"0.5rem"}}>
                       {[T("scrutiny_min"),T("scrutiny_avg"),T("scrutiny_careful"),T("scrutiny_yerei"),T("scrutiny_exc")].map((label,i)=>{
-                        const pct = i / 4;
+                        const pct = i / 4; // 0, 0.25, 0.5, 0.75, 1
                         const thumbW = 40;
                         const offset = thumbW * (0.5 - pct);
                         return(
@@ -1227,13 +1248,21 @@ export default function korbanosCalculator() {
             </div>
 
             {/* Grand total */}
-            <div style={{padding:"1.4rem 1.6rem",background:"linear-gradient(135deg,#6a3010,#4a2008,#2a1004)",border:"2px solid #f0c060",boxShadow:"0 8px 40px rgba(240,192,96,.2)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div style={{padding:"1.4rem 1.6rem",background:"linear-gradient(135deg,#6a3010,#4a2008,#2a1004)",border:"2px solid #f0c060",boxShadow:"0 8px 40px rgba(240,192,96,.2)",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"1rem"}}>
               <div>
                 <div style={{fontSize:"0.9rem",color:"#f0ddb0",letterSpacing:"0.15em",textTransform:"uppercase",opacity:.85,marginBottom:"0.15rem"}}>{T("estimated_total")}</div>
                 <div className="df" style={{fontSize:"2.8rem",color:"#f0c060",fontWeight:900,textShadow:"0 2px 12px rgba(240,192,96,.4)"}}>{fmtC(annualTotal)}</div>
-                {!includeTravel&&<div style={{fontSize:"0.9rem",color:"#5aabdf",marginTop:"0.25rem",fontStyle:"italic"}}>{T("travel_excl")} {fmtC(travelSubtotal)} {T("excl_suffix")}</div>}
+                {(!includeTravel||livesInEY)&&travelSubtotal>0&&<div style={{fontSize:"0.9rem",color:"#5aabdf",marginTop:"0.25rem",fontStyle:"italic"}}>{T("travel_excl")} {fmtC(travelSubtotal)} {T("excl_suffix")}</div>}
               </div>
-              <button onClick={doReset} style={{background:"transparent",border:"2px solid #f0ddb0",color:"#f0ddb0",padding:"0.55rem 1.1rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.85rem",letterSpacing:"0.1em",fontWeight:600}}>{T("reset")}</button>
+              <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap"}}>
+                <button onClick={()=>setShowPrint(true)} style={{background:"transparent",border:"1px solid #c9a45a",color:"#c9a45a",padding:"0.45rem 0.9rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.8rem",letterSpacing:"0.08em"}}>🖨 Print Summary</button>
+                <button onClick={()=>{
+                  const cfg={s:shiurId,t:financialTier,st:strictness,r:regalimAttending,ey:livesInEY,lo:isLandowner,it:includeTravel,itt:includeTravelTodah,tc:travelCfg,pq:personalQtys,to:todahOverride,so:shalmeiOverride,co:chagigah14Override};
+                  const url=window.location.origin+window.location.pathname+"?bill="+encodeURIComponent(btoa(JSON.stringify(cfg)));
+                  navigator.clipboard.writeText(url).then(()=>alert("Link copied to clipboard!")).catch(()=>prompt("Copy this link:",url));
+                }} style={{background:"transparent",border:"1px solid #c9a45a",color:"#c9a45a",padding:"0.45rem 0.9rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.8rem",letterSpacing:"0.08em"}}>🔗 Share My Bill</button>
+                <button onClick={doReset} style={{background:"transparent",border:"2px solid #f0ddb0",color:"#f0ddb0",padding:"0.45rem 1rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.85rem",letterSpacing:"0.1em",fontWeight:600}}>{T("reset")}</button>
+              </div>
             </div>
             {disclaimer}
           </div>
@@ -1248,11 +1277,30 @@ export default function korbanosCalculator() {
               <p style={{fontSize:"0.95rem",color:"#c9a45a",fontStyle:"italic",lineHeight:1.7,margin:0}}>Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. Half a shekel hakodesh = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1)}g silver ({shiur.labelShort}; shekel = {(SHEKEL_HAKODESH_NAEH_G*shiur.multiplier).toFixed(1)}g = 320 barley grains) = <strong style={{color:"#f0ddb0"}}>{fmtC(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier))}</strong> {T("at_current")} (~${silverUsdPerGram.toFixed(2)}/gram{silverStatus==="live"?<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>{T("live_lbl")}</span>:<span style={{color:"#c9a45a",marginLeft:"0.3rem"}}>{T("est_lbl")}</span>}).</p>
             </div>
 
+            {/* Population slider */}
+            <div style={{marginBottom:"1.5rem",padding:"1rem 1.25rem",background:"rgba(24,12,4,.7)",border:"1px solid #5a3a1a"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"0.5rem"}}>
+                <div style={lbl}>Adult Male Population</div>
+                <div style={{fontFamily:"'Cinzel',serif",fontSize:"0.95rem",color:"#f0c060",fontWeight:700}}>
+                  {population>=1000000?(population/1000000).toFixed(1)+"M":(population/1000).toFixed(0)+"k"}
+                </div>
+              </div>
+              <input type="range" min="600000" max="10000000" step="100000" value={population} onChange={e=>setPopulation(parseInt(e.target.value))} style={{width:"100%",cursor:"pointer",marginBottom:"0.5rem"}}/>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:"0.8rem",color:"#7a5030",fontFamily:"'EB Garamond',Georgia,serif",marginBottom:"0.5rem"}}>
+                <span>600k</span><span>1M</span><span>2M</span><span>3.5M</span><span>5M</span><span>7.5M</span><span>10M</span>
+              </div>
+              <div style={{display:"flex",gap:"0.4rem",flexWrap:"wrap"}}>
+                {[{label:"600k — Bamidbar census",v:600000},{label:"1M — Scholars' low estimate",v:1000000},{label:"3M — Josephus",v:3000000},{label:"6M — Today's observant men",v:6000000}].map(({label,v})=>(
+                  <button key={v} onClick={()=>setPopulation(v)} style={{padding:"0.25rem 0.6rem",background:population===v?"rgba(240,192,96,.15)":"transparent",border:"1px solid "+(population===v?"#f0c060":"#3a2010"),color:population===v?"#f0c060":"#7a5030",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.75rem",borderRadius:2}}>{label}</button>
+                ))}
+              </div>
+            </div>
+
             {/* Summary cards */}
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:"1rem",marginBottom:"2rem"}}>
               {[
                 {tkey:"total_annual",value:fmtC(communalTotal),sub:"all public korbanos combined",color:"#f0c060"},
-                {tkey:"per_capita",value:fmtC(perCapitaCommunal),sub:"assuming "+((ASSUMED_POPULATION/1000).toFixed(0))+"k adult males",color:"#4ec98a"},
+                {tkey:"per_capita",value:fmtC(perCapitaCommunal),sub:"assuming "+( population>=1000000 ? (population/1000000).toFixed(1)+"M" : (population/1000).toFixed(0)+"k" )+" adult males",color:"#4ec98a"},
                 {tkey:"actual_chatzi",value:fmtC(fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)),sub:((SHEKEL_HAKODESH_NAEH_G*shiur.multiplier/2).toFixed(1))+"g silver • "+(shiur.labelShort)+" • "+(silverStatus==="live"?"live price":"est. price"),color:"#c07ad8"},
                 {tkey:"subsidy",value:fmtC(Math.max(0,fixedPriceFor("chatzi_shekel",silverUsdPerGram,financialTier,shiur.multiplier)-perCapitaCommunal)),sub:"chatzi shekel minus per-capita cost",color:"#5aabdf"},
               ].map(({tkey,value,sub,color})=>(
@@ -1308,7 +1356,7 @@ export default function korbanosCalculator() {
             })}
 
             <div style={{marginTop:"1.5rem",padding:"1rem 1.25rem",background:"rgba(240,192,96,.04)",border:"1px solid #5a3a1a",fontSize:"0.9rem",color:"#c9a45a",lineHeight:1.7,fontStyle:"italic"}}>
-              Note: The Kohen Gadol's personal bull on Yom Kippur was not funded by the communal pool — he brought it at his own expense. The 12 Rosh Chodesh mussafim assume a standard year; a leap year adds one additional Rosh Chodesh mussaf. Population assumption of 600,000 adult males is a conventional figure; actual Second Temple era population estimates vary considerably.
+              Note: The Kohen Gadol's personal bull on Yom Kippur was not funded by the communal pool — he brought it at his own expense. The 12 Rosh Chodesh mussafim assume a standard year; a leap year adds one additional Rosh Chodesh mussaf. Population assumption adjustable via slider in this tab; default 600,000 follows the Bamidbar census. Second Temple era estimates range from 600k to several million.
             </div>
             {disclaimer}
           </div>
@@ -1403,14 +1451,17 @@ export default function korbanosCalculator() {
               offerings:[{label:(sukkosBulls)+" "+T("off_bull_olah"),key:"bull_olah",count:sukkosBulls},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 "+T("off_lambs_olah"),key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}],
               note:"Bull count decreases by one each day (13→7). 70 bulls total over all 7 days represent atonement for the 70 nations. Source: Bamidbar 29:12–34."});
           } else if(isRH){
+            // Shabbos mussaf first if applicable
             if(isShabbat){
               blocks.push({title:T("blk_mussaf")+" — "+T("day_shabbos"),color:"#f0c060",
                 offerings:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2}],
                 note:"Source: Bamidbar 28:9–10."});
             }
+            // Rosh Hashana mussaf
             blocks.push({title:T("blk_mussaf")+" — "+T("day_rh"),color:"#f0a060",
               offerings:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
               note:"Source: Bamidbar 29:1–6."});
+            // Rosh Chodesh Tishrei mussaf — 1 Tishrei is always Rosh Chodesh
             blocks.push({title:T("blk_mussaf")+" — "+T("day_rc")+" "+H_MONTH_NAMES[HM.TISHREI],color:"#c9a45a",
               offerings:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
               note:"1 Tishrei is Rosh Chodesh — both mussafim are brought. This is why many have the custom of saying מוּסְפֵי in davening on Rosh Hashana. Source: Bamidbar 28:11–15; 29:1–6."});
@@ -1530,8 +1581,8 @@ export default function korbanosCalculator() {
                 <div style={{fontSize:"0.75rem",color:"#5a3a1a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.55rem"}}>{T("jump_to")}</div>
                 <div style={{display:"flex",flexDirection:"column",gap:"0.45rem"}}>
                   {JUMP_GROUPS.map(g=>(
-                    <div key={g.tkey} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
-                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{T(g.tkey)}</span>
+                    <div key={g.tkey||g.label} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
+                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{g.tkey?T(g.tkey):g.label}</span>
                       {g.items.map(item=>{
                         const active=item.abs===todayAbs;
                         return(<button key={item.tkey||item.label} onClick={()=>setTodayAbs(item.abs)} style={{padding:"0.28rem 0.6rem",background:active?"rgba(240,192,96,.12)":"transparent",border:"1px solid "+(active?g.col:"#3a2010"),color:active?g.col:"#7a5030",cursor:"pointer",fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",fontSize:"0.76rem",letterSpacing:"0.05em",whiteSpace:"nowrap"}}>{item.tkey?T(item.tkey):item.label}</button>);
@@ -1735,6 +1786,56 @@ export default function korbanosCalculator() {
         {" · "}
         <a href="https://github.com/morrismassel/korbanos-site#readme" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>Methodology &amp; Sources</a>
       </div>
+
+      {/* ── Print Modal ─────────────────────────────────────────────────── */}
+      {showPrint&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setShowPrint(false)}>
+          <div onClick={e=>e.stopPropagation()} style={{background:"#fff",color:"#111",maxWidth:680,width:"100%",maxHeight:"90vh",overflowY:"auto",padding:"2.5rem",fontFamily:"Georgia,serif",fontSize:"14px",lineHeight:1.7}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem",borderBottom:"2px solid #111",paddingBottom:"1rem"}}>
+              <div>
+                <div style={{fontSize:"22px",fontWeight:700,letterSpacing:"0.05em",fontFamily:"'Cinzel',serif"}}>KORBANOS CALCULATOR</div>
+                <div style={{fontSize:"13px",color:"#555",marginTop:"0.2rem"}}>korbancalculator.com — Estimated Annual Bill</div>
+              </div>
+              <div style={{textAlign:"right",fontSize:"12px",color:"#777"}}>
+                <div>{new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})}</div>
+                <div>Shiur: {shiur.labelShort} · {financialTier.charAt(0).toUpperCase()+financialTier.slice(1)} · {regalimCount} regel{regalimCount!==1?"im":""}</div>
+                <div>{livesInEY?"Eretz Yisroel":"Chutz L'Aretz"}</div>
+              </div>
+            </div>
+
+            {byCategory.filter(x=>!x.isTravel||(!livesInEY&&includeTravel)).map(({cat,items,subtotal,isTravel})=>(
+              <div key={cat} style={{marginBottom:"1.25rem"}}>
+                <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #ccc",paddingBottom:"0.2rem",marginBottom:"0.4rem"}}>
+                  <strong style={{fontSize:"13px",letterSpacing:"0.08em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>{CAT_NAMES[cat]||cat}</strong>
+                  <strong>{fmtC(subtotal)}</strong>
+                </div>
+                {isTravel
+                  ? <div style={{display:"flex",justifyContent:"space-between",padding:"0.15rem 0",color:"#444"}}><span>Travel ({regalimCount} regalim)</span><span>{fmtC(subtotal)}</span></div>
+                  : items.map(item=>{
+                      const qty=getQty(item.id); if(!qty) return null;
+                      const cost=qty*resolveUnitCost(item.id,P);
+                      return(<div key={item.id} style={{display:"flex",justifyContent:"space-between",padding:"0.15rem 0",color:"#333"}}>
+                        <span>{item.label}{qty>1?" × "+qty:""}</span>
+                        <span>{fmtC(cost)}</span>
+                      </div>);
+                    })
+                }
+              </div>
+            ))}
+
+            <div style={{borderTop:"2px solid #111",paddingTop:"0.75rem",display:"flex",justifyContent:"space-between",fontSize:"18px",fontWeight:700,fontFamily:"'Cinzel',serif",marginBottom:"1rem"}}>
+              <span>Total</span><span>{fmtC(annualTotal)}</span>
+            </div>
+            <div style={{fontSize:"11px",color:"#888",borderTop:"1px solid #ddd",paddingTop:"0.75rem",lineHeight:1.6}}>
+              For educational purposes only. Do not rely on anything here for any halachic decision. All prices are Jerusalem market rates converted at live NIS/USD. Shiur: {shiur.labelShort}. Silver: ${(silverUsdPerGram*31.1035).toFixed(2)}/troy oz. Rate: $1 = NIS {(1/usdPerNis).toFixed(2)}.
+            </div>
+            <div style={{display:"flex",gap:"0.75rem",marginTop:"1.25rem",justifyContent:"flex-end"}}>
+              <button onClick={()=>window.print()} style={{padding:"0.5rem 1.25rem",background:"#111",color:"#fff",border:"none",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px",letterSpacing:"0.08em"}}>Print / Save PDF</button>
+              <button onClick={()=>setShowPrint(false)} style={{padding:"0.5rem 1.25rem",background:"transparent",color:"#555",border:"1px solid #999",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
