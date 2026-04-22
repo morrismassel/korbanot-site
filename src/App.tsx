@@ -1,3 +1,4 @@
+// Korbanos Calculator — V4
 import { useState, useMemo, useEffect } from "react";
 
 // ── Shiurim ───────────────────────────────────────────────────────────────────
