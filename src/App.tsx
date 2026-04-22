@@ -1026,7 +1026,7 @@ export default function korbanosCalculator() {
                   const going=regalimAttending[id];
                   return(<button key={id} onClick={()=>setRegalimAttending(r=>{const next={...r};(next as Record<string,boolean>)[id]=!(r as Record<string,boolean>)[id];return next;})} style={{display:"flex",alignItems:"center",gap:"0.6rem",padding:"0.65rem 1.2rem",background:going?"rgba(240,192,96,.15)":"rgba(30,14,6,.8)",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),color:going?"#f0ddb0":"#7a5030",cursor:"pointer",fontFamily:"inherit"}}>
                     <div style={{width:16,height:16,borderRadius:"50%",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),background:going?"#f0c060":"transparent",flexShrink:0}}/>
-                    <span style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{T(tkey)}</span>
+                    <span style={{fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{T(tkey)}</span>
                   </button>);
                 })}
               </div>
@@ -1582,8 +1582,8 @@ export default function korbanosCalculator() {
                 <div style={{fontSize:"0.75rem",color:"#5a3a1a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.55rem"}}>{T("jump_to")}</div>
                 <div style={{display:"flex",flexDirection:"column",gap:"0.45rem"}}>
                   {JUMP_GROUPS.map(g=>(
-                    <div key={g.tkey||g.label} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
-                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{g.tkey?T(g.tkey):g.label}</span>
+                    <div key={g.tkey} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
+                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{T(g.tkey)}</span>
                       {g.items.map(item=>{
                         const active=item.abs===todayAbs;
                         return(<button key={(item as {tkey?:string,label?:string,abs:number}).tkey||(item as {tkey?:string,label?:string,abs:number}).label} onClick={()=>setTodayAbs(item.abs)} style={{padding:"0.28rem 0.6rem",background:active?"rgba(240,192,96,.12)":"transparent",border:"1px solid "+(active?g.col:"#3a2010"),color:active?g.col:"#7a5030",cursor:"pointer",fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",fontSize:"0.76rem",letterSpacing:"0.05em",whiteSpace:"nowrap"}}>{item.tkey?T(item.tkey):item.label}</button>);
