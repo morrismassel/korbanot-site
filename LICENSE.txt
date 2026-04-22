@@ -1,0 +1,10 @@
+Copyright (c) 2026 Morris Massel and Jeremy Spier
+All rights reserved.
+
+The source code, halachic content, pricing data, educational materials,
+and source sheets in this repository may not be copied, modified, or
+redistributed without written permission from the authors.
+
+For educational or non-commercial inquiries: info@korbancalculator.com
+
+korbancalculator.com
