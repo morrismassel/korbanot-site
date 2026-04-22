@@ -1040,7 +1040,7 @@ export default function korbanosCalculator() {
                     <div style={{position:"relative",height:"1.2rem",marginBottom:"0.5rem"}}>
                       {[T("scrutiny_min"),T("scrutiny_avg"),T("scrutiny_careful"),T("scrutiny_yerei"),T("scrutiny_exc")].map((label,i)=>{
                         const pct = i / 4;
-                        const thumbW = 16;
+                        const thumbW = 40;
                         const offset = thumbW * (0.5 - pct);
                         return(
                           <span key={i} style={{
