@@ -318,6 +318,11 @@ const TR = {
   live_rate:     {en:"live rate",   he:"מחיר חי",   es:"tasa en vivo",  fr:"taux en direct", ru:"онлайн курс"},
   fetching:      {en:"fetching...", he:"טוען...",    es:"cargando...",   fr:"chargement...",  ru:"загрузка..."},
   at_jlm_prices: {en:"at current Jerusalem prices", he:"במחירי ירושלים עדכניים", es:"a precios actuales de Jerusalén", fr:"aux prix actuels de Jérusalem", ru:"по текущим ценам Иерусалима"},
+
+  print_summary: {en:"Print Summary",   he:"הדפס סיכום",    es:"Imprimir Resumen",  fr:"Imprimer le Résumé",  ru:"Распечатать Сводку"},
+  share_bill:    {en:"Share My Bill",   he:"שתף את החשבון", es:"Compartir Mi Bill", fr:"Partager Mon Bill",   ru:"Поделиться Счётом"},
+  link_copied:   {en:"Link copied to clipboard!", he:"הקישור הועתק!", es:"¡Enlace copiado!", fr:"Lien copié!", ru:"Ссылка скопирована!"},
+  copy_link:     {en:"Copy this link:", he:"העתק קישור:", es:"Copiar enlace:", fr:"Copier el enlace:", ru:"Скопировать ссылку:"},
   refresh_lbl:   {en:"Refresh",      he:"רענן",          es:"Actualizar",   fr:"Actualiser",    ru:"Обновить"},
   live_lbl:      {en:"live",         he:"חי",             es:"en vivo",      fr:"en direct",     ru:"онлайн"},
   est_lbl:       {en:"est.",         he:"משוער",          es:"est.",         fr:"est.",           ru:"приблиз."},
@@ -1256,12 +1261,12 @@ export default function korbanosCalculator() {
                 {(!includeTravel||livesInEY)&&travelSubtotal>0&&<div style={{fontSize:"0.9rem",color:"#5aabdf",marginTop:"0.25rem",fontStyle:"italic"}}>{T("travel_excl")} {fmtC(travelSubtotal)} {T("excl_suffix")}</div>}
               </div>
               <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap"}}>
-                <button onClick={()=>setShowPrint(true)} style={{background:"transparent",border:"1px solid #c9a45a",color:"#c9a45a",padding:"0.45rem 0.9rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.8rem",letterSpacing:"0.08em"}}>🖨 Print Summary</button>
+                <button onClick={()=>setShowPrint(true)} style={{background:"transparent",border:"1px solid #c9a45a",color:"#c9a45a",padding:"0.45rem 0.9rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.8rem",letterSpacing:"0.08em"}}>🖨 {T("print_summary")}</button>
                 <button onClick={()=>{
                   const cfg={s:shiurId,t:financialTier,st:strictness,r:regalimAttending,ey:livesInEY,lo:isLandowner,it:includeTravel,itt:includeTravelTodah,tc:travelCfg,pq:personalQtys,to:todahOverride,so:shalmeiOverride,co:chagigah14Override};
                   const url=window.location.origin+window.location.pathname+"?bill="+encodeURIComponent(btoa(JSON.stringify(cfg)));
-                  navigator.clipboard.writeText(url).then(()=>alert("Link copied to clipboard!")).catch(()=>prompt("Copy this link:",url));
-                }} style={{background:"transparent",border:"1px solid #c9a45a",color:"#c9a45a",padding:"0.45rem 0.9rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.8rem",letterSpacing:"0.08em"}}>🔗 Share My Bill</button>
+                  navigator.clipboard.writeText(url).then(()=>alert(T("link_copied"))).catch(()=>prompt(T("copy_link"),url));
+                }} style={{background:"transparent",border:"1px solid #c9a45a",color:"#c9a45a",padding:"0.45rem 0.9rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.8rem",letterSpacing:"0.08em"}}>🔗 {T("share_bill")}</button>
                 <button onClick={doReset} style={{background:"transparent",border:"2px solid #f0ddb0",color:"#f0ddb0",padding:"0.45rem 1rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.85rem",letterSpacing:"0.1em",fontWeight:600}}>{T("reset")}</button>
               </div>
             </div>
@@ -1831,7 +1836,7 @@ export default function korbanosCalculator() {
               For educational purposes only. Do not rely on anything here for any halachic decision. All prices are Jerusalem market rates converted at live NIS/USD. Shiur: {shiur.labelShort}. Silver: ${(silverUsdPerGram*31.1035).toFixed(2)}/troy oz. Rate: $1 = NIS {(1/usdPerNis).toFixed(2)}.
             </div>
             <div style={{display:"flex",gap:"0.75rem",marginTop:"1.25rem",justifyContent:"flex-end"}}>
-              <button onClick={()=>window.print()} style={{padding:"0.5rem 1.25rem",background:"#111",color:"#fff",border:"none",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px",letterSpacing:"0.08em"}}>Print / Save PDF</button>
+              <button onClick={()=>window.print()} style={{padding:"0.5rem 1.25rem",background:"#111",color:"#fff",border:"none",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px",letterSpacing:"0.08em"}}>{T("print_summary")} / PDF</button>
               <button onClick={()=>setShowPrint(false)} style={{padding:"0.5rem 1.25rem",background:"transparent",color:"#555",border:"1px solid #999",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Close</button>
             </div>
           </div>
