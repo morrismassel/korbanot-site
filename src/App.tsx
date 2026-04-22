@@ -1036,9 +1036,25 @@ export default function korbanosCalculator() {
                       <div style={lbl}>{T("scrutiny_lbl")}</div>
                       <div style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",color:"#d4884a",fontWeight:700}}>{currentLevel.label}</div>
                     </div>
-                    <input type="range" min="1" max="5" value={strictness} onChange={e=>handleStrictnessChange(parseInt(e.target.value))} style={{cursor:"pointer",marginBottom:"0.4rem"}}/>
-                    <div style={{display:"flex",justifyContent:"space-between",fontSize:"0.82rem",color:"#c9a45a",fontFamily:"'EB Garamond',Georgia,serif",marginBottom:"0.5rem"}}>
-                      <span>{T("scrutiny_min")}</span><span>{T("scrutiny_avg")}</span><span>{T("scrutiny_careful")}</span><span>{T("scrutiny_yerei")}</span><span>{T("scrutiny_exc")}</span>
+                    <input type="range" min="1" max="5" value={strictness} onChange={e=>handleStrictnessChange(parseInt(e.target.value))} style={{cursor:"pointer",marginBottom:"0.4rem",width:"100%"}}/>
+                    <div style={{position:"relative",height:"1.2rem",marginBottom:"0.5rem"}}>
+                      {[T("scrutiny_min"),T("scrutiny_avg"),T("scrutiny_careful"),T("scrutiny_yerei"),T("scrutiny_exc")].map((label,i)=>{
+                        const pct = i / 4;
+                        const thumbW = 16;
+                        const offset = thumbW * (0.5 - pct);
+                        return(
+                          <span key={i} style={{
+                            position:"absolute",
+                            left:"calc("+( pct*100)+"% + "+(offset)+"px)",
+                            transform:"translateX(-50%)",
+                            fontSize:"0.82rem",
+                            color: strictness===i+1 ? "#d4884a" : "#c9a45a",
+                            fontFamily:"'EB Garamond',Georgia,serif",
+                            whiteSpace:"nowrap",
+                            fontWeight: strictness===i+1 ? 700 : 400,
+                          }}>{label}</span>
+                        );
+                      })}
                     </div>
                     <div style={{fontSize:"1rem",color:"#e8d4a0",fontStyle:"italic",lineHeight:1.6}}>{currentLevel.desc}</div>
                     <div style={{marginTop:"0.4rem",fontSize:"0.92rem",color:"#c9a45a",lineHeight:1.6}}>{T("slider_desc")}</div>
