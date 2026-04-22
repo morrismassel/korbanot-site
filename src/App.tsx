@@ -311,6 +311,10 @@ const TR = {
   pidyon_lbl:    {en:"Pidyon haben:",  he:"פדיון הבן:",  es:"Pidyon haben:",  fr:"Pidyon haben:",  ru:"Пидьон а-бен:"},
 
 
+
+  live_rate:     {en:"live rate",   he:"מחיר חי",   es:"tasa en vivo",  fr:"taux en direct", ru:"онлайн курс"},
+  fetching:      {en:"fetching...", he:"טוען...",    es:"cargando...",   fr:"chargement...",  ru:"загрузка..."},
+  at_jlm_prices: {en:"at current Jerusalem prices", he:"במחירי ירושלים עדכניים", es:"a precios actuales de Jerusalén", fr:"aux prix actuels de Jérusalem", ru:"по текущим ценам Иерусалима"},
   refresh_lbl:   {en:"Refresh",      he:"רענן",          es:"Actualizar",   fr:"Actualiser",    ru:"Обновить"},
   live_lbl:      {en:"live",         he:"חי",             es:"en vivo",      fr:"en direct",     ru:"онлайн"},
   est_lbl:       {en:"est.",         he:"משוער",          es:"est.",         fr:"est.",           ru:"приблиз."},
@@ -717,7 +721,7 @@ export default function korbanosCalculator() {
   const perCapitaCommunal  = communalTotal/ASSUMED_POPULATION;
 
   const catalogTotal    = useMemo(()=>CATALOG.reduce((s,c)=>s+(counts[c.id]||0)*offeringTotal(c,P),0),[counts,P]);
-  const catalogSelected = useMemo(()=>Object.values(counts).reduce((a,b)=>a+(b||0),0),[counts]);
+  const catalogSelected = useMemo(()=>Object.values(counts).reduce<number>((a,b)=>a+(((b as unknown) as number)||0),0),[counts]);
   const filtered        = CATALOG.filter(s=>s.group===activeGroup);
 
   const lbl = {fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.5rem"};
@@ -794,7 +798,7 @@ export default function korbanosCalculator() {
                     {lang===l.code&&<span style={{color:"#f0c060",marginRight:6,fontSize:"0.65rem"}}>✦</span>}{l.label}
                   </button>
                 ))}
-                <div style={{padding:"0.6rem 1rem",borderTop:"1px solid #2a1404",fontSize:"0.72rem",color:"#3a2010",lineHeight:1.5,fontStyle:"italic",fontFamily:"'EB Garamond',serif"}}>
+                <div style={{padding:"0.6rem 1rem",borderTop:"1px solid #2a1404",fontSize:"0.72rem",color:"#a08050",lineHeight:1.5,fontStyle:"italic",fontFamily:"'EB Garamond',serif"}}>
                   Interface translated by AI. Halachic content and detailed notes remain in English.
                 </div>
               </div>
@@ -920,8 +924,8 @@ export default function korbanosCalculator() {
                   <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>/troy oz</span>
                   <span style={{fontSize:"0.85rem",color:"#7a5030"}}>(= ${silverUsdPerGram.toFixed(4)}/g)</span>
                   <button onClick={fetchSilver} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>{T("refresh_lbl")}</button>
-                  {silverStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
-                  {silverStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
+                  {silverStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>{T("live_rate")}</span>}
+                  {silverStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>{T("fetching")}</span>}
                   {silverStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>{T("fetch_fail")}</span>}
                   {silverStatus==="idle"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>{T("est_lbl")}</span>}
                 </div>
@@ -940,8 +944,8 @@ export default function korbanosCalculator() {
                   <input type="number" step="0.01" min="0.1" value={parseFloat(nisPerUsd)} onChange={e=>setUsdPerNis(1/(parseFloat(e.target.value)||2.96))} style={{width:70,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
                   <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>NIS</span>
                   <button onClick={fetchRate} style={{padding:"0.35rem 0.8rem",background:"transparent",border:"1px solid #7a4f20",color:"#c9a45a",cursor:"pointer",fontSize:"0.85rem",fontFamily:"'Cinzel',serif"}}>{T("refresh_lbl")}</button>
-                  {rateStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>live rate</span>}
-                  {rateStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>fetching...</span>}
+                  {rateStatus==="live"&&<span style={{fontSize:"0.9rem",color:"#4ec98a"}}>{T("live_rate")}</span>}
+                  {rateStatus==="loading"&&<span style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic"}}>{T("fetching")}</span>}
                   {rateStatus==="error"&&<span style={{fontSize:"0.9rem",color:"#e05050"}}>{T("fetch_fail")}</span>}
                 </div>
               </div>
@@ -994,7 +998,7 @@ export default function korbanosCalculator() {
                   const going=regalimAttending[id];
                   return(<button key={id} onClick={()=>setRegalimAttending(r=>({...r,[id]:!r[id]}))} style={{display:"flex",alignItems:"center",gap:"0.6rem",padding:"0.65rem 1.2rem",background:going?"rgba(240,192,96,.15)":"rgba(30,14,6,.8)",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),color:going?"#f0ddb0":"#7a5030",cursor:"pointer",fontFamily:"inherit"}}>
                     <div style={{width:16,height:16,borderRadius:"50%",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),background:going?"#f0c060":"transparent",flexShrink:0}}/>
-                    <span style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{T(tkey)}</span>
+                    <span style={{fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{T(tkey)}</span>
                   </button>);
                 })}
               </div>
@@ -1229,7 +1233,7 @@ export default function korbanosCalculator() {
 
             <div style={{borderBottom:"2px solid #f0c06044",paddingBottom:"0.5rem",marginBottom:"1rem",display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
               <h2 className="df" style={{margin:0,fontSize:"0.95rem",color:"#f0c060",letterSpacing:"0.15em",textTransform:"uppercase"}}>{T("annual_offerings")}</h2>
-              <span style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic"}}>at current Jerusalem prices</span>
+              <span style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic"}}>{T("at_jlm_prices")}</span>
             </div>
 
             {COMMUNAL_OFFERINGS.map(o=>{
@@ -1485,8 +1489,8 @@ export default function korbanosCalculator() {
                 <div style={{fontSize:"0.75rem",color:"#5a3a1a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.55rem"}}>{T("jump_to")}</div>
                 <div style={{display:"flex",flexDirection:"column",gap:"0.45rem"}}>
                   {JUMP_GROUPS.map(g=>(
-                    <div key={g.tkey||g.label} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
-                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{g.tkey?T(g.tkey):g.label}</span>
+                    <div key={g.tkey} style={{display:"flex",alignItems:"center",gap:"0.45rem",flexWrap:"wrap"}}>
+                      <span style={{fontSize:"0.76rem",color:g.col,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{T(g.tkey)}</span>
                       {g.items.map(item=>{
                         const active=item.abs===todayAbs;
                         return(<button key={item.tkey||item.label} onClick={()=>setTodayAbs(item.abs)} style={{padding:"0.28rem 0.6rem",background:active?"rgba(240,192,96,.12)":"transparent",border:"1px solid "+(active?g.col:"#3a2010"),color:active?g.col:"#7a5030",cursor:"pointer",fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",fontSize:"0.76rem",letterSpacing:"0.05em",whiteSpace:"nowrap"}}>{item.tkey?T(item.tkey):item.label}</button>);
