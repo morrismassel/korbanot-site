@@ -115,17 +115,19 @@ const COMMUNAL_OFFERINGS = [
 const V = {
   chatas_total:{
     kareis:[
-      {act:"Pushed a stroller outside the valid eruv boundary",detail:"Eruv route assumed valid; later found posul"},
-      {act:"Tore along a perforated line on Shabbos",detail:"Kore'a - a common toladah not widely known"},
-      {act:"Squeezed a lemon into a drink on Shabbos",detail:"Sechita - toladah of dash (threshing)"},
-      {act:"Wrote a note, forgetting it was Shabbos",detail:"Kotev - shogeg Shabbos, classic case"},
-      {act:"Switched on a light momentarily forgetting Shabbos",detail:"Mav'ir - shogeg Shabbos"},
-      {act:"Sorted items on Shabbos not knowing borer applies",detail:"Borer - very common unknowing violation"},
-      {act:"Smeared ointment on Shabbos not knowing memareiach applies",detail:"Toladah of memachek; often unknown"},
-      {act:"Physical contact b'shogeg with a niddah",detail:"Niddah carries kareis; inadvertent contact"},
-      {act:"Relations during a period later confirmed as niddah",detail:"Common circumstance; kareis violation b'shogeg"},
-      {act:"Ate a dish containing meat cooked with butter b'shogeg",detail:"D'oraisa basar b'chalav; thought it was pareve"},
-      {act:"Alone in an elevator with female colleague - door closed",detail:"If the underlying arayos issur was crossed b'shogeg"},
+      {act:"Pushed a stroller outside the valid eruv boundary on Shabbos",detail:"Hotzaah — carrying in a public domain; d'oraisa melacha carrying kareis"},
+      {act:"Picked an apple from a tree on Shabbos b'shogeg",detail:"Tolesh — detaching a fruit from its source is a toladah of Kotzer (reaping), a d'oraisa melacha carrying kareis"},
+      {act:"Wrote a note, forgetting it was Shabbos",detail:"Kotev — shogeg Shabbos, classic kareis case"},
+      {act:"Switched on a light momentarily forgetting Shabbos",detail:"Mav'ir — shogeg Shabbos; d'oraisa melacha"},
+      {act:"Sorted items on Shabbos not knowing borer applies",detail:"Borer — taking pesoles from ochel without immediate use; d'oraisa, commonly unknown"},
+      {act:"Smeared ointment on Shabbos not knowing memareiach applies",detail:"Toladah of memachek; d'oraisa, often unknown"},
+      {act:"Relations with wife during a period later confirmed as niddah",detail:"Niddah carries kareis; a common inadvertent violation"},
+      {act:"Ate a dish containing meat cooked with butter b'shogeg",detail:"D'oraisa basar b'chalav; thought it was pareve — kareis according to Rambam"},
+      {act:"Relations b'shogeg with a woman forbidden as arayos",detail:"Arayos carries kareis; the inadvertent transgressor brings a chatas"},
+      {act:"Ate chelev (forbidden fat) thinking it was permitted",detail:"Chelev carries kareis; confused it with permitted fat (Vayikra 4:27)"},
+      {act:"Ate chametz on Pesach thinking it was kosher l'Pesach",detail:"Chametz on Pesach carries kareis (Shemos 12:15); common inadvertent violation"},
+      {act:"Ate blood in a dish unknowingly",detail:"Dam carries kareis (Vayikra 7:27); often concealed in cooked dishes"},
+      {act:"Cooked a meal on Yom Kippur genuinely forgetting the date",detail:"Bishul on Yom Kippur carries kareis (Vayikra 23:30); distinct from Shabbos context"},
     ],
     nonKareis:[
       {act:"Handled muktzeh on Shabbos",detail:"Rabbinic - no chatas"},
@@ -427,8 +429,8 @@ const ANNUAL_ASSUMPTIONS = [
   {id:"pesach_korban", cat:CAT.FIXED,    label:"Korban Pesach",            hebrew:"קָרְבַּן פֶּסַח",      catalogId:"pesach",           defaultQty:1, rationale:"Obligatory. Failure without valid exemption carries kareis."},
   {id:"reiyah",        cat:CAT.FIXED,    label:"Olas Re'iyah x regalim",   hebrew:"עוֹלַת רְאִיָּה",      catalogId:"reiyah",           defaultQty:3, rationale:"Obligatory on Pesach, Shavuos, and Sukkos. Animal type varies by financial standing."},
   {id:"chagigah",      cat:CAT.FIXED,    label:"Chagigah x regalim",       hebrew:"חֲגִיגָה",            catalogId:"chagigah",         defaultQty:3, rationale:"Obligatory on Pesach, Shavuos, and Sukkos. Animal type varies by financial standing."},
-  {id:"shalmei_simcha",cat:CAT.FIXED,    label:"Shalmei Simcha x regalim", hebrew:"שַׁלמֵי שִׂמְחָה",   catalogId:"shalmei_simcha",   defaultQty:3, rationale:"The Torah mitzvah of simcha on each regel is fulfilled through shelamim (Rambam Hilchos Yom Tov 6:17). For adult males this is a distinct obligation from the chagigah — neither fulfills the other. Scales with regalim attendance. Default is 1 per regel attended; adjust freely."},
-  {id:"chagigah_14_nissan",cat:CAT.FIXED, label:"Chagigat 14 Nisan",        hebrew:"חֲגִיגַת י\"ד",        catalogId:"chagigah_14",      defaultQty:1, rationale:"Brought on Erev Pesach (14 Nisan) alongside the Korban Pesach, so that the seder meal is eaten al hasova — on satiety — rather than from hunger. Tied to Pesach attendance. Note: when 14 Nisan falls on Shabbos, this chagigah is not brought (and cannot be made up). In practice, toggle Pesach off to reflect non-attendance; the offering drops to zero automatically."},
+  {id:"shalmei_simcha",cat:CAT.FIXED,    label:"Shalmei Simcha x regalim", hebrew:"שַׁלמֵי שִׂמְחָה",   catalogId:"shalmei_simcha",   defaultQty:3, rationale:"The Torah mitzvah of simcha on the regalim is fulfilled for adult males through shelamim specifically (Rambam Hilchos Yom Tov 6:17) — distinct from the chagigah, neither fulfills the other. However, some hold that if the chagigah and re'iyah already provide sufficient meat for the household to rejoice, a separate shalmei simcha is not required. The matter is disputed; this is a considered halachic question. Default is 1 per regel; adjust to 0 if your other korbanos suffice. Consult your posek."},
+  {id:"chagigah_14_nissan",cat:CAT.FIXED, label:"Chagigat 14 Nisan",        hebrew:"חֲגִיגַת י\"ד",        catalogId:"chagigah_14",      defaultQty:1, rationale:"Brought on Erev Pesach (14 Nisan) alongside the Korban Pesach so the seder is eaten al hasova (on satiety). However this offering is not unconditional — it is only required if you lack sufficient other meat for the household to eat their fill. If other shelamim or food provides enough satiety, this chagigah is not needed (Rambam Hilchos Korban Pesach 10:12). It is therefore adjustable. Note: when 14 Nisan falls on Shabbos, this chagigah is not brought and cannot be made up. Defaults to 1 when attending Pesach; set to 0 if not needed."},
   {id:"chatzi_shekel", cat:CAT.FIXED,    label:"Chatzi Shekel",            hebrew:"מַחֲצִית הַשֶּׁקֶל",   catalogId:null,               defaultQty:1, rationale:"Mandatory annual contribution of every adult Jewish male, used to fund all communal korbanos. Fixed at exactly half a shekel hakodesh — 9.6 grams of silver per R' Naeh (shekel = 19.2g = 320 barley grains; Rambam Hilchos Shekalim 1:2). Source: Shemos 30:13; Rambam Hilchos Shekalim 1:5. No one gives more or less — the wealthy and the poor are equal. Price updates with live silver spot price."},
   {id:"bikkurim",      cat:CAT.FIXED,    label:"Bikkurim",                 hebrew:"בִּכּוּרִים",           catalogId:null,               defaultQty:0, rationale:"First fruits of the seven species brought to the Mikdash between Shavuos and Sukkos. Only obligatory for landowners in Eretz Yisroel. Check the EY and landowner boxes in Assumptions to set automatically. Basket type scales with financial standing — poor: straw (~$150); average: silver basket returned after use (~$450); wealthy: gold basket kept by the Kohen with doves (~$1,200). Source: Devarim 26:1-11; Mishnah Bikkurim 3:8."},
   {id:"chatas_total",  cat:CAT.PERSONAL, label:"Chataos",                  hebrew:"חַטָּאוֹת",            catalogId:"chatat_individual",defaultQty:7, rationale:"Total inadvertent violations of kareis prohibitions: Shabbos melachos, eruv failures, arayos, and basar b'chalav. Set by the scrutiny slider; adjust freely.", violations:V.chatas_total},
@@ -458,7 +460,7 @@ const CATEGORY_COLORS = {
 };
 
 const PERSONAL_IDS   = ["chatas_total","asham_talui"];
-const REGALIM_LOCKED = ["pesach_korban","reiyah","chagigah","chagigah_14_nissan"];
+const REGALIM_LOCKED = ["pesach_korban","reiyah","chagigah"];
 const LIFE_IDS       = ["yoledet","olah_vol","shelamim_vol","nazir_vol","metzora_vol","oleh_yored","pidyon_haben","pesach_sheni"];
 const FIXED_PRICE_IDS= ["chatzi_shekel","bikkurim","pidyon_haben"]; // non-catalog fixed prices
 
@@ -519,15 +521,18 @@ export default function korbanosCalculator() {
   const [langOpen,         setLangOpen]         = useState(false);
   const [currency,         setCurrency]         = useState<"usd"|"nis">("usd");
   const [todayAbs,         setTodayAbs]         = useState<number>(()=>gregToAbs(new Date()));
-  const [counts,           setCounts]           = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
-  const [expanded,         setExpanded]         = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
+  const [counts,           setCounts]           = useState<Record<string,number>>({});
+  const [expanded,         setExpanded]         = useState<Record<string,boolean>>({});
   const [activeGroup,      setActiveGroup]      = useState("Daily & Weekly");
   const [profileQtys,      setProfileQtys]      = useState(Object.fromEntries(ANNUAL_ASSUMPTIONS.map(a=>[a.id,a.defaultQty])));
-  const [showRationale,    setShowRationale]    = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
-  const [showExamples,     setShowExamples]     = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
+  const [showRationale,    setShowRationale]    = useState<Record<string,boolean>>({});
+
+  const [showExamples,     setShowExamples]     = useState<Record<string,boolean>>({});
+
   const [regalimAttending, setRegalimAttending] = useState({pesach:true,shavuot:true,sukkot:true});
-  const [expandedPrice,    setExpandedPrice]    = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
-  const [expandedCommune,  setExpandedCommune]  = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
+  const [expandedPrice,    setExpandedPrice]    = useState<Record<string,boolean>>({});
+  const [expandedCommune,  setExpandedCommune]  = useState<Record<string,boolean>>({});
+
   const [showSettings,     setShowSettings]     = useState(false);
   const [shiurId,          setShiurId]          = useState("naeh");
   const [usdPerNis,        setUsdPerNis]        = useState(1/2.96);
@@ -546,6 +551,7 @@ export default function korbanosCalculator() {
   const [isLandowner,      setIsLandowner]      = useState(false);
   const [todahOverride,    setTodahOverride]    = useState<number|null>(null);
   const [shalmeiOverride,  setShalmeiOverride]  = useState<number|null>(null);
+  const [chagigah14Override, setChagigah14Override] = useState<number|null>(null);
 
   // Helper: fetch silver from fawazahmed0 metals API
   // Response: { xag: { usd: <USD_per_troy_oz> } }
@@ -682,7 +688,7 @@ export default function korbanosCalculator() {
     if(id==="reiyah")        return regalimCount;
     if(id==="chagigah")      return regalimCount;
     if(id==="shalmei_simcha") return shalmeiOverride !== null ? shalmeiOverride : regalimCount;
-    if(id==="chagigah_14_nissan") return regalimAttending.pesach?1:0;
+    if(id==="chagigah_14_nissan") return chagigah14Override !== null ? chagigah14Override : (regalimAttending.pesach?1:0);
     if(id==="chatzi_shekel") return 1;
     if(id==="todah")         return todahTotal;
     if(id==="bikkurim")      return isLandowner?1:0;
@@ -701,7 +707,7 @@ export default function korbanosCalculator() {
     [profileQtys,personalQtys,regalimAttending,P,strictness,financialTier]
   );
 
-  const annualTotal = offeringsSubtotal + (includeTravel?travelSubtotal:0);
+  const annualTotal = offeringsSubtotal + (!livesInEY && includeTravel ? travelSubtotal : 0);
 
   const byCategory = useMemo(()=>CATEGORY_ORDER.map(cat=>{
     if(cat===CAT.TRAVEL){
@@ -732,7 +738,7 @@ export default function korbanosCalculator() {
     setRegalimAttending({pesach:true,shavuot:true,sukkot:true});
     setStrictness(2);setPersonalQtys(STRICTNESS_LEVELS[1].qtys);
     setFinancialTier("average");setTravelCfg(DEFAULT_TRAVEL);setTravelUserEdited({});setShiurId("naeh");setIncludeTravel(true);
-    setIncludeTravelTodah(true);setTodahOverride(null);setShalmeiOverride(null);
+    setIncludeTravelTodah(true);setTodahOverride(null);setShalmeiOverride(null);setChagigah14Override(null);
     setLivesInEY(false);setIsLandowner(false);
     setSilverUsdPerGram(SILVER_USD_PER_GRAM_FALLBACK);setSilverInputVal((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));setSilverStatus("idle");
   };
@@ -1082,6 +1088,7 @@ export default function korbanosCalculator() {
                   const isChatziFixed = item.id==="chatzi_shekel";
                   const isBikkurim    = item.id==="bikkurim";
                   const isShalmei     = item.id==="shalmei_simcha";
+                  const isChagigah14  = item.id==="chagigah_14_nissan";
                   const unitCost      = resolveUnitCost(item.id,P);
                   const qty           = getQty(item.id);
                   const lineCost      = qty*unitCost;
@@ -1153,6 +1160,16 @@ export default function korbanosCalculator() {
                                     {financialTier==="poor"?T("bik_straw"):financialTier==="wealthy"?T("bik_gold"):T("bik_silver")}
                                   </div>}
                                 </div>
+                            : isChagigah14
+                              ? <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"0.4rem",minWidth:160}}>
+                                  <div style={{display:"flex",alignItems:"center",gap:"0.4rem"}}>
+                                    <button onClick={()=>setChagigah14Override(Math.max(0,(chagigah14Override!=null?chagigah14Override:(regalimAttending.pesach?1:0))-1))} style={qBtn(qty>0)}>-</button>
+                                    <input type="number" min="0" value={qty} onChange={e=>{const v=parseInt(e.target.value);setChagigah14Override(isNaN(v)?0:Math.max(0,v));}} style={{width:52,padding:"0.4rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"}}/>
+                                    <button onClick={()=>setChagigah14Override((chagigah14Override!=null?chagigah14Override:(regalimAttending.pesach?1:0))+1)} style={qBtn(true)}>+</button>
+                                  </div>
+                                  {chagigah14Override!==null&&<button onClick={()=>setChagigah14Override(null)} style={{background:"none",border:"none",color:"#c9a45a",cursor:"pointer",fontSize:"0.82rem",fontFamily:"inherit",fontStyle:"italic",padding:0,textDecoration:"underline",textUnderlineOffset:"3px"}}>{T("reset_auto")+" ("+(regalimAttending.pesach?1:0)+")"}</button>}
+                                  {chagigah14Override===null&&<div style={{fontSize:"0.8rem",color:"#f0c060",fontStyle:"italic"}}>{T("auto_lbl")+": "+(regalimAttending.pesach?"1":"0")}</div>}
+                                </div>
                             : isShalmei
                               ? <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"0.4rem",minWidth:160}}>
                                   <div style={{display:"flex",alignItems:"center",gap:"0.4rem"}}>
@@ -1197,9 +1214,9 @@ export default function korbanosCalculator() {
             <div style={{marginBottom:"1.5rem"}}>
               <div style={{fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:"0.5rem",fontFamily:"'Cinzel',serif"}}>{T("cost_breakdown")}</div>
               <div style={{display:"flex",height:14,borderRadius:3,overflow:"hidden",gap:1}}>
-                {byCategory.filter(x=>includeTravel||!x.isTravel).map(({cat,subtotal})=>{const pct=(subtotal/annualTotal)*100;if(pct<0.5||!annualTotal)return null;return <div key={cat} title={(CAT_NAMES[cat]||cat)+": "+(fmtC(subtotal))} style={{width:(pct)+"%",background:CATEGORY_COLORS[cat]}}/>;})}</div>
+                {byCategory.filter(x=>(!livesInEY&&includeTravel)||!x.isTravel).map(({cat,subtotal})=>{const pct=(subtotal/annualTotal)*100;if(pct<0.5||!annualTotal)return null;return <div key={cat} title={(CAT_NAMES[cat]||cat)+": "+(fmtC(subtotal))} style={{width:(pct)+"%",background:CATEGORY_COLORS[cat]}}/>;})}</div>
               <div style={{display:"flex",flexWrap:"wrap",gap:"0.5rem 1.2rem",marginTop:"0.6rem"}}>
-                {byCategory.filter(x=>includeTravel||!x.isTravel).map(({cat,subtotal})=>(
+                {byCategory.filter(x=>(!livesInEY&&includeTravel)||!x.isTravel).map(({cat,subtotal})=>(
                   <div key={cat} style={{display:"flex",alignItems:"center",gap:"0.4rem",fontSize:"0.9rem",color:"#c9a45a"}}>
                     <div style={{width:10,height:10,borderRadius:"50%",background:CATEGORY_COLORS[cat],flexShrink:0}}/>
                     <span style={{color:"#e8d4a0"}}>{CAT_NAMES[cat]||cat}</span>
@@ -1386,9 +1403,17 @@ export default function korbanosCalculator() {
               offerings:[{label:(sukkosBulls)+" "+T("off_bull_olah"),key:"bull_olah",count:sukkosBulls},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 "+T("off_lambs_olah"),key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}],
               note:"Bull count decreases by one each day (13→7). 70 bulls total over all 7 days represent atonement for the 70 nations. Source: Bamidbar 29:12–34."});
           } else if(isRH){
-            const off=[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}];
-            if(isShabbat) off.unshift({label:"2 lambs (olah) — Mussaf Shabbos",key:"lamb_olah",count:2});
-            blocks.push({title:T("blk_mussaf")+" — "+T("day_rh")+(isShabbat?" & "+T("day_shabbos"):""),color:"#f0a060",offerings:off,note:"Source: Bamidbar 29:1–6."+(isShabbat?" Both mussafim are brought; Shabbos mussaf listed first.":"")});
+            if(isShabbat){
+              blocks.push({title:T("blk_mussaf")+" — "+T("day_shabbos"),color:"#f0c060",
+                offerings:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2}],
+                note:"Source: Bamidbar 28:9–10."});
+            }
+            blocks.push({title:T("blk_mussaf")+" — "+T("day_rh"),color:"#f0a060",
+              offerings:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
+              note:"Source: Bamidbar 29:1–6."});
+            blocks.push({title:T("blk_mussaf")+" — "+T("day_rc")+" "+H_MONTH_NAMES[HM.TISHREI],color:"#c9a45a",
+              offerings:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],
+              note:"1 Tishrei is Rosh Chodesh — both mussafim are brought. This is why many have the custom of saying מוּסְפֵי in davening on Rosh Hashana. Source: Bamidbar 28:11–15; 29:1–6."});
           } else if(isShavuos){
             blocks.push({title:T("blk_mussaf")+" — "+T("rgl_shavuos"),color:"#4ec98a",
               offerings:[{label:T("off_shtei_lech"),key:"issaron_flour",count:4},{label:T("off_lambs_sht"),key:"lamb_olah",count:2},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"2 goats (chatas)",key:"goat",count:2}],
