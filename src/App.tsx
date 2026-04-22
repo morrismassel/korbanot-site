@@ -1691,6 +1691,8 @@ export default function korbanosCalculator() {
       </div>
       <div style={{textAlign:"center",marginTop:"0.5rem",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
         Code available at <a href="https://github.com/morrismassel/korbanos-site" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>github.com/morrismassel/korbanos-site</a>
+        {" · "}
+        <a href="https://github.com/morrismassel/korbanos-site#readme" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>Methodology &amp; Sources</a>
       </div>
     </div>
   );
