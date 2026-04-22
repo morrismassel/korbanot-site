@@ -520,26 +520,26 @@ export default function korbanosCalculator() {
   const [activeTab,        setActiveTab]        = useState("annual");
   const [lang,             setLang]             = useState("en");
   const [langOpen,         setLangOpen]         = useState(false);
-  const [currency,         setCurrency]         = useState("usd");
-  const [todayAbs,         setTodayAbs]         = useState(()=>gregToAbs(new Date()));
-  const [counts,           setCounts]           = useState({});
-  const [expanded,         setExpanded]         = useState({});
+  const [currency,         setCurrency]         = useState<"usd"|"nis">("usd");
+  const [todayAbs,         setTodayAbs]         = useState<number>(()=>gregToAbs(new Date()));
+  const [counts,           setCounts]           = useState<Record<string,number>>({});
+  const [expanded,         setExpanded]         = useState<Record<string,boolean>>({});
   const [activeGroup,      setActiveGroup]      = useState("Daily & Weekly");
   const [profileQtys,      setProfileQtys]      = useState(Object.fromEntries(ANNUAL_ASSUMPTIONS.map(a=>[a.id,a.defaultQty])));
-  const [showRationale,    setShowRationale]    = useState({});
-  const [showExamples,     setShowExamples]     = useState({});
+  const [showRationale,    setShowRationale]    = useState<Record<string,boolean>>({});
+  const [showExamples,     setShowExamples]     = useState<Record<string,boolean>>({});
   const [regalimAttending, setRegalimAttending] = useState({pesach:true,shavuot:true,sukkot:true});
-  const [expandedPrice,    setExpandedPrice]    = useState({});
-  const [expandedCommune,  setExpandedCommune]  = useState({});
+  const [expandedPrice,    setExpandedPrice]    = useState<Record<string,boolean>>({});
+  const [expandedCommune,  setExpandedCommune]  = useState<Record<string,boolean>>({});
   const [showSettings,     setShowSettings]     = useState(false);
   const [shiurId,          setShiurId]          = useState("naeh");
   const [usdPerNis,        setUsdPerNis]        = useState(1/2.96);
-  const [rateStatus,       setRateStatus]       = useState("idle");
+  const [rateStatus,       setRateStatus]       = useState<"idle"|"loading"|"live"|"error">("idle");
   const [silverUsdPerGram, setSilverUsdPerGram] = useState(SILVER_USD_PER_GRAM_FALLBACK);
-  const [silverStatus,     setSilverStatus]     = useState("idle");
+  const [silverStatus,     setSilverStatus]     = useState<"idle"|"loading"|"live"|"error">("idle");
   const [silverInputVal,   setSilverInputVal]   = useState((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));
-  const [travelCfg,        setTravelCfg]        = useState(DEFAULT_TRAVEL);
-  const [travelUserEdited, setTravelUserEdited] = useState({});
+  const [travelCfg,        setTravelCfg]        = useState<typeof DEFAULT_TRAVEL>(DEFAULT_TRAVEL);
+  const [travelUserEdited, setTravelUserEdited] = useState<{flightCost?:boolean,nightlyRate?:boolean}>({});
   const [strictness,       setStrictness]       = useState(2);
   const [financialTier,    setFinancialTier]    = useState("average");
   const [personalQtys,     setPersonalQtys]     = useState({chatas_total:7,asham_talui:3});
@@ -547,11 +547,11 @@ export default function korbanosCalculator() {
   const [includeTravelTodah, setIncludeTravelTodah] = useState(true);
   const [livesInEY,        setLivesInEY]        = useState(false);
   const [isLandowner,      setIsLandowner]      = useState(false);
-  const [todahOverride,    setTodahOverride]    = useState(null);
-  const [shalmeiOverride,  setShalmeiOverride]  = useState(null);
-  const [chagigah14Override, setChagigah14Override] = useState(null);
-  const [population,       setPopulation]       = useState(600000);
-  const [showPrint,        setShowPrint]        = useState(false);
+  const [todahOverride,    setTodahOverride]    = useState<number|null>(null);
+  const [shalmeiOverride,  setShalmeiOverride]  = useState<number|null>(null);
+  const [chagigah14Override, setChagigah14Override] = useState<number|null>(null);
+  const [population,       setPopulation]       = useState<number>(600000);
+  const [showPrint,        setShowPrint]        = useState<boolean>(false);
 
   // Helper: fetch silver from fawazahmed0 metals API
   // Response: { xag: { usd: <USD_per_troy_oz> } }
@@ -742,18 +742,18 @@ export default function korbanosCalculator() {
   }),[profileQtys,personalQtys,regalimAttending,P,travelCosts,strictness,financialTier]);
 
   // Communal budget
-  const communalTotal = useMemo(()=>COMMUNAL_OFFERINGS.reduce((s,o)=>{
+  const communalTotal = useMemo(()=>COMMUNAL_OFFERINGS.reduce<number>((s,o)=>{
     const entry=CATALOG.find(c=>c.id===o.catalogId);
     return s+(entry?o.count*offeringTotal(entry,P):0);
   },0),[P]);
   const perCapitaCommunal  = communalTotal/population;
 
   const catalogTotal    = useMemo(()=>CATALOG.reduce((s,c)=>s+(counts[c.id]||0)*offeringTotal(c,P),0),[counts,P]);
-  const catalogSelected = useMemo(()=>Object.values(counts).reduce((a,b)=>a+(b||0),0),[counts]);
+  const catalogSelected = useMemo(()=>Object.values(counts).reduce<number>((a,b)=>a+(((b as unknown) as number)||0),0),[counts]);
   const filtered        = CATALOG.filter(s=>s.group===activeGroup);
 
-  const lbl = {fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.5rem"};
-  const inp = {width:"100%",padding:"0.5rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center",fontFamily:"inherit",fontSize:"1rem"};
+  const lbl = {fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.1em",textTransform:"uppercase" as const,fontFamily:"'Cinzel',serif",marginBottom:"0.5rem"};
+  const inp = {width:"100%",padding:"0.5rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center" as const,fontFamily:"inherit",fontSize:"1rem"};
 
   const doReset=()=>{
     setProfileQtys(Object.fromEntries(ANNUAL_ASSUMPTIONS.map(a=>[a.id,a.defaultQty])));
@@ -993,7 +993,7 @@ export default function korbanosCalculator() {
                       <div style={{...lbl,fontSize:"0.7rem",letterSpacing:"0.06em",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{T(tkey)}</div>
                       <div style={{display:"flex",alignItems:"center",gap:"0.3rem"}}>
                         {prefix&&<span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>{prefix}</span>}
-                        <input type="number" min="0" step={step} value={travelCfg[key]} onChange={e=>setTravel(key,parseFloat(e.target.value)||0)} style={{...inp,fontSize:"0.9rem"}}/>
+                        <input type="number" min="0" step={step} value={(travelCfg as Record<string,number>)[key]} onChange={e=>setTravel(key,parseFloat(e.target.value)||0)} style={{...inp,fontSize:"0.9rem"}}/>
                         {suffix&&<span style={{fontSize:"0.72rem",color:"#7a5030",whiteSpace:"nowrap"}}>{suffix?T(suffix):""}</span>}
                       </div>
                     </div>
@@ -1024,7 +1024,7 @@ export default function korbanosCalculator() {
               <div style={{display:"flex",gap:"0.85rem",flexWrap:"wrap",marginBottom:"0.9rem"}}>
                 {[{id:"pesach",tkey:"rgl_pesach"},{id:"shavuot",tkey:"rgl_shavuos"},{id:"sukkot",tkey:"rgl_sukkos"}].map(({id,tkey})=>{
                   const going=regalimAttending[id];
-                  return(<button key={id} onClick={()=>setRegalimAttending(r=>({...r,[id]:!r[id]}))} style={{display:"flex",alignItems:"center",gap:"0.6rem",padding:"0.65rem 1.2rem",background:going?"rgba(240,192,96,.15)":"rgba(30,14,6,.8)",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),color:going?"#f0ddb0":"#7a5030",cursor:"pointer",fontFamily:"inherit"}}>
+                  return(<button key={id} onClick={()=>setRegalimAttending(r=>{const next={...r};(next as Record<string,boolean>)[id]=!(r as Record<string,boolean>)[id];return next;})} style={{display:"flex",alignItems:"center",gap:"0.6rem",padding:"0.65rem 1.2rem",background:going?"rgba(240,192,96,.15)":"rgba(30,14,6,.8)",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),color:going?"#f0ddb0":"#7a5030",cursor:"pointer",fontFamily:"inherit"}}>
                     <div style={{width:16,height:16,borderRadius:"50%",border:"2px solid "+(going?"#f0c060":"#5a3a1a"),background:going?"#f0c060":"transparent",flexShrink:0}}/>
                     <span style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.08em",fontWeight:going?700:400,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{T(tkey)}</span>
                   </button>);
@@ -1586,7 +1586,7 @@ export default function korbanosCalculator() {
                       <span style={{fontSize:"0.76rem",color:g.col,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",letterSpacing:"0.06em",minWidth:96,flexShrink:0}}>{g.tkey?T(g.tkey):g.label}</span>
                       {g.items.map(item=>{
                         const active=item.abs===todayAbs;
-                        return(<button key={item.tkey||item.label} onClick={()=>setTodayAbs(item.abs)} style={{padding:"0.28rem 0.6rem",background:active?"rgba(240,192,96,.12)":"transparent",border:"1px solid "+(active?g.col:"#3a2010"),color:active?g.col:"#7a5030",cursor:"pointer",fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",fontSize:"0.76rem",letterSpacing:"0.05em",whiteSpace:"nowrap"}}>{item.tkey?T(item.tkey):item.label}</button>);
+                        return(<button key={(item as {tkey?:string,label?:string,abs:number}).tkey||(item as {tkey?:string,label?:string,abs:number}).label} onClick={()=>setTodayAbs(item.abs)} style={{padding:"0.28rem 0.6rem",background:active?"rgba(240,192,96,.12)":"transparent",border:"1px solid "+(active?g.col:"#3a2010"),color:active?g.col:"#7a5030",cursor:"pointer",fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif",fontSize:"0.76rem",letterSpacing:"0.05em",whiteSpace:"nowrap"}}>{item.tkey?T(item.tkey):item.label}</button>);
                       })}
                     </div>
                   ))}
