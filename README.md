@@ -2,7 +2,7 @@
 
 **A modern-day price calculator for the sacrificial offerings of the Beis HaMikdash.**
 
-Built by Jeremy Spier and Morris Massel with a lot of help from Claude.ai.
+Built by Morris Massel and Jeremy Spier with a lot of help from Claude.ai.
 
 ---
 
@@ -18,16 +18,19 @@ This is an educational tool only. Nothing here should be relied upon for any hal
 
 ## The Story Behind Korbanos Calculator
 
-One Shabbos afternoon, Jeremy Spier had a thought: wouldn't it be interesting to know what it would actually cost to bring korbanos today? That evening he opened Claude and started building. Meir Bar-David contributed early input and encouragement, and a working prototype took shape.
+In case you did not sufficiently value the power of a long Shabbos afternoon, you should know this story.
 
-At yet another one of their sons' hockey games the next day, Spier showed the idea to Morris Massel. Massel ran with it — adding live market prices, shiur opinions, communal budgets, a full offering catalog, and considerably more than either of them originally planned.
+Over Shabbos, Jeremy Spier had a deep and important shayla — l'maysa, wouldn't it be cool to know how much it costs to bring korbanos today? Was it divine inspiration that caused him to open Claude motzei Shabbos, or perhaps just enough cholent and l'chaims? Who knows — but he developed the perfect idea, received deep and meaningful input from Meir Bar-David, and coded a beautiful prototype.
+
+At a hockey game the next day, Spier shared the idea with Morris Massel. Unable to control his enthusiasm, Massel carried forward the mesorah — building out more detail, live market prices, shiur opinions, communal budgets, and all kinds of other insanity.
 
 They launched korbancalculator.com.
 
-Within 24 hours the response was remarkable. It spread through Torah communities in the US and Israel. Rabbis and educators started using it in shiurim.
+Within 24 hours, the reception was overwhelming. Lakewood Scoop featured the site on its WhatsApp status (bigger than the New York Times bestseller list). It stormed the olam.
 
-The boys lost the hockey game but a small contribution was made to Klal Yisroel.
+Should you ever question whether important things happen at hockey games besides sportsmanship, competition, and performance — you now have your answer.
 
+*B'simcha u'b'siyata d'shmeya,*  
 *Morris Massel and Jeremy Spier*
 
 ---
@@ -46,188 +49,109 @@ We owe a special debt of gratitude to **Meir Bar-David**, whose assistance, cons
 
 ## Version History
 
-### V4 (April 2026)
+### V4.2 — Educational Depth Update (April 22, 2026)
 
-**Multi-language support:**
-- Full interface now available in Hebrew (עברית), Spanish (Español), French (Français), and Russian (Русский) via an elegant dropdown in the header.
-- RTL layout activates automatically for Hebrew.
-- Language selection covers all UI labels, tab names, settings, category names, day labels, avodah block titles, disclaimer, and summary bar.
-- Halachic rationale text and detailed notes remain in English; a note in the dropdown explains this.
-- Translations produced by AI — users should be aware.
+#### Sefaria Links — Corrected and Comprehensive
 
-**Currency toggle:**
-- New $ / ₪ toggle in the header. Switches all price displays between USD and NIS (₪) using the live exchange rate.
-- In ₪ mode, the secondary NIS display line is hidden (redundant); the settings strip shows ₪1 = $X instead.
+All Sefaria URLs have been audited and corrected. Rambam links now use the proper Sefaria format (`Mishneh_Torah,_Shekalim.1.5` etc.) rather than the incorrect `%2C_Laws_of_` format used previously. Every one of the 18 annual offering entries and all 22 Full Catalog entries now carries a verified Sefaria link pointing to the primary pasuk or Rambam chapter. The Full Catalog source line renders as a live hyperlink. Measurement conversions each show their Talmudic source with a Sefaria link (Ephah → Menachos 77a, Issaron → Bamidbar 28:5, Hin → Menachos 88a, Log → Kerisos 5a, Komatz → Vayikra 2:2).
 
-**Today's Communal Costs tab:**
-- New tab showing the exact public korbanos for any Hebrew date, with running cost total.
-- Defaults to today's Hebrew date. Navigate day by day with ‹/› arrows.
-- Jump buttons organized by category: Regular (weekday/Shabbos/Rosh Chodesh), Pesach (all 7 days + Omer block on 16 Nisan), Sukkos (all 7 days with bull count noted + Shemini Atzeres), Shavuos, and Yamim Noraim.
-- Three time-blocks per day: Shacharit (Tamid + Ketores + Menorah oil; Lechem HaPanim on Shabbos), Omer (own block on 16 Nisan), Mussaf (day-specific — Sukkos decreases 13→7 bulls, Yom Kippur split into communal mussaf + public goats, Shavuos with Shtei HaLechem), and Mincha/Afternoon Tamid.
-- Overnight ma'arachah note at the bottom of every day.
-- Pure JavaScript Hebrew calendar (no external library) — tested against known dates.
+#### Inline Citation Hyperlinks
 
-**Halachic correction — Solet repriced:**
-- Issaron flour repriced from NIS 18 to NIS 28/kg, reflecting the correct identification of solet as semolina-grade wheat — coarsely ground and sifted, not fine flour.
-- Source: Menachos 27a, Rashi s.v. Solet=Geres; Avos 5:15 (the best student retains the solet and lets the fine flour through).
-- This correction meaningfully increases all flour-dependent calculations: Lechem HaPanim (24 issaron), Todah loaves (20 issaron), Shtei HaLechem, Nazir basket, and all nesachim libations.
+A `renderWithLinks()` function parses all rationale text at render time, detecting recognized citation patterns (35 citations mapped) and wrapping them in live `<a>` tags. When the Shalmei Simcha rationale says "(Rambam Hilchos Yom Tov 6:17)" or the Chatzi Shekel rationale cites "Rambam Hilchos Shekalim 1:2," those are blue clickable links opening the correct Sefaria page in a new tab. The same function is used for Did You Know? fact and source text.
 
-**Shalmei Simcha:**
-- Remains in Fixed Obligations (Rambam Hilchos Yom Tov 6:17 — the obligation of simcha for adult males is fulfilled specifically through shelamim).
-- Now has a +/− spinner with "reset to auto" link. Defaults to 1 per regel attended; adjustable freely.
-- Rationale updated to note the dispute: some hold that if the chagigah and re'iyah already provide sufficient meat, a separate shalmei simcha is not required. Consult your posek.
-- No longer hard-locked like chagigah and re'iyah.
+#### Glossary Tooltips
 
-**Chagigat 14 Nisan — made adjustable:**
-- Like Shalmei Simcha, this offering is not unconditional. It is only required when additional meat is needed so the Korban Pesach is eaten al hasova (on satiety). If other shelamim or food suffices, it is not needed (Rambam Hilchos Korban Pesach 10:12).
-- Now has a +/− spinner with "reset to auto" link. Defaults to 1 when attending Pesach; set to 0 if not needed.
-- No longer hard-locked.
+16 halachic terms defined in a `GLOSSARY` object: *kareis, shogeg, b'shogeg, olah, shelamim, chatas, asham, nesachim, issaron, log, mussaf, tamid, al hasova, posek, hekdesh, me'ilah.* The `renderWithLinks()` function, when called with `withGlossary=true`, performs a second pass over rationale text wrapping the first occurrence of each term in a `GlossaryTerm` component. Gold dotted underline; hover activates a definition tooltip. Tooltip uses `useRef` + `getBoundingClientRect()` to position above the word with viewport clamping — no more tooltips falling off the left edge of the screen. Activates on hover (desktop) and tap (mobile).
 
-**Rosh Hashana mussaf corrected:**
-- 1 Tishrei is always Rosh Chodesh. The Today's Communal Costs tab now correctly shows three separate mussaf blocks on Rosh Hashana: Mussaf Shabbos (if applicable), Mussaf Rosh Hashana, and Mussaf Rosh Chodesh Tishrei. Note explaining the *musfei* custom in davening included.
+#### Did You Know? Panel
 
-**Chatas violation examples revised:**
-- Removed halachically incorrect examples (lemon squeezing = d'rabbanan; elevator yichud = d'rabbanan; physical contact with niddah alone = no korban).
-- Added four missing kareis categories: chelev, chametz on Pesach, blood in a dish, bishul on Yom Kippur.
-- Replaced electricity example (controversial) with lighting a candle (classic Mav'ir).
-- Tightened niddah and arayos examples to clarify the halachic distinction: lo yada (didn't know her status changed) vs. ta'us (mistaken identity — classic Kerisus 2a case).
-- Basar b'chalav example retained with honest note about the Rishonim dispute on whether eating carries kareis.
+A rotating educational fact panel at the bottom of the Annual Bill tab. 10 sourced facts: the 70 bulls of Sukkos (Sukkah 55b), Lechem HaPanim freshness (Avos 5:5), saffron in the Ketores (Kerisos 6a), Kohen Gadol's garment changes (Yoma 32a), Korban Pesach timing (Pesachim 58a), the olah's hide goes to the Kohen (Vayikra 7:8), Josephus's 256,500 Pesach offerings, the chatzi shekel equality principle (Shemos 30:15), the wood offering by family lottery (Nehemiah 10:35; Taanis 28a), the tamid as the day's frame (Tamid 28b). Navigate with ‹/› or dot indicators. All source citations hyperlinked via `renderWithLinks()`.
 
-**Bug fix — Eretz Yisroel travel:**
-- Travel costs were incorrectly included in the annual total even when "I live in Eretz Yisroel" was checked. Fixed: EY residents now correctly see $0 travel in their total and summary bar.
+#### Print and Share — Today's Communal Costs Tab
 
-**Annual Communal Budget renamed:**
-- Tab renamed from "Communal Budget" to "Annual Communal Budget" for clarity.
+The Today's Communal Costs tab now has Print Summary and Share buttons matching the Annual Bill tab. The print modal shows the full day's avodah broken down by block (Shacharit, Mussaf, Mincha as applicable) with Hebrew and Gregorian date, shiur label, per-block costs, and grand total. The modal is correctly scoped inside the Today tab IIFE so all variables (hebrewStr, gregDate, blocks, bTotal, dayTotal) are in scope.
 
-**Mussaf spelling:**
-- Corrected to "Mussaf" (double s) throughout.
+#### Full Catalog Sources
+
+All 22 Full Catalog entries now display their source citation as a hyperlink in the expanded detail panel. Clicking opens the primary source on Sefaria.
+
+#### Printable Source Sheets for the Classroom
 
 ---
 
-### V3 (April 2026)
+### V4.1 — Sources Update (April 22, 2026)
 
-**Eretz Yisroel residency:**
-- "I live in Eretz Yisroel" checkbox removes travel costs and travel-related todaos from the annual total.
-- "I own agricultural land in Eretz Yisroel" checkbox automatically activates Bikkurim.
+#### Source Citations in Rationale Panel
 
-**Bikkurim — tiered pricing:**
-- Basket type scales with financial standing (Mishnah Bikkurim 3:8):
-  - **Poor (Ani)** — straw basket (~$150)
-  - **Average** — silver basket returned after use (~$450)
-  - **Wealthy (Ashir)** — gold basket kept by the Kohen with doves (~$1,200)
+All 18 ANNUAL_ASSUMPTIONS entries now carry `source` and `sefaria` fields. The rationale expand panel displays the source citation below the explanation text, separated by a thin divider, as a hyperlink to Sefaria. The "SOURCE:" label was removed as self-evident.
 
-**Silver weight now shiur-dependent:**
-- Chatzi shekel and pidyon haben weights scale with the active shiur, exactly as flour, oil, and wine do.
+#### Sources Added to All Offerings
 
-**Ashir travel defaults:**
-- Selecting Wealthy (Ashir) sets flight cost to $5,000/person and hotel to $1,000/night automatically.
+Every offering in the annual bill now has a primary source citation:
 
----
+| Offering | Primary Source |
+|---|---|
+| Korban Pesach | Shemos 12:6; Rambam Hilchos Korban Pesach 1:1 |
+| Olas Re'iyah | Devarim 16:16; Rambam Hilchos Chagigah 1:1 |
+| Chagigah | Devarim 16:16; Rambam Hilchos Chagigah 1:1 |
+| Shalmei Simcha | Devarim 27:7; Rambam Hilchos Yom Tov 6:17 |
+| Chagigat 14 Nisan | Pesachim 70a; Rambam Hilchos Korban Pesach 10:12 |
+| Chatzi Shekel | Shemos 30:13; Rambam Hilchos Shekalim 1:5 |
+| Bikkurim | Devarim 26:1-11; Mishnah Bikkurim 3:8 |
+| Chataos | Vayikra 4:27-35; Rambam Hilchos Shegagos 1:1 |
+| Asham Taluy | Vayikra 5:17-19; Rambam Hilchos Shegagos 8:1 |
+| Todah | Vayikra 7:11-15; Rambam Hilchos Maaseh HaKorbanos 9:12 |
+| Yoledet | Vayikra 12:6-8; Rambam Hilchos Mechusrei Kaparah 1:1 |
+| Olah (voluntary) | Vayikra 1:2-17; Rambam Hilchos Maaseh HaKorbanos 1:1 |
+| Shelamim | Vayikra 3:1-17; Rambam Hilchos Maaseh HaKorbanos 11:1 |
+| Nazir | Bamidbar 6:13-20; Rambam Hilchos Nezirus 8:1 |
+| Metzora | Vayikra 14:10-32; Rambam Hilchos Mechusrei Kaparah 4:1 |
+| Oleh v'Yored | Vayikra 5:1-13; Rambam Hilchos Shegagos 10:1 |
+| Pesach Sheni | Bamidbar 9:9-12; Rambam Hilchos Korban Pesach 5:1 |
+| Pidyon Haben | Bamidbar 18:15-16; Rambam Hilchos Bikkurim 11:1 |
 
-### V2 (April 2026)
+#### Shiur Source Links
 
-**New offerings:**
-- Shalmei Simcha, Chagigat 14 Nisan, Ketores (11-spice composite per Kerisos 6a), Menorah oil.
+All four shiur opinions in the settings panel now link to their primary source documents on Sefaria: R' Naeh → Shiurei Torah; R' Moshe Feinstein → Igros Moshe OC 1:136; Rambam → Hilchos Shabbos 18:1; Chazon Ish → OC 39:17. The Bikkurim landowner checkbox now shows a Devarim 26:1 link.
 
-**Pricing corrections:**
-- Chatzi shekel corrected to 9.6g (R' Naeh); silver price now fetched live.
-- Pidyon haben corrected to 96g.
-- Ketores priced as a proper 11-spice composite (~NIS 1,072/offering).
+#### Print and Share Button Translations
 
-**Todah improvements:**
-- Baseline 2, travel component opt-in, manual spinner, reset-to-auto link.
-
----
-
-### V1 (March 2026)
-
-Initial release.
-
----
-
-## Features
-
-### My Annual Bill
-A personalized cost estimator covering:
-- **Fixed Obligations** — Korban Pesach, Olas Re'iyah, Chagigah, Shalmei Simcha, Chagigat 14 Nisan, Chatzi Shekel, Bikkurim — all scaling with regalim attendance, EY status, and financial standing.
-- **Personal Violations** — Chataos and asham taluy, set by a five-point scrutiny slider.
-- **Thanksgiving (Todah)** — Baseline 2, optional travel component.
-- **Life Events** — Yoledet, nazir, metzora, oleh v'yored, pidyon haben, pesach sheni, and voluntary offerings.
-- **Travel** — Round-trip flights and lodging for the regalim, configurable by family size and nights.
-
-### Annual Communal Budget
-Full annual cost of all public korbanos funded by the chatzi shekel. Shows total, per-capita cost, actual chatzi shekel value (shiur-adjusted), and per-person subsidy/surplus.
-
-### Today's Communal Costs
-Any Hebrew date's public avodah with full pricing. Jump to any Yom Tov, Shabbos, or Rosh Chodesh. Overnight ma'arachah noted.
-
-### Full Catalog
-Every offering by category with Hebrew names, sources, descriptions, and component breakdowns. +/− quantity controls with a running sticky total.
-
-### Prices & Sources
-Full price transparency: base NIS, shiur-adjusted price, source, and notes for every commodity.
+The 🖨 Print Summary and 🔗 Share My Bill buttons now translate across all 5 languages.
 
 ---
 
-## Key Settings
+### V4.0 — Core Release (April 2026)
 
-### Shiur (Halachic Measurement Standard)
-Agricultural quantities and silver-weight obligations scale with the active shiur:
+**Multi-language support:** Full interface in Hebrew (RTL), Spanish, French, and Russian. All UI elements translated; halachic rationale text remains in English with a note in other languages.
 
-| Opinion | Beitzah | Log | Issaron | Chatzi Shekel | Multiplier |
-|---|---|---|---|---|---|
-| R' Naeh *(default)* | 50 ml | 300 ml | ~2.4 kg | 9.6g | 1.0× |
-| R' Moshe Feinstein | 57 ml | 342 ml | ~2.74 kg | 10.9g | 1.14× |
-| Rambam (R' Kafih) | 75 ml | 450 ml | ~3.6 kg | 14.4g | 1.5× |
-| Chazon Ish | 100 ml | 600 ml | ~4.8 kg | 19.2g | 2.0× |
+**Currency toggle:** $ / ₪ pill toggle in the header. `fmtC()` routes all price displays. Live NIS/USD exchange rate from Cloudflare Worker.
 
-### USD / NIS Exchange Rate
-Fetched live on load. Overridable manually.
+**Today's Communal Costs tab:** Exact public korbanos for any Hebrew date computed in pure JavaScript (no external calendar library). Day navigation with ‹/› arrows and jump buttons for every Yom Tov. Time-block breakdown: Shacharit Tamid, Omer (16 Nisan), Mussaf (Shabbos/Yom Tov/Rosh Chodesh as applicable), Mincha Tamid. Ketores and Menorah oil listed separately. Three separate Mussaf blocks on 1 Tishrei that falls on Shabbos.
 
-### Silver Price
-Fetched live (XAG spot). Affects chatzi shekel and pidyon haben. Weights scale with shiur.
+**Population slider:** Range 600K–10M with four presets (Bamidbar census 600K, scholars' estimate 1M, Josephus 3M, modern observant estimate 6M). Per-capita and communal totals update live.
 
-### Financial Tier
-Affects olas re'iyah and chagigah animal grade, Bikkurim basket, and travel defaults.
+**Print Summary:** Clean black-on-white modal of the annual bill. Itemized by category with totals. Print/Save PDF button.
 
----
+**Share My Bill:** Base64 URL encoding of all settings. WhatsApp-safe URLs (~450 chars). `useEffect` reads `?bill=` param on mount. Verified round-trip.
 
-## Commodity Prices (Jerusalem, Q1–Q2 2026)
-
-| Item | Base NIS | Notes |
-|---|---|---|
-| Bull | 9,000 | Central Cattle Market, Moshav Beit Dagan |
-| Ram | 1,200 | Central Sheep & Goat Market |
-| Lamb | 700 | Central Sheep & Goat Market |
-| Goat | 650 | Central Sheep & Goat Market |
-| Bird (squab) | 30 | Israeli poultry wholesale |
-| Solet (issaron) | 28 | Semolina-grade wheat; Sugat/Osem semolina retail. Solet = coarsely ground, not fine flour (Menachos 27a, Rashi; Avos 5:15) |
-| Log olive oil | 12 | Galilee domestic EVOO |
-| Log wine | 15 | Golan Heights / Carmel table wine |
-| Frankincense | 25 | Machane Yehuda spice market (Omani) |
-| Ketores (per offering) | 1,072 | Composite — 11 spices per Kerisos 6a; saffron >50% of cost |
-| Wood | 45 | Jerusalem lumber market (per offering) |
-| Salt | 2 | Israeli commodity pricing |
-| Silver | live | XAG spot rate, fetched on load |
+**Halachic corrections:**
+- Solet repriced NIS 18 → NIS 28/kg as semolina-grade per Menachos 27a, Rashi s.v. Solet=Geres, Avos 5:15
+- Shalmei Simcha adjustable with +/− spinner; default 1 per regel; rationale notes the dispute (Rambam Hilchos Yom Tov 6:17)
+- Chagigat 14 Nisan adjustable; conditional obligation per Rambam Hilchos Korban Pesach 10:12; defaults to 1 when attending Pesach; note that when 14 Nisan falls on Shabbos it is not brought
+- RH Mussaf: three separate blocks on 1 Tishrei (Shabbos Mussaf + RH Mussaf + RC Tishrei Mussaf with note about musafei custom)
+- Chatas violation examples revised: removed d'rabbanan examples, added chelev, chametz on Pesach, blood, Yom Kippur melacha; corrected electricity → lit candle (Mav'ir); tightened niddah/arayos with lo yada/ta'us distinction
+- Bug fix: EY travel costs no longer included in annual total when "I live in Eretz Yisroel" is checked
 
 ---
 
-## Tech Stack
+## Technical Notes
 
-- **React** (TypeScript) — single-component application
-- **Vite** — build tooling
-- **Cloudflare Pages** — hosting via GitHub auto-deploy
-- Pure JavaScript Hebrew calendar (no npm packages)
-- No external UI libraries; all styling is inline CSS
+Built with React + TypeScript, deployed on Cloudflare Pages. Live silver spot price from a Cloudflare Worker + KV storage. Live NIS/USD exchange rate from a separate Worker endpoint. Hebrew calendar in pure JavaScript — no external library. Source: `morrismassel/korbanos-site` on GitHub.
 
----
-
-## How It Was Built
-
-This project was conceived and directed by Jeremy Spier and Morris Massel. The application — including the halachic research, commodity pricing, offering catalog, multilingual interface, Hebrew calendar implementation, and all code — was built with a lot of help from **Claude** (claude.ai), Anthropic's AI.
-
----
-
-## Disclaimer
-
-For educational purposes only. Do not rely on anything here for any halachic decision whatsoever. The violation examples, korban obligations, shiur conversions, and price estimates have not been reviewed by any rabbinic authority and may contain errors, oversimplifications, or outright mistakes. All halachic questions must be addressed to a qualified posek.
+Key architectural notes:
+- `renderWithLinks(text, withGlossary?)` — parses text at render time, produces array of strings and React elements. First pass: citation links. Second pass (if withGlossary=true): glossary term wrapping with word boundary detection.
+- `CITE_LINKS` — 45-entry map of citation strings to Sefaria URLs, sorted longest-first to prevent partial matches.
+- `GLOSSARY` — 16-entry map of Hebrew terms to one-line definitions.
+- `GlossaryTerm` component — uses `useRef` + `getBoundingClientRect()` for viewport-clamped tooltip positioning with `position:fixed`.
+- `SHIURIM` — four shiur opinions each with multiplier, source string, notes, and Sefaria URL.
+- Hebrew calendar: `gregToAbs`, `absToHebrew`, `hebrewToAbs` with H_EPOCH = -1373427.
