@@ -1,5 +1,5 @@
 // Korbanos Calculator — V4 build 1776860187
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef} from "react";
 
 // ── Shiurim ───────────────────────────────────────────────────────────────────
 const SHIURIM = {
@@ -588,31 +588,7 @@ const CITE_LINKS = {
   "Vayikra 14:10-32": "https://www.sefaria.org/Leviticus.14.10",
   "Vayikra 5:1-13":   "https://www.sefaria.org/Leviticus.5.1",
   "Bamidbar 18:15-16":"https://www.sefaria.org/Numbers.18.15",
-  "Bamidbar 9:9-12":  "https://www.sefaria.org/Numbers.9.9",
-  "Bamidbar 6:13-20": "https://www.sefaria.org/Numbers.6.13",
-  "Pesachim 70a":     "https://www.sefaria.org/Pesachim.70a",
-  "Bamidbar 28:3-8":   "https://www.sefaria.org/Numbers.28.3",
-  "Bamidbar 28:9-10":  "https://www.sefaria.org/Numbers.28.9",
-  "Bamidbar 28:11-15": "https://www.sefaria.org/Numbers.28.11",
-  "Bamidbar 28:19-24": "https://www.sefaria.org/Numbers.28.19",
-  "Bamidbar 28:26-31": "https://www.sefaria.org/Numbers.28.26",
-  "Bamidbar 29:1-6":   "https://www.sefaria.org/Numbers.29.1",
-  "Bamidbar 29:7-11":  "https://www.sefaria.org/Numbers.29.7",
-  "Bamidbar 29:13-34": "https://www.sefaria.org/Numbers.29.13",
-  "Bamidbar 29:35-38": "https://www.sefaria.org/Numbers.29.35",
-  "Vayikra 23:9-14":   "https://www.sefaria.org/Leviticus.23.9",
-  "Vayikra 23:15-21":  "https://www.sefaria.org/Leviticus.23.15",
-  "Vayikra 16:3":      "https://www.sefaria.org/Leviticus.16.3",
-  "Vayikra 16:5":      "https://www.sefaria.org/Leviticus.16.5",
-  "Vayikra 1:2-17":    "https://www.sefaria.org/Leviticus.1.2",
-  "Vayikra 3:1-17":    "https://www.sefaria.org/Leviticus.3.1",
-  "Vayikra 2:2":       "https://www.sefaria.org/Leviticus.2.2",
-  "Shemos 29:40":      "https://www.sefaria.org/Exodus.29.40",
-  "Shemos 32:29":      "https://www.sefaria.org/Exodus.32.29",
-  "Shemos 27:20":      "https://www.sefaria.org/Exodus.27.20",
-  "Shemos 30:7-8":     "https://www.sefaria.org/Exodus.30.7",
-  "Shemos 12:6":       "https://www.sefaria.org/Exodus.12.6",
-  "Bamidbar 18:15-16": "https://www.sefaria.org/Numbers.18.15",
+
   "Pesachim 70a-71a":  "https://www.sefaria.org/Pesachim.70a",
   "Yoma 26b":          "https://www.sefaria.org/Yoma.26b",
   "Kerisos 6a":        "https://www.sefaria.org/Keritot.6a",
@@ -1821,6 +1797,24 @@ export default function korbanosCalculator() {
               <strong style={{color:"#7a5030",fontStyle:"normal"}}>Ma'arachah — overnight fire:</strong> The mizbeach fire burns continuously through the night (Vayikra 6:5–6). Fats and limbs from daytime korbanos continue consuming overnight — these are included in the animal costs above. Additional wood for the ma'arachah (Rambam Hilchos Temidin 2:4) adds a nominal amount not separately itemized.
             </div>
 
+            
+            {showTodayPrint&&(
+              <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setShowTodayPrint(false)}>
+                <div onClick={e=>e.stopPropagation()} style={{background:"#fff",color:"#111",maxWidth:620,width:"100%",maxHeight:"90vh",overflowY:"auto",padding:"2.5rem",fontFamily:"Georgia,serif",fontSize:"14px",lineHeight:1.7}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem",borderBottom:"2px solid #111",paddingBottom:"1rem"}}>
+                    <div><div style={{fontSize:"20px",fontWeight:700,fontFamily:"'Cinzel',serif"}}>KORBANOS CALCULATOR</div><div style={{fontSize:"13px",color:"#555"}}>Today's Communal Costs</div></div>
+                    <div style={{textAlign:"right",fontSize:"12px",color:"#777"}}><div>{hebrewStr}</div><div>{gregDate}</div><div>Shiur: {shiur.labelShort}</div></div>
+                  </div>
+                  {blocks.map((b,bi)=>(<div key={bi} style={{marginBottom:"1rem"}}><div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #ccc",paddingBottom:"0.2rem",marginBottom:"0.3rem"}}><strong style={{fontSize:"12px",fontFamily:"'Cinzel',serif"}}>{b.title}</strong><strong>{fmtC(bTotal(b))}</strong></div>{b.offerings.map((o,oi)=>(<div key={oi} style={{display:"flex",justifyContent:"space-between",padding:"0.1rem 0",color:"#444",fontSize:"13px"}}><span>{o.label}{o.count>1?" × "+o.count:""}</span><span>{fmtC(compCost(o.key,o.count,P))}</span></div>))}</div>))}
+                  <div style={{borderTop:"2px solid #111",paddingTop:"0.75rem",display:"flex",justifyContent:"space-between",fontSize:"17px",fontWeight:700,fontFamily:"'Cinzel',serif",marginBottom:"1rem"}}><span>Total</span><span>{fmtC(dayTotal)}</span></div>
+                  <div style={{fontSize:"11px",color:"#888",borderTop:"1px solid #ddd",paddingTop:"0.6rem"}}>For educational purposes only. All prices are Jerusalem market rates.</div>
+                  <div style={{display:"flex",gap:"0.75rem",marginTop:"1rem",justifyContent:"flex-end"}}>
+                    <button onClick={()=>window.print()} style={{padding:"0.5rem 1.25rem",background:"#111",color:"#fff",border:"none",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Print / Save PDF</button>
+                    <button onClick={()=>setShowTodayPrint(false)} style={{padding:"0.5rem 1.25rem",background:"transparent",color:"#555",border:"1px solid #999",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Close</button>
+                  </div>
+                </div>
+              </div>
+            )}
             {disclaimer}
           </div>
           );
@@ -2066,42 +2060,3 @@ function GlossaryTerm({term, children}){
 }
 
 function qBtn(e){return{width:38,height:38,background:e?"#7a4f20":"#2a1a08",border:"1px solid "+(e?"#c9a45a":"#5a3a1a"),color:e?"#f0ddb0":"#5a3a1a",cursor:e?"pointer":"not-allowed",fontSize:"1.2rem",fontFamily:"inherit",opacity:e?1:0.4};}
-            {showTodayPrint&&(
-              <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setShowTodayPrint(false)}>
-                <div onClick={e=>e.stopPropagation()} style={{background:"#fff",color:"#111",maxWidth:620,width:"100%",maxHeight:"90vh",overflowY:"auto",padding:"2.5rem",fontFamily:"Georgia,serif",fontSize:"14px",lineHeight:1.7}}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem",borderBottom:"2px solid #111",paddingBottom:"1rem"}}>
-                    <div>
-                      <div style={{fontSize:"20px",fontWeight:700,fontFamily:"'Cinzel',serif",letterSpacing:"0.05em"}}>KORBANOS CALCULATOR</div>
-                      <div style={{fontSize:"13px",color:"#555"}}>Today's Communal Costs — korbancalculator.com</div>
-                    </div>
-                    <div style={{textAlign:"right",fontSize:"12px",color:"#777"}}>
-                      <div>{hebrewStr}</div>
-                      <div>{gregDate}</div>
-                      <div>Shiur: {shiur.labelShort}</div>
-                    </div>
-                  </div>
-                  {blocks.map((b,bi)=>(
-                    <div key={bi} style={{marginBottom:"1rem"}}>
-                      <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #ccc",paddingBottom:"0.2rem",marginBottom:"0.3rem"}}>
-                        <strong style={{fontSize:"12px",letterSpacing:"0.06em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>{b.title}</strong>
-                        <strong>{fmtC(bTotal(b))}</strong>
-                      </div>
-                      {b.offerings.map((o,oi)=>(
-                        <div key={oi} style={{display:"flex",justifyContent:"space-between",padding:"0.1rem 0",color:"#444",fontSize:"13px"}}>
-                          <span>{o.label}{o.count>1?" × "+o.count:""}</span>
-                          <span>{fmtC(compCost(o.key,o.count,P))}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                  <div style={{borderTop:"2px solid #111",paddingTop:"0.75rem",display:"flex",justifyContent:"space-between",fontSize:"17px",fontWeight:700,fontFamily:"'Cinzel',serif",marginBottom:"1rem"}}>
-                    <span>Total</span><span>{fmtC(dayTotal)}</span>
-                  </div>
-                  <div style={{fontSize:"11px",color:"#888",borderTop:"1px solid #ddd",paddingTop:"0.6rem",lineHeight:1.6}}>For educational purposes only. All prices are Jerusalem market rates. Shiur: {shiur.labelShort}.</div>
-                  <div style={{display:"flex",gap:"0.75rem",marginTop:"1rem",justifyContent:"flex-end"}}>
-                    <button onClick={()=>window.print()} style={{padding:"0.5rem 1.25rem",background:"#111",color:"#fff",border:"none",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Print / Save PDF</button>
-                    <button onClick={()=>setShowTodayPrint(false)} style={{padding:"0.5rem 1.25rem",background:"transparent",color:"#555",border:"1px solid #999",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Close</button>
-                  </div>
-                </div>
-              </div>
-            )}
