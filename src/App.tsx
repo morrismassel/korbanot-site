@@ -2006,45 +2006,7 @@ export default function korbanosCalculator() {
       </div>
 
       {/* ── Print Modal ─────────────────────────────────────────────────── */}
-      {showTodayPrint&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setShowTodayPrint(false)}>
-          <div onClick={e=>e.stopPropagation()} style={{background:"#fff",color:"#111",maxWidth:620,width:"100%",maxHeight:"90vh",overflowY:"auto",padding:"2.5rem",fontFamily:"Georgia,serif",fontSize:"14px",lineHeight:1.7}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem",borderBottom:"2px solid #111",paddingBottom:"1rem"}}>
-              <div>
-                <div style={{fontSize:"20px",fontWeight:700,fontFamily:"'Cinzel',serif",letterSpacing:"0.05em"}}>KORBANOS CALCULATOR</div>
-                <div style={{fontSize:"13px",color:"#555"}}>Today's Communal Costs — korbancalculator.com</div>
-              </div>
-              <div style={{textAlign:"right",fontSize:"12px",color:"#777"}}>
-                <div>{hebrewStr}</div>
-                <div>{gregDate}</div>
-                <div>Shiur: {shiur.labelShort}</div>
-              </div>
-            </div>
-            {blocks.map((b,bi)=>(
-              <div key={bi} style={{marginBottom:"1rem"}}>
-                <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #ccc",paddingBottom:"0.2rem",marginBottom:"0.3rem"}}>
-                  <strong style={{fontSize:"12px",letterSpacing:"0.06em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>{b.title}</strong>
-                  <strong>{fmtC(bTotal(b))}</strong>
-                </div>
-                {b.offerings.map((o,oi)=>(
-                  <div key={oi} style={{display:"flex",justifyContent:"space-between",padding:"0.1rem 0",color:"#444",fontSize:"13px"}}>
-                    <span>{o.label}{o.count>1?" × "+o.count:""}</span>
-                    <span>{fmtC(compCost(o.key,o.count,P))}</span>
-                  </div>
-                ))}
-              </div>
-            ))}
-            <div style={{borderTop:"2px solid #111",paddingTop:"0.75rem",display:"flex",justifyContent:"space-between",fontSize:"17px",fontWeight:700,fontFamily:"'Cinzel',serif",marginBottom:"1rem"}}>
-              <span>Total</span><span>{fmtC(dayTotal)}</span>
-            </div>
-            <div style={{fontSize:"11px",color:"#888",borderTop:"1px solid #ddd",paddingTop:"0.6rem",lineHeight:1.6}}>For educational purposes only. All prices are Jerusalem market rates. Shiur: {shiur.labelShort}.</div>
-            <div style={{display:"flex",gap:"0.75rem",marginTop:"1rem",justifyContent:"flex-end"}}>
-              <button onClick={()=>window.print()} style={{padding:"0.5rem 1.25rem",background:"#111",color:"#fff",border:"none",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Print / Save PDF</button>
-              <button onClick={()=>setShowTodayPrint(false)} style={{padding:"0.5rem 1.25rem",background:"transparent",color:"#555",border:"1px solid #999",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Close</button>
-            </div>
-          </div>
-        </div>
-      )}
+      
       {showPrint&&(
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setShowPrint(false)}>
           <div onClick={e=>e.stopPropagation()} style={{background:"#fff",color:"#111",maxWidth:680,width:"100%",maxHeight:"90vh",overflowY:"auto",padding:"2.5rem",fontFamily:"Georgia,serif",fontSize:"14px",lineHeight:1.7}}>
