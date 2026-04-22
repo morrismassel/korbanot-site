@@ -1113,7 +1113,7 @@ export default function korbanosCalculator() {
               {/* Silver price */}
               <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
                 <div style={lbl}>{T("set_silver")}</div>
-                <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>{T("silver_note")}></div>
+                <div style={{fontSize:"0.9rem",color:"#a08050",fontStyle:"italic",marginBottom:"0.5rem"}}>{T("silver_note")}</div>
                 <div style={{display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
                   <span style={{fontSize:"0.9rem",color:"#f0ddb0"}}>$</span>
                   <input
