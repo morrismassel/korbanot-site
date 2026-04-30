@@ -1,5 +1,5 @@
 // Korbanos Calculator — V4 build 1776860187
-import { useState, useMemo, useEffect, useRef} from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 
 // ── Shiurim ───────────────────────────────────────────────────────────────────
 const SHIURIM = {
@@ -632,7 +632,6 @@ const CITE_LINKS = {
   "Shemos 27:20":      "https://www.sefaria.org/Exodus.27.20",
   "Shemos 30:7-8":     "https://www.sefaria.org/Exodus.30.7",
   "Shemos 12:6":       "https://www.sefaria.org/Exodus.12.6",
-  "Bamidbar 18:15-16": "https://www.sefaria.org/Numbers.18.15",
   "Pesachim 70a-71a":  "https://www.sefaria.org/Pesachim.70a",
   "Yoma 26b":          "https://www.sefaria.org/Yoma.26b",
   "Kerisos 6a":        "https://www.sefaria.org/Keritot.6a",
@@ -876,6 +875,9 @@ const SCENARIOS = [
     proc_he:"כל תקופת הנזירות הקודמת מתבטלת ויש להתחיל מחדש. הצפרים מכפרות על ההפסקה; הקרבן המלא מובא רק בסיום הנדר החדש.",
   },
 ];
+
+const PRICES_LAST_UPDATED = "April 2026";
+const PRICES_REVIEW_NOTE = "Jerusalem wholesale market rates. Updated quarterly.";
 
 export default function korbanosCalculator() {
   const [activeTab,        setActiveTab]        = useState("annual");
