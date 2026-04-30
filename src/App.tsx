@@ -11,12 +11,13 @@ const SHIURIM = {
 
 // ── Jerusalem prices (NIS) ────────────────────────────────────────────────────
 const JLM_NIS = {
-  bull:9000, ram:1200, lamb:700, goat:650, bird:30,
+  bull:9000, ram:1200, lamb:700, ewe:620, goat:650, bird:30,
   issaron_flour:28, log_oil:12, log_wine:15, frankincense:25, salt:2, wood:45,
   ketores:1072,
 };
 const JLM_SOURCES = {
   bull:        { src:"Central Cattle Market, Moshav Beit Dagan", url:"https://www.moag.gov.il", note:"Israeli cattle market average, Q1 2026." },
+  ewe:         { src:"Central Sheep & Goat Market, Israel",     url:"https://www.moag.gov.il", note:"Female lamb (כַּבְשָׂה). ~10% lower market price than male lamb due to lighter carcass weight. Used for chatat and other female-specific offerings." },
   ram:         { src:"Central Sheep & Goat Market, Israel",      url:"https://www.moag.gov.il", note:"Domestic production keeps prices lower than comparable US animals." },
   lamb:        { src:"Central Sheep & Goat Market, Israel",      url:"https://www.moag.gov.il", note:"Yearling lamb at Israeli auction. High domestic consumption; robust supply." },
   goat:        { src:"Central Sheep & Goat Market, Israel",      url:"https://www.moag.gov.il", note:"Widely raised domestically." },
@@ -37,7 +38,7 @@ function buildPrices(shiurId, usdPerNis) {
   const c = v => v * usdPerNis;
   return {
     bull:c(JLM_NIS.bull), ram:c(JLM_NIS.ram), lamb:c(JLM_NIS.lamb),
-    goat:c(JLM_NIS.goat), bird:c(JLM_NIS.bird),
+    ewe:c(JLM_NIS.ewe), goat:c(JLM_NIS.goat), bird:c(JLM_NIS.bird),
     issaron_flour:c(JLM_NIS.issaron_flour*m), log_oil:c(JLM_NIS.log_oil*m),
     log_wine:c(JLM_NIS.log_wine*m), frankincense:c(JLM_NIS.frankincense),
     salt:c(JLM_NIS.salt), wood:c(JLM_NIS.wood),
@@ -50,6 +51,8 @@ function compCost(key,count,P){
     case"bull_olah":return count*(P.bull+libCost("bull",P));
     case"ram_olah": return count*(P.ram +libCost("ram", P));
     case"lamb_olah":return count*(P.lamb+libCost("lamb",P));
+    case"ewe_olah": return count*(P.ewe +libCost("lamb",P));
+    case"ewe":     return count*P.ewe;
     case"bull":return count*P.bull; case"ram":return count*P.ram;
     case"lamb":return count*P.lamb; case"goat":return count*P.goat;
     case"bird":return count*P.bird; case"issaron_flour":return count*P.issaron_flour;
@@ -65,36 +68,46 @@ const fmtNIS = n=>"₪"+n.toLocaleString("en-US",{minimumFractionDigits:0,maximu
 
 // ── Catalog ───────────────────────────────────────────────────────────────────
 const CATALOG = [
-  {id:"tamid", group:"Daily & Weekly",hebrew:"תָּמִיד",name:"Korban Tamid",subtitle:"The twice-daily continual offering",description:"Two yearling male lambs as olah each day with libations and wood. Ketores and menorah oil are listed separately in the communal budget.",description_he:"שני כבשים זכרים בני שנה כעולה מדי יום עם נסכים ועצים. קטורת ושמן מנורה רשומים כסעיפי ציבור נפרדים.",description_es:"Dos corderos machos de un año como olá cada día con libaciones y leña. El ketores y el aceite de menorá se listan como partidas comunitarias separadas.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Altar wood",key:"wood",count:1}]},
-  {id:"ketores_daily", group:"Daily & Weekly",hebrew:"קְטֹרֶת",name:"Ketores - Daily Incense",subtitle:"Morning and afternoon incense offering",description:"The 11-spice incense offered twice daily on the golden altar. One of the most expensive communal obligations. Per Kerisos 6a the annual batch is 368 maneh (~184kg): stacte, onycha, galbanum, and frankincense (70 maneh each); myrrh, cassia, spikenard, and saffron (16 maneh each); costus (12 maneh), aromatic bark (3 maneh), cinnamon (9 maneh). Saffron alone — at ~NIS 50/gram wholesale — accounts for over half the total cost. Price reflects a composite calculation across all 11 spices at Jerusalem wholesale rates; annual total ~NIS 782,000 ÷ 730 offerings.",description_he:"הקטורת בת 11 הסממנים המוקטרת פעמיים ביום על המזבח הזהב. אחת מחובות הציבור היקרות ביותר — סך שנתי מרשים.",description_es:"El incienso de 11 especias ofrecido dos veces al día sobre el altar de oro. Una de las obligaciones comunitarias más costosas — total anual impresionante.",components:[{label:"11-spice blend (full offering)",key:"ketores",count:1}]},
-  {id:"menorah_oil", group:"Daily & Weekly",hebrew:"שֶׁמֶן הַמְּנוֹרָה",name:"Menorah Oil",subtitle:"Pure olive oil for the golden menorah",description:"Pure beaten olive oil lit each evening (and replenished each morning) in the seven-branched golden menorah. The Talmud (Menachos 89a) records the precise amount used. Approximately half a log per lamp per day for the six outer lamps; the western lamp burned continuously. Total daily consumption approximately 3.5 log of first-pressing olive oil.",description_he:"שמן זית זך כתית הנדלק בכל ערב (ומחודש בכל בוקר) במנורה הזהב בת שבעת הקנים. כמות מדויקת לפי הרמב\"ם.",description_es:"Aceite de oliva puro batido encendido cada tarde (y repuesto cada mañana) en la menorá de oro de siete brazos. Cantidad exacta según el Rambam.",components:[{label:"Olive oil (3.5 log daily)",key:"log_oil",count:3.5}]},
-  {id:"shabbat", group:"Daily & Weekly",hebrew:"מוּסַף שַׁבָּת",name:"Mussaf Shabbos",subtitle:"Additional offering for the Sabbath",description:"Two yearling male lambs as olah with nesachim, plus lechem hapanim.",description_he:"שני כבשים זכרים בני שנה כעולה עם נסכים, בנוסף ללחם הפנים.",description_es:"Dos corderos machos de un año como olá con libaciones, más lechem hapanim.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Lechem hapanim (24 issaron)",key:"issaron_flour",count:24}]},
-  {id:"rosh_chodesh", group:"Daily & Weekly",hebrew:"רֹאשׁ חֹדֶשׁ",name:"Mussaf Rosh Chodesh",subtitle:"Additional offering for the new month",description:"Two bulls, one ram, seven lambs as olah with nesachim, plus one goat as chatas.",description_he:"שני פרים, איל אחד, שבעה כבשים כעולה עם נסכים, בנוסף לשעיר אחד כחטאת.",description_es:"Dos novillos, un carnero, siete corderos como olá con libaciones, más un macho cabrío como chatat.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"pesach", group:"Pilgrimage Festivals",hebrew:"פֶּסַח",name:"Korban Pesach",subtitle:"Paschal offering (14 Nisan)",description:"A yearling lamb or kid, roasted whole, eaten by a registered group on the night of the 15th.",description_he:"כבש או גדי בן שנה, צלוי שלם, הנאכל על ידי חבורה רשומה בליל ט\"ו.",description_es:"Un cordero o cabrito de un año, asado entero, comido por un grupo registrado en la noche del 15.",components:[{label:"1 lamb (pesach)",key:"lamb",count:1}]},
-  {id:"chagigah_14", group:"Pilgrimage Festivals",hebrew:"חֲגִיגַת י\"ד",name:"Chagigat 14 Nisan",subtitle:"The supplementary festive offering on Erev Pesach",description:"When 14 Nisan falls on a weekday, a shelamim is brought alongside the Korban Pesach to supplement the seder meal, ensuring there is additional meat so that the Korban Pesach is eaten al hasova (on satiety) rather than out of hunger. Brought only on 14 Nisan, unlike the standard chagigah which is brought on the first day of the regel. Eaten on the night of the 15th before the Pesach itself.",description_he:"כאשר י\"ד ניסן חל בחול, מוביאים שלמים לצד קרבן פסח להשלים האכילה עד לשובע. ראו גם: חגיגת י\"ד ניסן בחשבון השנתי.",description_es:"Cuando el 14 de Nisán cae en día de semana, se trae un shelamim junto al Korban Pesaj para complementar la comida hasta la saciedad. Ver también: Chagigat 14 Nisán en la cuenta anual.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
-  {id:"pesach_mussaf_day", group:"Pilgrimage Festivals",hebrew:"מוּסַף פֶּסַח",name:"Mussaf of Pesach - one day",subtitle:"Per day, for each of the 7 days",description:"2 bulls, 1 ram, 7 lambs as olah with nesachim, and 1 goat as chatas.",description_he:"2 פרים, איל 1, 7 כבשים כעולה עם נסכים, ושעיר 1 כחטאת.",description_es:"2 novillos, 1 carnero, 7 corderos como olá con libaciones, y 1 macho cabrío como chatat.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"omer", group:"Pilgrimage Festivals",hebrew:"עֹמֶר",name:"Korban HaOmer",subtitle:"Barley wave-offering (16 Nisan)",description:"One issaron of barley flour with a yearling male lamb as olah and its libation.",description_he:"עשרון אחד קמח שעורים עם כבש זכר בן שנה כעולה ונסכיו.",description_es:"Un isarón de harina de cebada con un cordero macho de un año como olá y sus libaciones.",components:[{label:"1 issaron barley flour",key:"issaron_flour",count:1},{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
-  {id:"shavuot", group:"Pilgrimage Festivals",hebrew:"שָׁבֻעוֹת",name:"Shavuos - Full Day",subtitle:"Including the Two Loaves and peace offerings",description:"Shtei HaLechem with 2 lambs as shelamim, plus full mussaf and chatas.",description_he:"שתי הלחם עם 2 כבשים כשלמים, בנוסף למוסף שלם וחטאת.",description_es:"Shtei HaLechem con 2 corderos como shelamim, más mussaf completo y chatat.",components:[{label:"Shtei HaLechem (4 issaron)",key:"issaron_flour",count:4},{label:"2 lambs (shelamim)",key:"lamb_olah",count:2},{label:"Mussaf: 7 lambs",key:"lamb_olah",count:7},{label:"Mussaf: 1 bull",key:"bull_olah",count:1},{label:"Mussaf: 2 rams",key:"ram_olah",count:2},{label:"Bamidbar 28: 2 bulls",key:"bull_olah",count:2},{label:"Bamidbar 28: 1 ram",key:"ram_olah",count:1},{label:"Bamidbar 28: 7 lambs",key:"lamb_olah",count:7},{label:"2 goats (chatas)",key:"goat",count:2}]},
-  {id:"rosh_hashanah", group:"Pilgrimage Festivals",hebrew:"רֹאשׁ הַשָּׁנָה",name:"Mussaf Rosh Hashana",subtitle:"New Year additional offering",description:"1 bull, 1 ram, 7 lambs as olah with nesachim, plus 1 goat as chatas.",description_he:"פר 1, איל 1, 7 כבשים כעולה עם נסכים, ושעיר 1 כחטאת.",description_es:"1 novillo, 1 carnero, 7 corderos como olá con libaciones, más 1 macho cabrío como chatat.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"yom_kippur", group:"Pilgrimage Festivals",hebrew:"יוֹם הַכִּפּוּרִים",name:"Yom Kippur - Full Service",subtitle:"The avodah of the Kohen Gadol",description:"The high priest's personal bull, two goats, two rams, and communal mussaf.",description_he:"פרו של הכהן הגדול, שני שעירים, שני אילים, ומוסף ציבור.",description_es:"El novillo personal del Kohen Gadol, dos machos cabríos, dos carneros, y mussaf comunitario.",components:[{label:"Kohen Gadol's bull (chatas)",key:"bull",count:1},{label:"2 goats (chatas + Azazel)",key:"goat",count:2},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"Mussaf: 1 bull",key:"bull_olah",count:1},{label:"Mussaf: 1 ram",key:"ram_olah",count:1},{label:"Mussaf: 7 lambs",key:"lamb_olah",count:7},{label:"Mussaf goat (chatas)",key:"goat",count:1},{label:"Ketores",key:"frankincense",count:4}]},
-  {id:"sukkot_day1",group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - יוֹם א",name:"Sukkos - Day 1",subtitle:"Largest animal offering of the year",description:"13 bulls, 2 rams, 14 lambs as olah with nesachim, plus 1 goat as chatas.",description_he:"13 פרים, 2 אילים, 14 כבשים כעולה עם נסכים, ושעיר 1 כחטאת.",description_es:"13 novillos, 2 carneros, 14 corderos como olá con libaciones, más 1 macho cabrío como chatat.",components:[{label:"13 bulls (olah) with nesachim",key:"bull_olah",count:13},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 lambs (olah) with nesachim",key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"sukkot_all", group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - כָּל הַיָּמִים",name:"Sukkos - All 7 Days",subtitle:"70 bulls total, representing 70 nations",description:"Seven days: 70 bulls, 14 rams, 98 lambs as olah, plus 7 goats as chatas.",description_he:"שבעה ימים: 70 פרים, 14 אילים, 98 כבשים כעולה, ו-7 שעירים כחטאת.",description_es:"Siete días: 70 novillos, 14 carneros, 98 corderos como olá, más 7 machos cabríos como chatat.",components:[{label:"70 bulls (olah) with nesachim",key:"bull_olah",count:70},{label:"14 rams (olah) with nesachim",key:"ram_olah",count:14},{label:"98 lambs (olah) with nesachim",key:"lamb_olah",count:98},{label:"7 goats (chatas)",key:"goat",count:7}]},
-  {id:"shemini_atzeret", group:"Pilgrimage Festivals",hebrew:"שְׁמִינִי עֲצֶרֶת",name:"Shemini Atzeres",subtitle:"The eighth-day assembly",description:"1 bull, 1 ram, 7 lambs as olah with nesachim + 1 goat as chatas.",description_he:"פר 1, איל 1, 7 כבשים כעולה עם נסכים, ושעיר 1 כחטאת.",description_es:"1 novillo, 1 carnero, 7 corderos como olá con libaciones + 1 macho cabrío como chatat.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}]},
-  {id:"chatat_individual", group:"Individual Offerings",hebrew:"חַטָּאת יָחִיד",name:"Chatas - Individual Sin Offering",subtitle:"For inadvertent transgression of a kareis prohibition",description:"An individual who inadvertently violated a kareis prohibition brings a female goat as chatas.",description_he:"יחיד שעבר בשגגה על איסור כרת מביא שעירת עיזים כחטאת.",description_es:"Un individuo que violó inadvertidamente una prohibición de karet trae una cabra hembra como chatat.",components:[{label:"1 female goat (chatas)",key:"goat",count:1}]},
-  {id:"asham",group:"Individual Offerings",hebrew:"אָשָׁם",name:"Asham - Guilt Offering",subtitle:"Ram for misappropriation or doubt",description:"For misusing sanctified property, certain oaths, or doubt cases: a male ram with nesachim.",description_he:"על מעילה בהקדש, שבועות מסוימות, או מקרי ספק: איל זכר עם נסכים.",description_es:"Por mal uso de propiedad sagrada, ciertos juramentos, o casos de duda: un carnero macho con libaciones.",components:[{label:"1 ram (asham) with nesachim",key:"ram_olah",count:1}]},
-  {id:"olah_animal", group:"Individual Offerings",hebrew:"עוֹלָה",name:"Olah - Voluntary Burnt Offering",subtitle:"Wholly consumed on the altar",description:"A voluntary ascent-offering. One male lamb with its libation.",description_he:"עולת נדבה. כבש זכר אחד ונסכיו.",description_es:"Ofrenda de ascenso voluntaria. Un cordero macho con sus libaciones.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
-  {id:"olah_bird",group:"Individual Offerings",hebrew:"עוֹלַת הָעוֹף",name:"Olah of the Poor - Bird",subtitle:"For one unable to afford an animal",description:"A turtledove or young pigeon as olah. No nesachim.",description_he:"תור או בן יונה כעולה. ללא נסכים.",description_es:"Una tórtola o palomino joven como olá. Sin libaciones.",components:[{label:"1 bird (olah)",key:"bird",count:1}]},
-  {id:"shelamim", group:"Individual Offerings",hebrew:"שְׁלָמִים",name:"Shelamim - Peace Offering",subtitle:"Eaten by owner, priest, and altar",description:"A voluntary peace-offering. One mature ram with libation.",description_he:"קרבן שלמים מרצון. איל בוגר אחד עם נסך.",description_es:"Ofrenda de paz voluntaria. Un carnero maduro con libación.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
-  {id:"shalmei_simcha",   group:"Individual Offerings",hebrew:"שַׁלְמֵי שִׂמְחָה",name:"Shalmei Simcha - Festive Peace Offering",subtitle:"Obligatory joy-offering on the three festivals",description:"The Torah obligation of simcha on the three regalim — eating the meat of a shelamim in Yerushalayim. Distinct from the chagigah: the chagigah is a fixed minimal obligation, while the shalmei simcha scales to financial means and the size of one's household. Both are required; neither fulfills the other.",description_he:"מצוות שמחה מן התורה בשלושת הרגלים — אכילת בשר שלמים בירושלים.",description_es:"La obligación de la Torá de simchá en las tres festividades — comer carne de shelamim en Yerushalayim.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
-  {id:"todah",   group:"Individual Offerings",hebrew:"תּוֹדָה",name:"Korban Todah - Thanksgiving",subtitle:"Animal + 40 loaves",description:"After surviving danger. Ram + 40 loaves (20 issaron flour + oil).",description_he:"לאחר ניצול מסכנה. איל + 40 ככרות לחם (20 עשרון קמח + שמן).",description_es:"Tras sobrevivir un peligro. Carnero + 40 panes (20 isarón de harina + aceite).",components:[{label:"1 ram (todah) with nesachim",key:"ram_olah",count:1},{label:"40 loaves (~20 issaron flour)",key:"issaron_flour",count:20},{label:"Oil for loaves (~2 log)",key:"log_oil",count:2}]},
-  {id:"chagigah", group:"Individual Offerings",hebrew:"חֲגִיגָה",name:"Chagigah - Festival Peace Offering",subtitle:"Obligatory on the three pilgrimage festivals",description:"Every adult male at the Temple on each regel brings a shelamim-type offering.",description_he:"כל זכר בוגר במקדש בכל רגל מביא שלמים.",description_es:"Todo varón adulto en el Templo en cada festividad trae una ofrenda de tipo shelamim.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}]},
-  {id:"reiyah",   group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה",name:"Olas Re'iyah - Appearance Offering",subtitle:"Obligatory olah on each of the 3 regalim",description:"On each regel, every adult male brings a wholly-consumed olah.",description_he:"בכל רגל, כל זכר בוגר מביא עולה כליל.",description_es:"En cada festividad, todo varón adulto trae una olá completa.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}]},
-  {id:"reiyah_ram",group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה - אַיִל",name:"Olas Re'iyah - Ram (Wealthy)",subtitle:"Premium olas re'iyah for the wealthy",description:"A ram as the olas re'iyah, as brought by those of means.",description_he:"איל כעולת ראייה, כפי שמביאים בעלי אמצעים.",description_es:"Un carnero como olas re'iyah, como traen los de medios.",components:[{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1}]},
-  {id:"chagigah_bull",group:"Individual Offerings",hebrew:"חֲגִיגָה - פַּר",name:"Chagigah - Bull (Wealthy)",subtitle:"Premium chagigah for the wealthy",description:"A bull as the chagigah, as brought by those of means.",description_he:"שור כחגיגה, כפי שמביאים בעלי אמצעים.",description_es:"Un novillo como chagigah, como traen los de medios.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1}]},
-  {id:"yoledet", group:"Individual Offerings",hebrew:"יוֹלֶדֶת",name:"Yoledet - After Childbirth",subtitle:"Purification offering of a new mother",description:"A yearling male lamb as olah + a bird as chatas, after the days of purification.",description_he:"כבש זכר בן שנה כעולה + עוף כחטאת, לאחר ימי טהרה.",description_es:"Un cordero macho de un año como olá + un ave como chatat, tras los días de purificación.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 bird (chatas)",key:"bird",count:1}]},
-  {id:"nazir", sefaria:"https://www.sefaria.org/Numbers.6.13",group:"Individual Offerings",hebrew:"נָזִיר",name:"Korbanos Nazir - End of Nazirite Vow",subtitle:"At the completion of the vow",source:"Bamidbar 6:13-20",description:"1 male lamb (olah), 1 ewe-lamb (chatas), 1 ram (shelamim), basket of matzos.",description_he:"כבש זכר 1 (עולה), כבשה 1 (חטאת), איל 1 (שלמים), סל מצות.",description_es:"1 cordero macho (olá), 1 cordera (chatat), 1 carnero (shelamim), canasta de matzot.",components:[{label:"1 male lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 ewe-lamb (chatas)",key:"lamb",count:1},{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1},{label:"Basket of matzos (~6 issaron)",key:"issaron_flour",count:6},{label:"Oil (~2 log)",key:"log_oil",count:2}]},
+  {id:"tamid",korbanType:"olah",fixedTiming:true,nesachim_en:"1 issaron flour · ¼ hin oil (3 log) · ¼ hin wine (3 log)",nesachim_he:"1 עשרון קמח · ¼ הין שמן · ¼ הין יין",communal:true,obligatory:true,kkk:true,semichah:false, group:"Daily & Weekly",hebrew:"תָּמִיד",name:"Korban Tamid",subtitle:"The twice-daily continual offering",description:"Two yearling male lambs as olah each day with libations and wood. Ketores and menorah oil are listed separately in the communal budget.",description_he:"שני כבשים זכרים בני שנה כעולה מדי יום עם נסכים ועצים. קטורת ושמן מנורה רשומים כסעיפי ציבור נפרדים.",description_es:"Dos corderos machos de un año como olá cada día con libaciones y leña. El ketores y el aceite de menorá se listan como partidas comunitarias separadas.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Altar wood",key:"wood",count:1}],slaughter:"Courtyard North (צפון)",blood:"Throwing — NE & SW corners, lower (זריקה מן המזרק)",kohen_gets:"Hides (עורות)",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"The Tamid is the first and last korban of every day. All other offerings are bracketed between these two lambs. Only exception: Korban Pesach, offered after the afternoon Tamid."},
+  {id:"ketores_daily",korbanType:"other",fixedTiming:true,communal:true,obligatory:true,kkk:true,semichah:false, group:"Daily & Weekly",hebrew:"קְטֹרֶת",name:"Ketores - Daily Incense",subtitle:"Morning and afternoon incense offering",description:"The 11-spice incense offered twice daily on the golden altar. One of the most expensive communal obligations. Per Kerisos 6a the annual batch is 368 maneh (~184kg): stacte, onycha, galbanum, and frankincense (70 maneh each); myrrh, cassia, spikenard, and saffron (16 maneh each); costus (12 maneh), aromatic bark (3 maneh), cinnamon (9 maneh). Saffron alone — at ~NIS 50/gram wholesale — accounts for over half the total cost. Price reflects a composite calculation across all 11 spices at Jerusalem wholesale rates; annual total ~NIS 782,000 ÷ 730 offerings.",description_he:"הקטורת בת 11 הסממנים המוקטרת פעמיים ביום על המזבח הזהב. אחת מחובות הציבור היקרות ביותר — סך שנתי מרשים.",description_es:"El incienso de 11 especias ofrecido dos veces al día sobre el altar de oro. Una de las obligaciones comunitarias más costosas — total anual impresionante.",components:[{label:"11-spice blend (full offering)",key:"ketores",count:1}],slaughter:"N/A — incense offering",blood:"N/A",kohen_gets:"None",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"Offered on the golden inner altar (not the outer altar). The Kohen entered alone. The smoke and fragrance filled the Heichal."},
+  {id:"menorah_oil",korbanType:"other",fixedTiming:true,communal:true,obligatory:true,kkk:true,semichah:false, group:"Daily & Weekly",hebrew:"שֶׁמֶן הַמְּנוֹרָה",name:"Menorah Oil",subtitle:"Pure olive oil for the golden menorah",description:"Pure beaten olive oil lit each evening (and replenished each morning) in the seven-branched golden menorah. The Talmud (Menachos 89a) records the precise amount used. Approximately half a log per lamp per day for the six outer lamps; the western lamp burned continuously. Total daily consumption approximately 3.5 log of first-pressing olive oil.",description_he:"שמן זית זך כתית הנדלק בכל ערב (ומחודש בכל בוקר) במנורה הזהב בת שבעת הקנים. כמות מדויקת לפי הרמב\"ם.",description_es:"Aceite de oliva puro batido encendido cada tarde (y repuesto cada mañana) en la menorá de oro de siete brazos. Cantidad exacta según el Rambam.",components:[{label:"Olive oil (3.5 log daily)",key:"log_oil",count:3.5}],slaughter:"N/A — incense offering",blood:"N/A",kohen_gets:"None",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"Pure beaten first-pressing olive oil only. The western lamp was kept burning continuously (Ner HaMaaravi). The Kohen cleaned and replenished the lamps each morning and afternoon."},
+  {id:"shabbat",korbanType:"olah",fixedTiming:true,nesachim_en:"1 issaron flour · ¼ hin oil (3 log) · ¼ hin wine (3 log)",nesachim_he:"1 עשרון קמח · ¼ הין שמן · ¼ הין יין",communal:true,obligatory:true,kkk:true,semichah:false, group:"Daily & Weekly",hebrew:"מוּסַף שַׁבָּת",name:"Mussaf Shabbos",subtitle:"Additional offering for the Sabbath",description:"Two yearling male lambs as olah with nesachim, plus lechem hapanim.",description_he:"שני כבשים זכרים בני שנה כעולה עם נסכים, בנוסף ללחם הפנים.",description_es:"Dos corderos machos de un año como olá con libaciones, más lechem hapanim.",components:[{label:"2 lambs (olah) with nesachim",key:"lamb_olah",count:2},{label:"Lechem hapanim (24 issaron)",key:"issaron_flour",count:24}],slaughter:"Courtyard North (צפון)",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides (עורות)",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"Offered in addition to the two daily Tamid lambs. The Lechem HaPanim (Showbread) was placed on the golden table on Shabbos and the previous week\'s loaves removed."},
+  {id:"rosh_chodesh",korbanType:"mixed",fixedTiming:true,nesachim_en:"Varies by animal (see component breakdown below)",nesachim_he:"משתנה לפי הבהמה",communal:true,obligatory:true,kkk:true,semichah:false, group:"Daily & Weekly",hebrew:"רֹאשׁ חֹדֶשׁ",name:"Mussaf Rosh Chodesh",subtitle:"Additional offering for the new month",description:"Two bulls, one ram, seven lambs as olah with nesachim, plus one goat as chatas.",description_he:"שני פרים, איל אחד, שבעה כבשים כעולה עם נסכים, בנוסף לשעיר אחד כחטאת.",description_es:"Dos novillos, un carnero, siete corderos como olá con libaciones, más un macho cabrío como chatat.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],slaughter:"Courtyard North (צפון)",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides (עורות)",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"2 bulls, 1 ram, 7 lambs as olah; 1 goat as chatas. The goat\'s blood is daubed on the horns of the outer altar — 4 applications."},
+  {id:"pesach",korbanType:"shelamim",fixedTiming:true,communal:false,obligatory:true,kkk:false,semichah:false, group:"Pilgrimage Festivals",hebrew:"פֶּסַח",name:"Korban Pesach",subtitle:"Paschal offering (14 Nisan)",description:"A yearling lamb or kid, roasted whole, eaten by a registered group on the night of the 15th.",description_he:"כבש או גדי בן שנה, צלוי שלם, הנאכל על ידי חבורה רשומה בליל ט\"ו.",description_es:"Un cordero o cabrito de un año, asado entero, comido por un grupo registrado en la noche del 15.",components:[{label:"1 lamb (pesach)",key:"lamb",count:1}],slaughter:"Anywhere in the Courtyard (חצר — כל מקום)",blood:"Pouring — 1 application at the base, any of 3 corners (שפיכה)",kohen_gets:"None",owner_gets:"Remaining meat (registered participants only) + hides",proc_eaten:"Night of slaughter only",proc_where:"Within Yerushalayim",proc_note:"Unique: slaughter is permitted anywhere in the courtyard, not restricted to the north. Kodshei Kalim despite being obligatory. Only registered participants may eat."},
+  {id:"chagigah_14",korbanType:"shelamim",fixedTiming:false,communal:false,obligatory:false,kkk:false,semichah:true, group:"Pilgrimage Festivals",hebrew:"חֲגִיגַת י\"ד",name:"Chagigat 14 Nisan",subtitle:"The supplementary festive offering on Erev Pesach",description:"When 14 Nisan falls on a weekday, a shelamim is brought alongside the Korban Pesach to supplement the seder meal, ensuring there is additional meat so that the Korban Pesach is eaten al hasova (on satiety) rather than out of hunger. Brought only on 14 Nisan, unlike the standard chagigah which is brought on the first day of the regel. Eaten on the night of the 15th before the Pesach itself.",description_he:"כאשר י\"ד ניסן חל בחול, מוביאים שלמים לצד קרבן פסח להשלים האכילה עד לשובע. ראו גם: חגיגת י\"ד ניסן בחשבון השנתי.",description_es:"Cuando el 14 de Nisán cae en día de semana, se trae un shelamim junto al Korban Pesaj para complementar la comida hasta la saciedad. Ver también: Chagigat 14 Nisán en la cuenta anual.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}],slaughter:"Anywhere in the Courtyard",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Breast + right thigh",owner_gets:"Remaining meat",proc_eaten:"Two days and the night between",proc_where:"Yerushalayim",proc_note:"Brought alongside the Korban Pesach on 14 Nisan to ensure the seder is eaten al hasova. Not brought when 14 Nisan falls on Shabbos."},
+  {id:"pesach_mussaf_day",korbanType:"olah",fixedTiming:true,nesachim_en:"Varies by animal (see component breakdown below)",nesachim_he:"משתנה לפי הבהמה",communal:true,obligatory:true,kkk:true,semichah:false, group:"Pilgrimage Festivals",hebrew:"מוּסַף פֶּסַח",name:"Mussaf of Pesach - one day",subtitle:"Per day, for each of the 7 days",description:"2 bulls, 1 ram, 7 lambs as olah with nesachim, and 1 goat as chatas.",description_he:"2 פרים, איל 1, 7 כבשים כעולה עם נסכים, ושעיר 1 כחטאת.",description_es:"2 novillos, 1 carnero, 7 corderos como olá con libaciones, y 1 macho cabrío como chatat.",components:[{label:"2 bulls (olah) with nesachim",key:"bull_olah",count:2},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],slaughter:"Courtyard North",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"2 bulls, 1 ram, 7 lambs as olah with nesachim; 1 goat as chatas. Brought on each of the 7 days of Pesach."},
+  {id:"omer",korbanType:"olah",fixedTiming:true,nesachim_en:"1 issaron flour · ¼ hin oil (3 log) · ¼ hin wine (3 log)",nesachim_he:"1 עשרון קמח · ¼ הין שמן · ¼ הין יין",communal:true,obligatory:true,kkk:true,semichah:false, group:"Pilgrimage Festivals",hebrew:"עֹמֶר",name:"Korban HaOmer",subtitle:"Barley wave-offering (16 Nisan)",description:"One issaron of barley flour with a yearling male lamb as olah and its libation.",description_he:"עשרון אחד קמח שעורים עם כבש זכר בן שנה כעולה ונסכיו.",description_es:"Un isarón de harina de cebada con un cordero macho de un año como olá y sus libaciones.",components:[{label:"1 issaron barley flour",key:"issaron_flour",count:1},{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}],slaughter:"Courtyard North",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"One issaron of barley flour waved before the altar. The lamb olah accompanies the wave offering. New grain is forbidden until after the Omer is brought."},
+  {id:"shavuot",korbanType:"mixed",fixedTiming:true,nesachim_en:"Varies by animal (see component breakdown below)",nesachim_he:"משתנה לפי הבהמה",communal:true,obligatory:true,kkk:true,semichah:false, group:"Pilgrimage Festivals",hebrew:"שָׁבֻעוֹת",name:"Shavuos - Full Day",subtitle:"Including the Two Loaves and peace offerings",description:"Shtei HaLechem with 2 lambs as shelamim, plus full mussaf and chatas.",description_he:"שתי הלחם עם 2 כבשים כשלמים, בנוסף למוסף שלם וחטאת.",description_es:"Shtei HaLechem con 2 corderos como shelamim, más mussaf completo y chatat.",components:[{label:"Shtei HaLechem (4 issaron)",key:"issaron_flour",count:4},{label:"2 lambs (shelamim)",key:"lamb_olah",count:2},{label:"Mussaf: 7 lambs",key:"lamb_olah",count:7},{label:"Mussaf: 1 bull",key:"bull_olah",count:1},{label:"Mussaf: 2 rams",key:"ram_olah",count:2},{label:"Bamidbar 28: 2 bulls",key:"bull_olah",count:2},{label:"Bamidbar 28: 1 ram",key:"ram_olah",count:1},{label:"Bamidbar 28: 7 lambs",key:"lamb_olah",count:7},{label:"2 goats (chatas)",key:"goat",count:2}],slaughter:"Courtyard North",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides + Shtei HaLechem",owner_gets:"None",proc_eaten:"Day and following night",proc_where:"Courtyard (Shtei HaLechem)",proc_note:"The 2 wheat loaves (Shtei HaLechem) are the only chametz ever brought on the mizbeach. They are waved alive before slaughter and again after. The 2 accompanying lambs are Kodshei Kodashim — unusual for shelamim."},
+  {id:"rosh_hashanah",korbanType:"mixed",fixedTiming:true,nesachim_en:"Varies by animal (see component breakdown below)",nesachim_he:"משתנה לפי הבהמה",communal:true,obligatory:true,kkk:true,semichah:false, group:"Pilgrimage Festivals",hebrew:"רֹאשׁ הַשָּׁנָה",name:"Mussaf Rosh Hashana",subtitle:"New Year additional offering",description:"1 bull, 1 ram, 7 lambs as olah with nesachim, plus 1 goat as chatas.",description_he:"פר 1, איל 1, 7 כבשים כעולה עם נסכים, ושעיר 1 כחטאת.",description_es:"1 novillo, 1 carnero, 7 corderos como olá con libaciones, más 1 macho cabrío como chatat.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],slaughter:"Courtyard North",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"1 bull, 1 ram, 7 lambs as olah; 1 goat as chatas. Plus the daily Tamid and, if Shabbos, the Shabbos mussaf."},
+  {id:"yom_kippur",korbanType:"mixed",fixedTiming:true,nesachim_en:"Varies by animal (see component breakdown below)",nesachim_he:"משתנה לפי הבהמה",communal:true,obligatory:true,kkk:true,semichah:false, group:"Pilgrimage Festivals",hebrew:"יוֹם הַכִּפּוּרִים",name:"Yom Kippur - Full Service",subtitle:"The avodah of the Kohen Gadol",description:"The high priest's personal bull, two goats, two rams, and communal mussaf.",description_he:"פרו של הכהן הגדול, שני שעירים, שני אילים, ומוסף ציבור.",description_es:"El novillo personal del Kohen Gadol, dos machos cabríos, dos carneros, y mussaf comunitario.",components:[{label:"Kohen Gadol's bull (chatas)",key:"bull",count:1},{label:"2 goats (chatas + Azazel)",key:"goat",count:2},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"Mussaf: 1 bull",key:"bull_olah",count:1},{label:"Mussaf: 1 ram",key:"ram_olah",count:1},{label:"Mussaf: 7 lambs",key:"lamb_olah",count:7},{label:"Mussaf goat (chatas)",key:"goat",count:1},{label:"Ketores",key:"frankincense",count:4}],slaughter:"Courtyard North",blood:"Sprinkling (הזאה) — 27 applications total: 8 between staves of Aron, 8 on inner curtain; after mixing bull and goat blood: 4 corners + 7 on top of inner altar",kohen_gets:"None",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"The Kohen Gadol\'s bull and the communal goat blood are mixed before the additional applications. The second goat (Azazel) is sent to the wilderness. Remainder burned outside the city in Beis HaDeshen."},
+  {id:"sukkot_day1",korbanType:"mixed",fixedTiming:true,nesachim_en:"Varies by animal (see component breakdown below)",nesachim_he:"משתנה לפי הבהמה",communal:true,obligatory:true,kkk:true,semichah:false,group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - יוֹם א",name:"Sukkos - Day 1",subtitle:"Largest animal offering of the year",description:"13 bulls, 2 rams, 14 lambs as olah with nesachim, plus 1 goat as chatas.",description_he:"13 פרים, 2 אילים, 14 כבשים כעולה עם נסכים, ושעיר 1 כחטאת.",description_es:"13 novillos, 2 carneros, 14 corderos como olá con libaciones, más 1 macho cabrío como chatat.",components:[{label:"13 bulls (olah) with nesachim",key:"bull_olah",count:13},{label:"2 rams (olah) with nesachim",key:"ram_olah",count:2},{label:"14 lambs (olah) with nesachim",key:"lamb_olah",count:14},{label:"1 goat (chatas)",key:"goat",count:1}],slaughter:"Courtyard North",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"Day 1: 13 bulls, 2 rams, 14 lambs as olah; 1 goat as chatas. Bulls decrease by one each day — representing the 70 nations of the world."},
+  {id:"sukkot_all",korbanType:"mixed",fixedTiming:true,nesachim_en:"Varies by animal (see component breakdown below)",nesachim_he:"משתנה לפי הבהמה",communal:true,obligatory:true,kkk:true,semichah:false, group:"Pilgrimage Festivals",hebrew:"סֻכּוֹת - כָּל הַיָּמִים",name:"Sukkos - All 7 Days",subtitle:"70 bulls total, representing 70 nations",description:"Seven days: 70 bulls, 14 rams, 98 lambs as olah, plus 7 goats as chatas.",description_he:"שבעה ימים: 70 פרים, 14 אילים, 98 כבשים כעולה, ו-7 שעירים כחטאת.",description_es:"Siete días: 70 novillos, 14 carneros, 98 corderos como olá, más 7 machos cabríos como chatat.",components:[{label:"70 bulls (olah) with nesachim",key:"bull_olah",count:70},{label:"14 rams (olah) with nesachim",key:"ram_olah",count:14},{label:"98 lambs (olah) with nesachim",key:"lamb_olah",count:98},{label:"7 goats (chatas)",key:"goat",count:7}],slaughter:"Courtyard North",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"Over 7 days: 70 bulls total (13+12+11+10+9+8+7), 14 rams, 98 lambs as olah; 7 goats as chatas. The 70 bulls correspond to the 70 nations — the Mikdash interceded for all humanity."},
+  {id:"shemini_atzeret",korbanType:"mixed",fixedTiming:true,nesachim_en:"Varies by animal (see component breakdown below)",nesachim_he:"משתנה לפי הבהמה",communal:true,obligatory:true,kkk:true,semichah:false, group:"Pilgrimage Festivals",hebrew:"שְׁמִינִי עֲצֶרֶת",name:"Shemini Atzeres",subtitle:"The eighth-day assembly",description:"1 bull, 1 ram, 7 lambs as olah with nesachim + 1 goat as chatas.",description_he:"פר 1, איל 1, 7 כבשים כעולה עם נסכים, ושעיר 1 כחטאת.",description_es:"1 novillo, 1 carnero, 7 corderos como olá con libaciones + 1 macho cabrío como chatat.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1},{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1},{label:"7 lambs (olah) with nesachim",key:"lamb_olah",count:7},{label:"1 goat (chatas)",key:"goat",count:1}],slaughter:"Courtyard North",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"1 bull, 1 ram, 7 lambs as olah; 1 goat as chatas. A modest intimate offering after the abundance of Sukkos — described as a private gathering between Hashem and Yisroel."},
+  {id:"chatat_individual",korbanType:"chatas",fixedTiming:false,communal:false,obligatory:true,kkk:true,semichah:true, group:"Individual Offerings",hebrew:"חַטָּאת יָחִיד",name:"Chatas - Individual Sin Offering",subtitle:"For inadvertent transgression of a kareis prohibition",description:"An individual who inadvertently violated a kareis prohibition brings a female goat as chatas.",description_he:"יחיד שעבר בשגגה על איסור כרת מביא שעירת עיזים כחטאת.",description_es:"Un individuo que violó inadvertidamente una prohibición de karet trae una cabra hembra como chatat.",components:[{label:"1 female lamb or kid (chatas)",key:"ewe",count:1}],slaughter:"Courtyard North (צפון)",blood:"Daubing on horns of outer altar — 4 applications (טובל אצבעו)",kohen_gets:"Remaining meat + hides",owner_gets:"None",proc_eaten:"Day and following night",proc_where:"Within the Azarah",proc_note:"Always a female animal for individual sins. Triggered when the violation becomes known (v\'noda eilav). The outer chatas meat is eaten by kohanim in the Azarah."},
+  {id:"asham",korbanType:"asham",fixedTiming:false,communal:false,obligatory:true,kkk:true,semichah:true,group:"Individual Offerings",hebrew:"אָשָׁם",name:"Asham - Guilt Offering",subtitle:"Ram for misappropriation or doubt",description:"For misusing sanctified property, certain oaths, or doubt cases: a male ram with nesachim.",description_he:"על מעילה בהקדש, שבועות מסוימות, או מקרי ספק: איל זכר עם נסכים.",description_es:"Por mal uso de propiedad sagrada, ciertos juramentos, o casos de duda: un carnero macho con libaciones.",components:[{label:"1 ram (asham) with nesachim",key:"ram_olah",count:1}],slaughter:"Courtyard North (צפון)",blood:"Throwing — NE & SW corners, lower (זריקה)",kohen_gets:"Remaining meat + hides",owner_gets:"None",proc_eaten:"Day and following night",proc_where:"Within the Azarah",proc_note:"Always a ram — never a bull or goat. The only korban brought exclusively by individuals; no communal asham exists. For asham taluy: if the sin is later confirmed, a full chatas must still be brought."},
+  {id:"olah_animal",korbanType:"olah",fixedTiming:false,nesachim_en:"1 issaron flour · ¼ hin oil (3 log) · ¼ hin wine (3 log)",nesachim_he:"1 עשרון קמח · ¼ הין שמן · ¼ הין יין",communal:false,obligatory:false,kkk:true,semichah:true, group:"Individual Offerings",hebrew:"עוֹלָה",name:"Olah - Voluntary Burnt Offering",subtitle:"Wholly consumed on the altar",description:"A voluntary ascent-offering. One male lamb with its libation.",description_he:"עולת נדבה. כבש זכר אחד ונסכיו.",description_es:"Ofrenda de ascenso voluntaria. Un cordero macho con sus libaciones.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}],slaughter:"Courtyard North (צפון)",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides only (עורות)",owner_gets:"None",proc_eaten:"Not eaten — entirely consumed",proc_where:"Not eaten — entirely consumed",proc_note:"The hide alone goes to the Kohen — significant value at today\'s leather prices. Everything else is consumed on the altar. No portion returns to the owner."},
+  {id:"olah_bird",korbanType:"olah",fixedTiming:false,communal:false,obligatory:false,kkk:true,semichah:false,group:"Individual Offerings",hebrew:"עוֹלַת הָעוֹף",name:"Olah of the Poor - Bird",subtitle:"For one unable to afford an animal",description:"A turtledove or young pigeon as olah. No nesachim.",description_he:"תור או בן יונה כעולה. ללא נסכים.",description_es:"Una tórtola o palomino joven como olá. Sin libaciones.",components:[{label:"1 bird (olah)",key:"bird",count:1}],slaughter:"Near SE corner of altar — milikah (נטילת ראש) separating the head",blood:"Squeezed from head and body separately on the altar wall, above the red line",kohen_gets:"None",owner_gets:"None",proc_eaten:"Not eaten — entirely consumed",proc_where:"Not eaten — entirely consumed",proc_note:"The bird olah uses milikah (nipping the neck) rather than shechitah. The crop, feathers, and intestines are removed before burning. No nesachim."},
+  {id:"shelamim",korbanType:"shelamim",fixedTiming:false,nesachim_en:"2 issaron flour · ⅓ hin oil (4 log) · ⅓ hin wine (4 log)",nesachim_he:"2 עשרון קמח · ⅓ הין שמן · ⅓ הין יין",communal:false,obligatory:false,kkk:false,semichah:true, group:"Individual Offerings",hebrew:"שְׁלָמִים",name:"Shelamim - Peace Offering",subtitle:"Eaten by owner, priest, and altar",description:"A voluntary peace-offering. One mature ram with libation.",description_he:"קרבן שלמים מרצון. איל בוגר אחד עם נסך.",description_es:"Ofrenda de paz voluntaria. Un carnero maduro con libación.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}],slaughter:"Anywhere in the Courtyard (חצר)",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Breast (חזה) + right thigh (שוק ימין)",owner_gets:"All remaining meat",proc_eaten:"Two days and the night between",proc_where:"Within Yerushalayim",proc_note:"The only korban where the owner shares a substantial meal. The chest and right thigh are waved (tenufah) and given to the Kohen; everything else is the owner\'s to eat in Yerushalayim."},
+  {id:"shalmei_simcha",korbanType:"shelamim",fixedTiming:false,nesachim_en:"2 issaron flour · ⅓ hin oil (4 log) · ⅓ hin wine (4 log)",nesachim_he:"2 עשרון קמח · ⅓ הין שמן · ⅓ הין יין",communal:false,obligatory:true,kkk:false,semichah:true,   group:"Individual Offerings",hebrew:"שַׁלְמֵי שִׂמְחָה",name:"Shalmei Simcha - Festive Peace Offering",subtitle:"Obligatory joy-offering on the three festivals",description:"The Torah obligation of simcha on the three regalim — eating the meat of a shelamim in Yerushalayim. Distinct from the chagigah: the chagigah is a fixed minimal obligation, while the shalmei simcha scales to financial means and the size of one's household. Both are required; neither fulfills the other.",description_he:"מצוות שמחה מן התורה בשלושת הרגלים — אכילת בשר שלמים בירושלים.",description_es:"La obligación de la Torá de simchá en las tres festividades — comer carne de shelamim en Yerushalayim.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}],slaughter:"Anywhere in the Courtyard",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Breast + right thigh",owner_gets:"All remaining meat",proc_eaten:"Two days and the night between",proc_where:"Within Yerushalayim",proc_note:"The Torah obligation of simcha on the regalim — the mitzvah is specifically fulfilled through eating shelamim meat in Yerushalayim (Rambam Hilchos Yom Tov 6:17)."},
+  {id:"todah",korbanType:"shelamim",fixedTiming:false,nesachim_en:"2 issaron flour · ⅓ hin oil (4 log) · ⅓ hin wine (4 log)",nesachim_he:"2 עשרון קמח · ⅓ הין שמן · ⅓ הין יין",communal:false,obligatory:false,kkk:false,semichah:true,   group:"Individual Offerings",hebrew:"תּוֹדָה",name:"Korban Todah - Thanksgiving",subtitle:"Animal + 40 loaves",description:"After surviving danger. Ram + 40 loaves (20 issaron flour + oil).",description_he:"לאחר ניצול מסכנה. איל + 40 ככרות לחם (20 עשרון קמח + שמן).",description_es:"Tras sobrevivir un peligro. Carnero + 40 panes (20 isarón de harina + aceite).",components:[{label:"1 ram (todah) with nesachim",key:"ram_olah",count:1},{label:"40 loaves (~20 issaron flour)",key:"issaron_flour",count:20},{label:"Oil for loaves (~2 log)",key:"log_oil",count:2}],slaughter:"Anywhere in the Courtyard",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Breast + right thigh + one loaf from each of the 4 types",owner_gets:"Remaining meat + remaining loaves",proc_eaten:"Day and following night only (shorter window than regular shelamim)",proc_where:"Within Yerushalayim",proc_note:"40 loaves accompany the animal: 10 each of 4 types (chametz loaves, matzah loaves, oiled wafers, pan-fried matzos). The shortened eating window (one day + night vs. two days) is meant to create urgency — encouraging sharing."},
+  {id:"chagigah",korbanType:"shelamim",fixedTiming:false,nesachim_en:"2 issaron flour · ⅓ hin oil (4 log) · ⅓ hin wine (4 log)",nesachim_he:"2 עשרון קמח · ⅓ הין שמן · ⅓ הין יין",communal:false,obligatory:true,kkk:false,semichah:true, group:"Individual Offerings",hebrew:"חֲגִיגָה",name:"Chagigah - Festival Peace Offering",subtitle:"Obligatory on the three pilgrimage festivals",description:"Every adult male at the Temple on each regel brings a shelamim-type offering.",description_he:"כל זכר בוגר במקדש בכל רגל מביא שלמים.",description_es:"Todo varón adulto en el Templo en cada festividad trae una ofrenda de tipo shelamim.",components:[{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1}],slaughter:"Anywhere in the Courtyard",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Breast + right thigh",owner_gets:"Remaining meat",proc_eaten:"Two days and the night between",proc_where:"Within Yerushalayim",proc_note:"Kodshei Kalim — eaten throughout Yerushalayim, not restricted to the Azarah. The first day is the primary obligation; can be made up on any day of the regel."},
+  {id:"reiyah",korbanType:"olah",fixedTiming:false,nesachim_en:"1 issaron flour · ¼ hin oil (3 log) · ¼ hin wine (3 log)",nesachim_he:"1 עשרון קמח · ¼ הין שמן · ¼ הין יין",communal:false,obligatory:true,kkk:true,semichah:true,   group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה",name:"Olas Re'iyah - Appearance Offering",subtitle:"Obligatory olah on each of the 3 regalim",description:"On each regel, every adult male brings a wholly-consumed olah.",description_he:"בכל רגל, כל זכר בוגר מביא עולה כליל.",description_es:"En cada festividad, todo varón adulto trae una olá completa.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1}],slaughter:"Courtyard North (צפון)",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides only",owner_gets:"None",proc_eaten:"Not eaten — entirely consumed",proc_where:"Not eaten",proc_note:"Obligatory on each of the 3 regalim for every adult male. First day is the primary obligation with make-up days available. Semichah required. Animal grade scales by financial means."},
+  {id:"reiyah_ram",korbanType:"olah",fixedTiming:false,nesachim_en:"2 issaron flour · ⅓ hin oil (4 log) · ⅓ hin wine (4 log)",nesachim_he:"2 עשרון קמח · ⅓ הין שמן · ⅓ הין יין",communal:false,obligatory:true,kkk:true,semichah:true,group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה - אַיִל",name:"Olas Re'iyah - Ram (Wealthy)",subtitle:"Premium olas re'iyah for the wealthy",description:"A ram as the olas re'iyah, as brought by those of means.",description_he:"איל כעולת ראייה, כפי שמביאים בעלי אמצעים.",description_es:"Un carnero como olas re'iyah, como traen los de medios.",components:[{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1}],slaughter:"Courtyard North",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides only",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"Ram-grade olas re\'iyah brought by those of means. Same procedure as standard re\'iyah."},
+  {id:"chagigah_bull",korbanType:"shelamim",fixedTiming:false,nesachim_en:"3 issaron flour · ½ hin oil (6 log) · ½ hin wine (6 log)",nesachim_he:"3 עשרון קמח · ½ הין שמן · ½ הין יין",communal:false,obligatory:true,kkk:false,semichah:true,group:"Individual Offerings",hebrew:"חֲגִיגָה - פַּר",name:"Chagigah - Bull (Wealthy)",subtitle:"Premium chagigah for the wealthy",description:"A bull as the chagigah, as brought by those of means.",description_he:"שור כחגיגה, כפי שמביאים בעלי אמצעים.",description_es:"Un novillo como chagigah, como traen los de medios.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1}],slaughter:"Anywhere in the Courtyard",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Breast + right thigh",owner_gets:"Remaining meat",proc_eaten:"Two days and the night between",proc_where:"Within Yerushalayim",proc_note:"Bull-grade chagigah brought by the wealthy. The hide of a bull is significant economic value for the Kohen."},
+  {id:"yoledet",korbanType:"mixed",fixedTiming:false,communal:false,obligatory:true,kkk:true,semichah:false, group:"Individual Offerings",hebrew:"יוֹלֶדֶת",name:"Yoledet - After Childbirth",subtitle:"Purification offering of a new mother",description:"A yearling male lamb as olah + a bird as chatas, after the days of purification.",description_he:"כבש זכר בן שנה כעולה + עוף כחטאת, לאחר ימי טהרה.",description_es:"Un cordero macho de un año como olá + un ave como chatat, tras los días de purificación.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 bird (chatas)",key:"bird",count:1}],slaughter:"Courtyard North (olah) / Near SE corner (bird chatas)",blood:"Olah: throwing on corners; Bird: squeezed on wall",kohen_gets:"Hides (olah); remaining meat (bird chatas)",owner_gets:"None",proc_eaten:"Bird chatas: day and following night",proc_where:"Azarah",proc_note:"If she cannot afford a lamb, two birds replace the package (one olah, one chatas). One of the few korbanos with an explicit sliding-scale alternative in the Torah itself."},
+  {id:"nazir",korbanType:"mixed",fixedTiming:false,nesachim_en:"Varies by animal (see component breakdown below)",nesachim_he:"משתנה לפי הבהמה",communal:false,obligatory:false,kkk:false,semichah:true, sefaria:"https://www.sefaria.org/Numbers.6.13",group:"Individual Offerings",hebrew:"נָזִיר",name:"Korbanos Nazir - End of Nazirite Vow",subtitle:"At the completion of the vow",source:"Bamidbar 6:13-20",description:"1 male lamb (olah), 1 ewe-lamb (chatas), 1 ram (shelamim), basket of matzos.",description_he:"כבש זכר 1 (עולה), כבשה 1 (חטאת), איל 1 (שלמים), סל מצות.",description_es:"1 cordero macho (olá), 1 cordera (chatat), 1 carnero (shelamim), canasta de matzot.",components:[{label:"1 male lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 ewe-lamb (chatas)",key:"lamb",count:1},{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1},{label:"Basket of matzos (~6 issaron)",key:"issaron_flour",count:6},{label:"Oil (~2 log)",key:"log_oil",count:2}],slaughter:"North (olah + asham) / Anywhere (shelamim)",blood:"Olah/asham: throwing on corners; shelamim: throwing on corners",kohen_gets:"Asham: meat + hides; Shelamim: breast + thigh + cooked shoulder + waived loaves",owner_gets:"Remaining meat + remaining loaves",proc_eaten:"Day and following night",proc_where:"Within Yerushalayim",proc_note:"The juice of the shelamim is poured on the Nazir\'s head. The cut hair is placed under the fire of the shelamim\'s cooking pot. The cooked shoulder is a unique Kohen portion found only in the Nazir\'s shelamim."},
 ];
 const GROUPS = [{id:"Daily & Weekly",tkey:"grp_daily"},{id:"Pilgrimage Festivals",tkey:"grp_pilgrimage"},{id:"Individual Offerings",tkey:"grp_individual"}];
+
+const KORBAN_TYPES = {
+  olah:    {key:"olah",    name:"Olah",     name_he:"עוֹלָה",  holiness:"kkk", gender:"Male (זכר)",      semichah_req:false, altar:"Everything — entirely consumed",  kohen:"Hides only (עורות)",              owner:"None",                  eaten:"Not eaten",             where:"Not eaten",               purpose:"Pure elevation and devotion — entirely consumed on the altar. No trigger required.", purpose_he:"הקרבה ועליה גמורה — כולה למזבח. אינה מחייבת טריגר.", note:"The only korban where nothing goes to the owner. Represents total dedication.",       note_he:"הקרבן היחיד שכולו כליל למזבח. מבטאת מסירה מוחלטת."},
+  chatas:  {key:"chatas",  name:"Chatas",   name_he:"חַטָּאת", holiness:"kkk", gender:"Female (most)",    semichah_req:true,  altar:"Sacrificial portions (אימורים)",  kohen:"Remaining meat + hides",          owner:"None",                  eaten:"Day and following night", where:"Within the Azarah",       purpose:"Atonement for inadvertent violation of a kareis prohibition.",                      purpose_he:"כפרה על שגגת איסור כרת.",                              note:"Always female for individual sins. Inner chataot are burned outside — meat not eaten.", note_he:"חטאת יחיד תמיד נקבה. חטאות פנימיות נשרפות מחוץ למקדש."},
+  asham:   {key:"asham",   name:"Asham",    name_he:"אָשָׁם",  holiness:"kkk", gender:"Male (זכר)",      semichah_req:true,  altar:"Sacrificial portions (אימורים)",  kohen:"Remaining meat + hides",          owner:"None",                  eaten:"Day and following night", where:"Within the Azarah",       purpose:"Guilt offering: misuse of Temple property, false oath, or kareis doubt (asham taluy).", purpose_he:"קרבן על מעילה, שבועת הפקדון, או ספק בעבירת כרת.",   note:"Always an individual offering — no communal asham. Always a ram.",                    note_he:"קרבן יחיד בלבד. תמיד איל."},
+  shelamim:{key:"shelamim",name:"Shelamim", name_he:"שְׁלָמִים",holiness:"kk",  gender:"Either (זכר/נקבה)",semichah_req:true,  altar:"Sacrificial portions — chelev",   kohen:"Breast (חזה) + right thigh (שוק)",owner:"All remaining meat",  eaten:"Two days and the night",  where:"Within Yerushalayim",     purpose:"Peace and relationship — celebration, vow, or free-will gift.",                     purpose_he:"שלום וקשר — חגיגה, קיום נדר, או מנחת נדבה.",         note:"The only korban where the owner receives a substantial share — hence its association with simchah.", note_he:"הקרבן היחיד שהבעלים מקבלים חלק נכבד מהבשר — לכן קשור לשמחה."},
+  mixed:   {key:"mixed",   name:"Mixed",    name_he:"מורכב",   holiness:"",    gender:"Varies",          semichah_req:false, altar:"Varies by offering",              kohen:"Varies by offering",              owner:"Varies by offering",  eaten:"Varies",                  where:"Varies",                  purpose:"This occasion includes multiple korban types.",             purpose_he:"אירוע זה כולל סוגי קרבנות מרובים.",                   note:"", note_he:""},
+  other:   {key:"other",   name:"Other",    name_he:"אחר",     holiness:"",    gender:"—",               semichah_req:false, altar:"None",                             kohen:"None",                               owner:"None",                  eaten:"Not eaten",                       where:"Not eaten",                       purpose:"Special communal obligations.",                             purpose_he:"חובות ציבוריות מיוחדות.",                             note:"", note_he:""},
+};
+
 
 // ── Communal offerings (funded by chatzi shekel pool) ─────────────────────────
 const COMMUNAL_OFFERINGS = [
@@ -217,6 +230,7 @@ const TR = {
   tab_annual:    {en:"My Annual Bill",           he:"החשבון השנתי שלי",      es:"Mi Presupuesto Anual",       fr:"Mon Budget Annuel",          ru:"Мой Годовой Счёт"},
   tab_communal:  {en:"Annual Communal Budget",   he:"תקציב הציבור השנתי",    es:"Presupuesto Comunal Anual",  fr:"Budget Communautaire Annuel", ru:"Годовой Общественный Бюджет"},
   tab_today:     {en:"Today's Communal Costs",   he:"עלות הקרבנות היום",     es:"Costos Comunales de Hoy",    fr:"Coûts Communautaires Aujourd'hui", ru:"Сегодняшние Общественные Расходы"},
+  tab_scenarios: {en:"What Do I Bring?", he:"מה אני מביא?", es:"¿Qué traigo?", fr:"Que dois-je apporter?", ru:"Что принести?"},
   tab_catalog:   {en:"Full Catalog",             he:"קטלוג מלא",             es:"Catálogo Completo",          fr:"Catalogue Complet",          ru:"Полный Каталог"},
   tab_prices:    {en:"Prices & Sources",         he:"מחירים ומקורות",        es:"Precios y Fuentes",          fr:"Prix et Sources",             ru:"Цены и Источники"},
   strip_live:    {en:"Live:",    he:"מיקום:",      es:"En vivo:",   fr:"En direct:",  ru:"Онлайн:"},
@@ -358,6 +372,7 @@ const TR = {
   per_offering:  {en:"Per Offering",     he:"לקרבן",        es:"Por Ofrenda",         fr:"Par Offrande",        ru:"За Жертву"},
   details:       {en:"details",          he:"פרטים",        es:"detalles",            fr:"détails",             ru:"детали"},
   hide:          {en:"hide",             he:"הסתר",         es:"ocultar",             fr:"masquer",             ru:"скрыть"},
+  filter_by_type: {en:"Filter by type",he:"סנן לפי סוג",es:"Filtrar por tipo",fr:"Filtrer par type",ru:"Фильтр по типу"},
   clear:         {en:"CLEAR",            he:"נקה",           es:"LIMPIAR",             fr:"EFFACER",             ru:"ОЧИСТИТЬ"},
 
   // Prices tab
@@ -617,6 +632,7 @@ const CITE_LINKS = {
   "Shemos 27:20":      "https://www.sefaria.org/Exodus.27.20",
   "Shemos 30:7-8":     "https://www.sefaria.org/Exodus.30.7",
   "Shemos 12:6":       "https://www.sefaria.org/Exodus.12.6",
+  "Bamidbar 18:15-16": "https://www.sefaria.org/Numbers.18.15",
   "Pesachim 70a-71a":  "https://www.sefaria.org/Pesachim.70a",
   "Yoma 26b":          "https://www.sefaria.org/Yoma.26b",
   "Kerisos 6a":        "https://www.sefaria.org/Keritot.6a",
@@ -688,6 +704,179 @@ function renderWithLinks(text,withGlossary=false){
   return parts;
 }
 
+function KorbanPopover({catalogId, lang="en", fmtC, P, compCost}:{catalogId:string|null, lang:string, fmtC:(n:number)=>string, P:Record<string,number>, compCost:(key:string,count:number,P:Record<string,number>)=>number}) {
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<{top:number,left:number|string,right:number|string,fromBottom:boolean}>({top:0,left:0,right:"auto",fromBottom:false});
+  const ref = useRef<HTMLSpanElement>(null);
+  const entry = catalogId ? CATALOG.find((s:any)=>s.id===catalogId) : null;
+  if(!entry) return null;
+  const isHe = lang==="he";
+  const ktype = KORBAN_TYPES[entry.korbanType as keyof typeof KORBAN_TYPES];
+  const cost = entry.components ? entry.components.reduce((s:number,c:any)=>s+compCost(c.key,c.count,P),0) : 0;
+
+  const toggle = (e:React.MouseEvent) => {
+    e.stopPropagation();
+    if(!open && ref.current) {
+      const r = ref.current.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const spaceRight = vw - r.right;
+      const spaceBelow = vh - r.bottom;
+      setPos({
+        top: spaceBelow > 280 ? r.bottom + 4 : r.top - 4,
+        fromBottom: spaceBelow <= 280,
+        left: spaceRight > 310 ? r.left : "auto",
+        right: spaceRight <= 310 ? (vw - r.right) : "auto",
+      });
+    }
+    setOpen(o=>!o);
+  };
+
+  const hTag = ktype?.holiness==="kkk"
+    ? <span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 6px",background:"rgba(127,119,221,0.25)",color:"#afa9ec",border:"1px solid rgba(127,119,221,0.4)"}}>קדשי קדשים</span>
+    : ktype?.holiness==="kk"
+    ? <span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 6px",background:"rgba(212,83,126,0.25)",color:"#ed93b1",border:"1px solid rgba(212,83,126,0.4)"}}>קדשי קלים</span>
+    : null;
+
+  return (
+    <>
+      <span ref={ref} onClick={toggle} style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:14,height:14,borderRadius:"50%",background:"rgba(192,122,55,0.2)",border:"1px solid rgba(192,122,55,0.4)",color:"#c9a45a",fontSize:"0.65rem",fontWeight:700,cursor:"pointer",marginLeft:"0.3rem",verticalAlign:"middle",flexShrink:0,userSelect:"none"}} title="Halachic details">i</span>
+      {open&&(
+        <div style={{position:"fixed",inset:0,zIndex:998}} onClick={()=>setOpen(false)}>
+          <div style={{position:"fixed",top:pos.fromBottom?undefined:pos.top,bottom:pos.fromBottom?(window.innerHeight-pos.top+8):undefined,left:pos.left,right:pos.right,width:300,background:"#1a0c04",border:"1px solid #7a4f20",padding:"0.85rem",zIndex:999,boxShadow:"0 8px 24px rgba(0,0,0,0.6)"}} onClick={e=>e.stopPropagation()}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"0.5rem"}}>
+              <div>
+                <div style={{fontSize:"0.95rem",fontWeight:700,color:"#f0ddb0",fontFamily:"'Cinzel',serif"}}>{isHe?(entry.hebrew||entry.name):entry.name}</div>
+                <div style={{display:"flex",gap:"0.3rem",marginTop:"0.3rem",flexWrap:"wrap"}}>
+                  {hTag}
+                  {entry.communal&&<span style={{fontSize:"0.65rem",padding:"1px 5px",background:"rgba(29,158,117,0.2)",color:"#5dcaa5",border:"1px solid rgba(29,158,117,0.3)"}}>{isHe?"ציבור":"Communal"}</span>}
+                  {!entry.communal&&<span style={{fontSize:"0.65rem",padding:"1px 5px",background:"rgba(55,138,221,0.2)",color:"#85b7eb",border:"1px solid rgba(55,138,221,0.3)"}}>{isHe?"יחיד":"Individual"}</span>}
+                  {entry.obligatory&&<span style={{fontSize:"0.65rem",padding:"1px 5px",background:"rgba(186,117,23,0.2)",color:"#ef9f27",border:"1px solid rgba(186,117,23,0.3)"}}>{isHe?"חיוב":"Obligatory"}</span>}
+                  {!entry.obligatory&&<span style={{fontSize:"0.65rem",padding:"1px 5px",background:"rgba(136,135,128,0.2)",color:"#b4b2a9",border:"1px solid rgba(136,135,128,0.3)"}}>{isHe?"נדבה":"Voluntary"}</span>}
+                </div>
+              </div>
+              <button onClick={()=>setOpen(false)} style={{background:"transparent",border:"none",color:"#7a5030",cursor:"pointer",fontSize:"1rem",lineHeight:1,padding:"0 0 0 0.5rem"}}>×</button>
+            </div>
+            {ktype&&(
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"0.3rem",marginBottom:"0.6rem"}}>
+                {[{l:isHe?"מזבח":"Altar",v:ktype.altar,c:"rgba(127,119,221,0.15)",tc:"#afa9ec"},{l:isHe?"כהן":"Kohen",v:ktype.kohen,c:"rgba(29,158,117,0.15)",tc:"#5dcaa5"},{l:isHe?"בעלים":"Owner",v:ktype.owner==="—"?"—":ktype.owner,c:"rgba(186,117,23,0.15)",tc:"#ef9f27"}].map(d=>(
+                  <div key={d.l} style={{background:d.c,padding:"0.35rem 0.4rem",textAlign:"center"}}>
+                    <div style={{fontSize:"0.6rem",fontWeight:700,color:d.tc,letterSpacing:"0.04em",textTransform:"uppercase",marginBottom:"0.2rem"}}>{d.l}</div>
+                    <div style={{fontSize:"0.7rem",color:"#e8d4a0",lineHeight:1.3}}>{d.v}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {entry.slaughter&&entry.slaughter!=="—"&&(
+              <div style={{fontSize:"0.75rem",lineHeight:1.6,marginBottom:"0.5rem"}}>
+                {[["Slaughter",entry.slaughter],["Blood",entry.blood],["Eaten",entry.proc_eaten],["Where",entry.proc_where]].filter(([,v])=>v&&v!=="N/A").map(([k,v])=>(
+                  <div key={k} style={{display:"flex",gap:"0.5rem",borderBottom:"1px dotted #3a2010",padding:"0.15rem 0"}}>
+                    <span style={{color:"#8a6030",whiteSpace:"nowrap",minWidth:52,fontSize:"0.7rem"}}>{k}</span>
+                    <span style={{color:"#e8d4a0",fontSize:"0.72rem"}}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {entry.proc_note&&<div style={{fontSize:"0.82rem",color:"#e8d4a0",borderLeft:"2px solid #7a4f20",paddingLeft:"0.5rem",lineHeight:1.6,marginBottom:"0.5rem"}}>{entry.proc_note}</div>}
+
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+
+const SCENARIOS = [
+  {
+    key:"nazir",
+    title_en:"I completed a nezirus",
+    title_he:"סיימתי נזירות",
+    sub_en:"Upon completion of a nazirite vow",
+    sub_he:"בסיום נדר נזירות",
+    source:"Bamidbar 6:13-20",
+    items:[
+      {name_en:"Male lamb (olah)",name_he:"כבש זכר (עולה)",badge:"ob",catalogId:"olah_animal",price_key:"lamb_olah",count:1,note_en:"Slaughtered in the north; hides to the Kohen",note_he:"נשחט בצפון; עורות לכהן"},
+      {name_en:"Female lamb — ewe (chatat)",name_he:"כבשה (חטאת)",badge:"ob",catalogId:"chatat_individual",price_key:"ewe",count:1,note_en:"Slaughtered in the north; meat to the Kohen",note_he:"נשחטת בצפון; בשר לכהן"},
+      {name_en:"Ram (shelamim)",name_he:"איל (שלמים)",badge:"ob",catalogId:"shelamim",price_key:"ram_olah",count:1,note_en:"Eaten within Yerushalayim, day and night",note_he:"נאכל בירושלים, יום ולילה"},
+      {name_en:"Basket of matzot (10 loaves + 10 wafers + oil)",name_he:"סל מצות (10 חלות + 10 רקיקים + שמן)",badge:"ob",catalogId:null,price_key_custom:["issaron_flour","issaron_flour","issaron_flour","issaron_flour","issaron_flour","issaron_flour","log_oil","log_oil"],count:1,note_en:"One wafer from each type given to the Kohen",note_he:"רקיק אחד מכל סוג לכהן"},
+    ],
+    proc_en:"The juice of the shelamim is poured on the Nazir's head. The cut hair is then placed under the cooking fire of the shelamim. The cooked shoulder is a unique priestly portion found only here.",
+    proc_he:"רוטב השלמים נשפך על ראש הנזיר. השיער הגזוז מושלך תחת הדוד. הזרוע המבושלת היא חלק כהן ייחודי הנמצא רק כאן.",
+  },
+  {
+    key:"metzora",
+    title_en:"I am a metzora being purified",
+    title_he:"אני מצורע בטהרתו",
+    sub_en:"Upon completion of the purification process",
+    sub_he:"בסיום תהליך הטהרה",
+    source:"Vayikra 14:10-32",
+    items:[
+      {name_en:"Male lamb (asham) + log of oil",name_he:"כבש זכר (אשם) + לוג שמן",badge:"ob",catalogId:"asham",price_key:"lamb_olah",count:1,extra_key:"log_oil",extra_count:1,note_en:"Blood daubed on right ear, thumb, big toe. Log of oil waved alive.",note_he:"דם מוזה על אוזן ימין, אגודל יד, בוהן רגל. לוג שמן מונף חי."},
+      {name_en:"Female lamb — ewe (chatat)",name_he:"כבשה (חטאת)",badge:"ob",catalogId:"chatat_individual",price_key:"ewe",count:1,note_en:"Slaughtered in the north",note_he:"נשחטת בצפון"},
+      {name_en:"Male lamb (olah)",name_he:"כבש זכר (עולה)",badge:"ob",catalogId:"olah_animal",price_key:"lamb_olah",count:1,note_en:"Entirely consumed on the altar",note_he:"כולו כליל למזבח"},
+      {name_en:"Flour + oil + wine (nesachim)",name_he:"קמח + שמן + יין (נסכים)",badge:"ob",catalogId:null,price_key_custom:["issaron_flour","log_oil","log_wine","log_wine"],count:1,note_en:"Accompanies the olah",note_he:"מלווה את העולה"},
+    ],
+    proc_en:"The most elaborate purification ritual in korbanos. The oil application mirrors the blood exactly — right ear lobe, right thumb, right big toe. The metzora and log of oil are waved (tenufah) while the animal is still alive — unique in all of Kodashim.",
+    proc_he:"הטקס המפורט ביותר בקרבנות. מתן השמן מחקה את מתן הדם — אוזן ימין, אגודל יד, בוהן רגל. תנופת חי עם לוג השמן — ייחודית בכל הקודשים.",
+  },
+  {
+    key:"yoledet",
+    title_en:"I gave birth",
+    title_he:"ילדתי",
+    sub_en:"After the days of purification (33 or 66 days)",
+    sub_he:"לאחר ימי טהרה (33 או 66 יום)",
+    source:"Vayikra 12:6-8",
+    items:[
+      {name_en:"Male lamb, 1 year old (olah)",name_he:"כבש זכר בן שנה (עולה)",badge:"ob",catalogId:"olah_animal",price_key:"lamb_olah",count:1,note_en:"Slaughtered in the north; hides to the Kohen",note_he:"נשחט בצפון; עורות לכהן"},
+      {name_en:"Young bird (chatat)",name_he:"עוף (חטאת)",badge:"ob",catalogId:"chatat_individual",price_key:"bird",count:1,note_en:"Milikah near SE corner of altar, lower portion",note_he:"מליקה ליד קרן מזרח צפונית, מטה מן החוט"},
+    ],
+    proc_en:"One of the few korbanos with a built-in sliding scale: if she cannot afford a lamb, two birds replace the entire package. Every birth triggers this obligation.",
+    proc_he:"אחד מקרבנות מעטים עם סולם יורד: אם אינה יכולה להרשות לעצמה כבש, שתי צפרים מחליפות את כל הקרבן. כל לידה מחייבת.",
+  },
+  {
+    key:"pesach",
+    title_en:"I am attending Pesach",
+    title_he:"אני עולה לפסח",
+    sub_en:"14 Nisan in the Beis HaMikdash",
+    sub_he:"י''ד ניסן בבית המקדש",
+    source:"Shemos 12:3; Pesachim 70a",
+    items:[
+      {name_en:"Korban Pesach (lamb or kid)",name_he:"קרבן פסח (כבש או גדי)",badge:"ob",catalogId:"pesach",price_key:"lamb",count:1,note_en:"Slaughtered anywhere in the Courtyard; eaten by registered group only",note_he:"נשחט בכל מקום בעזרה; נאכל למנוייו בלבד"},
+      {name_en:"Chagigat 14 Nisan (shelamim)",name_he:"חגיגת י''ד ניסן (שלמים)",badge:"cond",catalogId:"chagigah_14",price_key:"ram_olah",count:1,note_en:"Only if needed to eat the Pesach al hasova — conditional",note_he:"רק אם נדרש לאכול את הפסח על השובע — מותנה"},
+    ],
+    proc_en:"The only korban brought after the afternoon Tamid. Slaughter is permitted anywhere in the Courtyard — not restricted to the north. Registered participants only may eat; the hide goes to whoever slaughtered it.",
+    proc_he:"הקרבן היחיד שמוקרב לאחר תמיד של בין הערביים. השחיטה מותרת בכל מקום בעזרה. רק המנוים אוכלים; העור לשוחט.",
+  },
+  {
+    key:"olah_reg",
+    title_en:"I want to bring a voluntary olah",
+    title_he:"אני רוצה להביא עולה נדבה",
+    sub_en:"Voluntary elevation offering — any time",
+    sub_he:"עולת נדבה — בכל עת",
+    source:"Vayikra 1:2-17",
+    items:[
+      {name_en:"Male animal of your choice (olah)",name_he:"זכר לבחירתך (עולה)",badge:"vol",catalogId:"olah_animal",price_key:"lamb_olah",count:1,note_en:"Lamb ($235), ram ($400), or bull ($1,500) — all valid",note_he:"כבש, איל, או פר — כולם כשרים"},
+    ],
+    proc_en:"Entirely consumed — nothing goes to the owner. The hide alone goes to the Kohen. No trigger required; purely an expression of devotion.",
+    proc_he:"כולה כליל — לבעלים אין כלום. רק העור לכהן. אין צורך בטריגר; ביטוי גמור של מסירות.",
+  },
+  {
+    key:"nazir_tamei",
+    title_en:"My nezirus was interrupted by tumah",
+    title_he:"נזירותי הופסקה על ידי טומאה",
+    sub_en:"Nazir who became impure — upon resumption",
+    sub_he:"נזיר שנטמא — בחידוש נזירותו",
+    source:"Bamidbar 6:10-12",
+    items:[
+      {name_en:"Bird chatat",name_he:"חטאת העוף",badge:"ob",catalogId:"chatat_individual",price_key:"bird",count:1,note_en:"Near SW corner — milikah without separation",note_he:"ליד קרן דרומית מערבית — מליקה ללא הבדלה"},
+      {name_en:"Bird olah",name_he:"עולת העוף",badge:"ob",catalogId:"olah_bird",price_key:"bird",count:1,note_en:"Near SE corner — milikah with separation",note_he:"ליד קרן דרומית מזרחית — מליקה עם הבדלה"},
+    ],
+    proc_en:"The entire prior period of nezirus is forfeited and must be restarted from the beginning. The birds atone for the interruption; the full package is brought only at the conclusion of the new vow.",
+    proc_he:"כל תקופת הנזירות הקודמת מתבטלת ויש להתחיל מחדש. הצפרים מכפרות על ההפסקה; הקרבן המלא מובא רק בסיום הנדר החדש.",
+  },
+];
+
 export default function korbanosCalculator() {
   const [activeTab,        setActiveTab]        = useState("annual");
   const [lang,             setLang]             = useState("en");
@@ -697,6 +886,8 @@ export default function korbanosCalculator() {
   const [counts,           setCounts]           = useState<Record<string,number>>({});
   const [expanded,         setExpanded]         = useState<Record<string,boolean>>({});
   const [activeGroup,      setActiveGroup]      = useState("Daily & Weekly");
+  const [catalogTypeFilter, setCatalogTypeFilter] = useState<string>("all");
+  const [activeScenario,    setActiveScenario]    = useState<string|null>(null);
   const [profileQtys,      setProfileQtys]      = useState(Object.fromEntries(ANNUAL_ASSUMPTIONS.map(a=>[a.id,a.defaultQty])));
   const [showRationale,    setShowRationale]    = useState<Record<string,boolean>>({});
   const [showExamples,     setShowExamples]     = useState<Record<string,boolean>>({});
@@ -931,7 +1122,8 @@ export default function korbanosCalculator() {
 
   const catalogTotal    = useMemo(()=>CATALOG.reduce((s,c)=>s+(counts[c.id]||0)*offeringTotal(c,P),0),[counts,P]);
   const catalogSelected = useMemo(()=>Object.values(counts).reduce<number>((a,b)=>a+(((b as unknown) as number)||0),0),[counts]);
-  const filtered        = CATALOG.filter(s=>s.group===activeGroup);
+  const filtered        = CATALOG.filter(s=>s.group===activeGroup&&(catalogTypeFilter==="all"||s.korbanType===catalogTypeFilter));
+  const typesInGroup    = [...new Set(CATALOG.filter(s=>s.group===activeGroup).map(s=>s.korbanType))];
 
   const lbl = {fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.1em",textTransform:"uppercase" as const,fontFamily:"'Cinzel',serif",marginBottom:"0.5rem"};
   const inp = {width:"100%",padding:"0.5rem",background:"#1a0c04",border:"1px solid #7a4f20",color:"#f0ddb0",textAlign:"center" as const,fontFamily:"inherit",fontSize:"1rem"};
@@ -948,8 +1140,13 @@ export default function korbanosCalculator() {
 
   const disclaimer=(
     <div style={{padding:"1.1rem 1.4rem",background:"rgba(139,0,0,.15)",border:"1px solid #aa3030",borderLeft:"4px solid #e04040",fontSize:"1rem",lineHeight:1.8,color:"#f0c0a0",marginTop:"1.5rem"}}>
-      <div style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.1em",color:"#e04040",marginBottom:"0.5rem",fontWeight:700}}>{T("disclaimer_title")}</div>
-      <strong style={{color:"#f0ddb0"}}>{T("disclaimer_body")}</strong>
+      <div style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.1em",color:"#e04040",marginBottom:"0.75rem",fontWeight:700}}>{T("disclaimer_title")}</div>
+      <div style={{marginBottom:"0.75rem",paddingBottom:"0.75rem",borderBottom:"1px solid rgba(170,48,48,0.4)"}}>
+        Halachic analysis authored by <a href="http://bit.ly/korbonos" target="_blank" rel="noopener noreferrer" style={{color:"#f0c060",textDecoration:"underline",textUnderlineOffset:"3px"}}>Naftoli Willner</a>, reviewed by R' Hillel Novetsky and Rabbi Yaakov Jaffe · לע"נ יהושע בן צבי ז"ל
+        <br/>
+        <span style={{fontStyle:"italic"}}>KorbanCalculator gratefully acknowledges the tremendous work and scholarship contributed by R' Willner to the halachic taxonomy and analysis throughout this site.</span>
+      </div>
+      {T("disclaimer_body")}
     </div>
   );
 
@@ -1025,7 +1222,7 @@ export default function korbanosCalculator() {
 
         {/* TABS */}
         <div style={{display:"flex",gap:"0.4rem",marginBottom:"1.5rem",flexWrap:"wrap"}}>
-          {TAB("annual",T("tab_annual"))}{TAB("communal",T("tab_communal"))}{TAB("today",T("tab_today"))}{TAB("catalog",T("tab_catalog"))}{TAB("prices",T("tab_prices"))}
+          {TAB("annual",T("tab_annual"))}{TAB("communal",T("tab_communal"))}{TAB("today",T("tab_today"))}{TAB("scenarios",T("tab_scenarios"))}{TAB("catalog",T("tab_catalog"))}{TAB("prices",T("tab_prices"))}
         </div>
 
         {/* SETTINGS STRIP */}
@@ -1305,7 +1502,7 @@ export default function korbanosCalculator() {
                       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem",flexWrap:"wrap"}}>
                         <div style={{flex:"1 1 260px"}}>
                           <div style={{display:"flex",alignItems:"baseline",gap:"0.6rem",flexWrap:"wrap"}}>
-                            <span style={{fontWeight:700,fontSize:"1.15rem",color:qty>0?"#f0ddb0":"#c0a870",fontFamily:isHe?"'Frank Ruhl Libre',serif":"inherit"}}>{isHe?(item.hebrew||item.label):item.label}</span>
+                            <span style={{fontWeight:700,fontSize:"1.15rem",color:qty>0?"#f0ddb0":"#c0a870",fontFamily:isHe?"'Frank Ruhl Libre',serif":"inherit"}}>{isHe?(item.hebrew||item.label):item.label}</span><KorbanPopover catalogId={item.catalogId||null} lang={lang} fmtC={fmtC} P={P} compCost={compCost}/>
                             {isRegalimLock&&catEntry&&<span style={{fontSize:"0.85rem",color:"#7a5030",fontStyle:"italic"}}>{catEntry.subtitle}</span>}
                           </div>
                           {isLife||isChatziFixed
@@ -1524,7 +1721,7 @@ export default function korbanosCalculator() {
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem",flexWrap:"wrap"}}>
                     <div style={{flex:"1 1 280px"}}>
                       <div style={{display:"flex",alignItems:"baseline",gap:"0.6rem",flexWrap:"wrap"}}>
-                        <span style={{fontWeight:700,fontSize:"1.1rem",color:"#f0ddb0"}}>{o.label}</span>
+                        <span style={{fontWeight:700,fontSize:"1.1rem",color:"#f0ddb0"}}>{o.label}</span><KorbanPopover catalogId={o.catalogId||null} lang={lang} fmtC={fmtC} P={P} compCost={compCost}/>
                         <span className="hf" style={{color:"#f0c060",fontSize:"1.25rem"}}>{o.hebrew}</span>
                         {o.count>1&&<span style={{fontSize:"0.85rem",color:"#7a5030",fontStyle:"italic"}}>x{o.count}</span>}
                       </div>
@@ -1838,7 +2035,7 @@ export default function korbanosCalculator() {
                     <div><div style={{fontSize:"20px",fontWeight:700,fontFamily:"'Cinzel',serif"}}>KORBANOS CALCULATOR</div><div style={{fontSize:"13px",color:"#555"}}>Today's Communal Costs</div></div>
                     <div style={{textAlign:"right",fontSize:"12px",color:"#777"}}><div>{hebrewStr}</div><div>{gregDate}</div><div>Shiur: {shiur.labelShort}</div></div>
                   </div>
-                  {blocks.map((b,bi)=>(<div key={bi} style={{marginBottom:"1rem"}}><div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #ccc",paddingBottom:"0.2rem",marginBottom:"0.3rem"}}><strong style={{fontSize:"12px",fontFamily:"'Cinzel',serif"}}>{b.title}</strong><strong>{fmtC(bTotal(b))}</strong></div>{b.offerings.map((o,oi)=>(<div key={oi} style={{display:"flex",justifyContent:"space-between",padding:"0.1rem 0",color:"#444",fontSize:"13px"}}><span>{o.label}{o.count>1?" × "+o.count:""}</span><span>{fmtC(compCost(o.key,o.count,P))}</span></div>))}</div>))}
+                  {blocks.map((b,bi)=>(<div key={bi} style={{marginBottom:"1rem"}}><div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #ccc",paddingBottom:"0.2rem",marginBottom:"0.3rem"}}><strong style={{fontSize:"12px",fontFamily:"'Cinzel',serif"}}>{b.title}</strong><strong>{fmtC(bTotal(b))}</strong></div>{b.offerings.map((o,oi)=>(<div key={oi} style={{display:"flex",justifyContent:"space-between",padding:"0.1rem 0",color:"#444",fontSize:"13px"}}><span style={{display:"inline-flex",alignItems:"center"}}>{o.label}{o.count>1?" × "+o.count:""}<KorbanPopover catalogId={o.catalogId||null} lang={lang} fmtC={fmtC} P={P} compCost={compCost}/></span><span>{fmtC(compCost(o.key,o.count,P))}</span></div>))}</div>))}
                   <div style={{borderTop:"2px solid #111",paddingTop:"0.75rem",display:"flex",justifyContent:"space-between",fontSize:"17px",fontWeight:700,fontFamily:"'Cinzel',serif",marginBottom:"1rem"}}><span>Total</span><span>{fmtC(dayTotal)}</span></div>
                   <div style={{fontSize:"11px",color:"#888",borderTop:"1px solid #ddd",paddingTop:"0.6rem"}}>For educational purposes only. All prices are Jerusalem market rates.</div>
                   <div style={{display:"flex",gap:"0.75rem",marginTop:"1rem",justifyContent:"flex-end"}}>
@@ -1855,11 +2052,116 @@ export default function korbanosCalculator() {
         })()}
 
         {/* ══ FULL CATALOG ══ */}
+        {activeTab==="scenarios"&&(
+          <div className="fi">
+            <div style={{fontSize:"0.82rem",color:"#a08050",marginBottom:"1.25rem",lineHeight:1.6}}>{isHe?"בחר את המצב שלך כדי לראות את קרבנותיך:":"Select your situation to see your required korbanos:"}</div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:"0.75rem",marginBottom:"1.5rem"}}>
+              {SCENARIOS.map(sc=>{
+                const isActive=activeScenario===sc.key;
+                return(<button key={sc.key} onClick={()=>setActiveScenario(isActive?null:sc.key)} style={{textAlign:"left",padding:"0.85rem 1rem",background:isActive?"rgba(218,165,32,0.15)":"rgba(24,12,4,0.7)",border:"1px solid "+(isActive?"#daa520":"#5a3a1a"),borderLeft:"4px solid "+(isActive?"#daa520":"#3a2010"),cursor:"pointer",transition:"border-color 0.15s"}}>
+                  <div style={{fontSize:"0.95rem",fontWeight:700,color:isActive?"#f0c060":"#f0ddb0",fontFamily:"'Cinzel',serif",marginBottom:"0.2rem"}}>{isHe?sc.title_he:sc.title_en}</div>
+                  <div style={{fontSize:"0.8rem",color:"#a08050"}}>{isHe?sc.sub_he:sc.sub_en}</div>
+                </button>);
+              })}
+            </div>
+            {activeScenario&&(()=>{
+              const sc=SCENARIOS.find(s=>s.key===activeScenario);
+              if(!sc) return null;
+              const total=sc.items.reduce((sum,item)=>{
+                const base=item.price_key?compCost(item.price_key,item.count,P):0;
+                const extra=item.extra_key?compCost(item.extra_key,item.extra_count||1,P):0;
+                const custom=item.price_key_custom?item.price_key_custom.reduce((s,k)=>s+compCost(k,1,P),0):0;
+                return sum+base+extra+custom;
+              },0);
+              return(
+                <div style={{background:"rgba(24,12,4,0.8)",border:"1px solid #7a4f20",borderLeft:"4px solid #daa520",padding:"1.1rem 1.4rem"}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"0.9rem",flexWrap:"wrap",gap:"0.5rem"}}>
+                    <div>
+                      <div style={{fontSize:"1.1rem",fontWeight:700,color:"#f0c060",fontFamily:"'Cinzel',serif"}}>{isHe?sc.title_he:sc.title_en}</div>
+                      <div style={{fontSize:"0.8rem",color:"#8a6030",marginTop:"0.2rem"}}>{renderWithLinks(sc.source)}</div>
+                    </div>
+                    <div className="df" style={{fontSize:"1.6rem",color:"#f0c060",fontWeight:900}}>{fmtC(total)}</div>
+                  </div>
+                  <div style={{display:"flex",flexDirection:"column",gap:"0.5rem",marginBottom:"0.9rem"}}>
+                    {sc.items.map((item,i)=>{
+                      const base=item.price_key?compCost(item.price_key,item.count,P):0;
+                      const extra=item.extra_key?compCost(item.extra_key,item.extra_count||1,P):0;
+                      const custom=item.price_key_custom?item.price_key_custom.reduce((s,k)=>s+compCost(k,1,P),0):0;
+                      const itemTotal=base+extra+custom;
+                      return(
+                        <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",padding:"0.6rem 0.75rem",background:"rgba(30,14,6,0.6)",borderBottom:"1px dotted #3a2010",gap:"1rem"}}>
+                          <div style={{flex:1}}>
+                            <div style={{display:"flex",alignItems:"center",gap:"0.4rem",flexWrap:"wrap",marginBottom:"0.2rem"}}>
+                              <span style={{fontSize:"0.9rem",color:"#f0ddb0",fontWeight:600}}>{isHe?item.name_he:item.name_en}</span>
+                              {item.catalogId&&<KorbanPopover catalogId={item.catalogId} lang={lang} fmtC={fmtC} P={P} compCost={compCost}/>}
+                              <span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 6px",background:item.badge==="ob"?"rgba(186,117,23,0.2)":item.badge==="cond"?"rgba(90,171,223,0.2)":"rgba(136,135,128,0.2)",color:item.badge==="ob"?"#ef9f27":item.badge==="cond"?"#5aabdf":"#b4b2a9",border:"1px solid "+(item.badge==="ob"?"rgba(186,117,23,0.4)":item.badge==="cond"?"rgba(90,171,223,0.4)":"rgba(136,135,128,0.4)")}}>{item.badge==="ob"?(isHe?"חיוב":"Obligatory"):item.badge==="cond"?(isHe?"מותנה":"Conditional"):(isHe?"נדבה":"Voluntary")}</span>
+                            </div>
+                            <div style={{fontSize:"0.78rem",color:"#c9a45a"}}>{isHe?item.note_he:item.note_en}</div>
+                          </div>
+                          <div className="df" style={{fontSize:"1rem",color:"#f0c060",fontWeight:700,whiteSpace:"nowrap"}}>{fmtC(itemTotal)}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div style={{fontSize:"0.82rem",color:"#e8d4a0",borderLeft:"2px solid #7a4f20",paddingLeft:"0.6rem",lineHeight:1.6,marginBottom:"0.5rem"}}>{isHe?sc.proc_he:sc.proc_en}</div>
+                </div>
+              );
+            })()}
+            {disclaimer}
+          </div>
+        )}
+
         {activeTab==="catalog"&&(
           <div className="fi">
             <div style={{display:"flex",justifyContent:"center",gap:"0.5rem",flexWrap:"wrap",marginBottom:"1.5rem"}}>
-              {GROUPS.map(g=><button key={g.id} onClick={()=>setActiveGroup(g.id)} style={{padding:"0.55rem 1.1rem",background:activeGroup===g.id?"#daa520":"transparent",color:activeGroup===g.id?"#1a0f08":"#f0c060",border:"1px solid "+(activeGroup===g.id?"#daa520":"#7a4f20"),cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase"}}>{T(g.tkey)}</button>)}
+              {GROUPS.map(g=><button key={g.id} onClick={()=>{setActiveGroup(g.id);setCatalogTypeFilter("all");}} style={{padding:"0.55rem 1.1rem",background:activeGroup===g.id?"#daa520":"transparent",color:activeGroup===g.id?"#1a0f08":"#f0c060",border:"1px solid "+(activeGroup===g.id?"#daa520":"#7a4f20"),cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase"}}>{T(g.tkey)}</button>)}
             </div>
+            {typesInGroup.length>1&&(
+              <div style={{marginBottom:"1rem"}}>
+                <div style={{fontSize:"0.75rem",color:"#a08050",letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:"0.5rem",fontFamily:"'Cinzel',serif"}}>{T("filter_by_type")}</div>
+                <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap"}}>
+                  {["all",...typesInGroup].map(tk=>{
+                    const t=KORBAN_TYPES[tk]||{name:"All",name_he:"הכל"};
+                    const isActive=catalogTypeFilter===tk;
+                    const count=tk==="all"?CATALOG.filter(s=>s.group===activeGroup).length:CATALOG.filter(s=>s.group===activeGroup&&s.korbanType===tk).length;
+                    return(<button key={tk} onClick={()=>setCatalogTypeFilter(tk)} style={{padding:"0.35rem 0.9rem",background:isActive?"#daa520":"transparent",color:isActive?"#1a0f08":"#c9a45a",border:"1px solid "+(isActive?"#daa520":"#7a4f20"),cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.78rem",letterSpacing:"0.06em"}}>
+                      {isHe?(tk==="all"?"הכל":t.name_he):(tk==="all"?"All":t.name)} <span style={{opacity:0.7,fontSize:"0.7rem"}}>({count})</span>
+                    </button>);
+                  })}
+                </div>
+              </div>
+            )}
+            {catalogTypeFilter!=="all"&&catalogTypeFilter!=="other"&&catalogTypeFilter!=="mixed"&&(()=>{
+              const t=KORBAN_TYPES[catalogTypeFilter];
+              if(!t) return null;
+              const isKKK=t.holiness==="kkk";
+              return(
+                <div style={{background:"rgba(20,10,2,0.9)",border:"1px solid #7a4f20",borderLeft:"4px solid #daa520",padding:"1rem 1.25rem",marginBottom:"1rem"}}>
+                  <div style={{display:"flex",alignItems:"baseline",gap:"0.6rem",marginBottom:"0.5rem",flexWrap:"wrap"}}>
+                    <span style={{fontSize:"1.1rem",fontWeight:700,color:"#f0ddb0",fontFamily:"'Cinzel',serif"}}>{isHe?t.name_he:t.name}</span>
+                    {isKKK?<span style={{fontSize:"0.72rem",background:"rgba(127,119,221,0.2)",color:"#afa9ec",border:"1px solid #7f77dd",padding:"2px 8px"}}>קדשי קדשים</span>:<span style={{fontSize:"0.72rem",background:"rgba(212,83,126,0.2)",color:"#ed93b1",border:"1px solid #d4537e",padding:"2px 8px"}}>קדשי קלים</span>}
+                  </div>
+                  <div style={{fontSize:"0.88rem",color:"#e8d4a0",lineHeight:1.6,marginBottom:"0.75rem"}}>{isHe?t.purpose_he:t.purpose}</div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"0.5rem",marginBottom:"0.75rem"}}>
+                    {[{label:isHe?"מזבח":"Altar",val:t.altar,bg:"rgba(127,119,221,0.15)",c:"#afa9ec"},{label:isHe?"כהן":"Kohen",val:t.kohen,bg:"rgba(29,158,117,0.15)",c:"#5dcaa5"},{label:isHe?"בעלים":"Owner",val:t.owner,bg:"rgba(186,117,23,0.15)",c:"#ef9f27"}].map(d=>(
+                      <div key={d.label} style={{background:d.bg,padding:"0.5rem 0.6rem",textAlign:"center"}}>
+                        <div style={{fontSize:"0.68rem",fontWeight:700,color:d.c,letterSpacing:"0.05em",textTransform:"uppercase",marginBottom:"0.25rem"}}>{d.label}</div>
+                        <div style={{fontSize:"0.78rem",color:"#f0ddb0",lineHeight:1.3}}>{d.val}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.3rem 1rem",fontSize:"0.8rem"}}>
+                    {[[isHe?"מין":"Gender",t.gender],[isHe?"סמיכה":"Semichah",t.semichah_req?(isHe?"נדרשת":"Required"):(isHe?"אינה נדרשת":"Not required")],[isHe?"זמן אכילה":"When eaten",t.eaten],[isHe?"מקום אכילה":"Where eaten",t.where]].map(([lbl,val])=>(
+                      <div key={lbl} style={{display:"flex",justifyContent:"space-between",borderBottom:"1px dotted #3a2010",padding:"0.2rem 0"}}>
+                        <span style={{color:"#a08050"}}>{lbl}</span>
+                        <span style={{color:"#e8d4a0",textAlign:"right"}}>{val}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {t.note&&<div style={{fontSize:"0.78rem",color:"#8a6030",marginTop:"0.6rem",fontStyle:"italic",borderTop:"1px dotted #3a2010",paddingTop:"0.5rem"}}>{isHe?t.note_he:t.note}</div>}
+                </div>
+              );
+            })()}
             <div style={{display:"flex",flexDirection:"column",gap:"0.9rem"}}>
               {filtered.map(s=>{
                 const count=counts[s.id]||0,cost=offeringTotal(s,P),isExp=expanded[s.id];
@@ -1869,7 +2171,14 @@ export default function korbanosCalculator() {
                       <div style={{display:"flex",alignItems:"baseline",gap:"0.6rem",flexWrap:"wrap"}}>
                         <h3 className="df" style={{margin:0,fontSize:"1.1rem",color:"#f0ddb0",fontWeight:700,fontFamily:isHe?"'Frank Ruhl Libre',serif":"'Cinzel',serif"}}>{isHe?(s.hebrew||s.name):s.name}</h3>
                       </div>
-                      <div style={{fontSize:"0.9rem",color:"#c9a45a",fontStyle:"italic",marginTop:"0.15rem"}}>{s.subtitle}</div>
+                      <div style={{display:"flex",gap:"0.3rem",flexWrap:"wrap",marginTop:"0.35rem"}}>
+                        <span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 7px",background:s.communal?"rgba(29,158,117,0.2)":"rgba(55,138,221,0.2)",color:s.communal?"#5dcaa5":"#85b7eb",border:"1px solid "+(s.communal?"rgba(29,158,117,0.4)":"rgba(55,138,221,0.4)")}}>{s.communal?(isHe?"ציבור":"Communal"):(isHe?"יחיד":"Individual")}</span>
+                        <span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 7px",background:s.obligatory?"rgba(186,117,23,0.2)":"rgba(136,135,128,0.2)",color:s.obligatory?"#ef9f27":"#b4b2a9",border:"1px solid "+(s.obligatory?"rgba(186,117,23,0.4)":"rgba(136,135,128,0.4)")}}>{s.obligatory?(isHe?"חיוב":"Obligatory"):(isHe?"נדבה":"Voluntary")}</span>
+                        {s.kkk?<span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 7px",background:"rgba(127,119,221,0.2)",color:"#afa9ec",border:"1px solid rgba(127,119,221,0.4)"}}>{isHe?"קדשי קדשים":"Kodshei Kodashim"}</span>:<span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 7px",background:"rgba(212,83,126,0.2)",color:"#ed93b1",border:"1px solid rgba(212,83,126,0.4)"}}>{isHe?"קדשי קלים":"Kodshei Kalim"}</span>}
+                        {s.semichah&&<span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 7px",background:"rgba(216,90,48,0.2)",color:"#f0997b",border:"1px solid rgba(216,90,48,0.4)"}}>{isHe?"סמיכה":"Semichah"}</span>}
+                        {s.fixedTiming!==undefined&&<span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 7px",background:s.fixedTiming?"rgba(90,171,223,0.2)":"rgba(136,135,128,0.2)",color:s.fixedTiming?"#5aabdf":"#b4b2a9",border:"1px solid "+(s.fixedTiming?"rgba(90,171,223,0.4)":"rgba(136,135,128,0.4)")}}>{s.fixedTiming?(isHe?"זמן קבוע":"Fixed time"):(isHe?"זמן גמיש":"Anytime")}</span>}
+                      </div>
+                      <div style={{fontSize:"0.88rem",color:"#e8d4a0",marginTop:"0.25rem"}}>{s.subtitle}</div>
                     </div>
                     <div style={{textAlign:"right"}}>
                       <div style={{fontSize:"0.78rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase"}}>{T("per_offering")}</div>
@@ -1897,6 +2206,18 @@ export default function korbanosCalculator() {
                         </tr>
                       ))}</tbody>
                     </table>
+                    {s.nesachim_en&&(<div style={{marginTop:"0.5rem",paddingTop:"0.5rem",borderTop:"1px dotted #5a3a1a",fontSize:"0.82rem"}}>
+                      <span style={{color:"#8a6030",marginRight:"0.5rem"}}>{isHe?"נסכים:":"Nesachim:"}</span>
+                      <span style={{color:"#e8d4a0"}}>{isHe&&s.nesachim_he?s.nesachim_he:s.nesachim_en}</span>
+                    </div>)}
+                    {s.slaughter&&s.slaughter!=="—"&&(<div style={{marginTop:"0.75rem",paddingTop:"0.75rem",borderTop:"1px dotted #5a3a1a"}}>
+                      <div style={{fontSize:"0.72rem",color:"#a08050",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:"0.4rem",fontFamily:"'Cinzel',serif"}}>How it was brought</div>
+                      <div style={{display:"grid",gridTemplateColumns:"90px 1fr",gap:"0.25rem 0.75rem",fontSize:"0.82rem",lineHeight:1.5,marginBottom:"0.5rem"}}>
+                        {[["Slaughter",s.slaughter],["Blood",s.blood],["Kohen",s.kohen_gets],["Owner",s.owner_gets],["Eaten",s.proc_eaten],["Where",s.proc_where]].filter(([,v])=>v&&v!=="N/A").map(([k,v])=>(<React.Fragment key={k}><span style={{color:"#8a6030"}}>{k}</span><span style={{color:"#e8d4a0"}}>{v}</span></React.Fragment>))}
+                      </div>
+                      {s.proc_note&&<div style={{fontSize:"0.82rem",color:"#e8d4a0",borderLeft:"2px solid #7a4f20",paddingLeft:"0.5rem",lineHeight:1.6}}>{s.proc_note}</div>}
+
+                    </div>)}
                   </div>)}
                 </div>);
               })}
@@ -1917,6 +2238,10 @@ export default function korbanosCalculator() {
         {/* ══ PRICES & SOURCES ══ */}
         {activeTab==="prices"&&(
           <div className="fi">
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1rem",padding:"0.6rem 1rem",background:"rgba(30,14,6,0.6)",border:"1px solid #5a3a1a",fontSize:"0.82rem"}}>
+              <span style={{color:"#a08050"}}>Livestock prices last reviewed: <span style={{color:"#f0ddb0",fontWeight:600}}>{PRICES_LAST_UPDATED}</span></span>
+              <span style={{color:"#7a5030",fontStyle:"italic",fontSize:"0.75rem"}}>{PRICES_REVIEW_NOTE}</span>
+            </div>
             <div style={{marginBottom:"1.5rem",padding:"1rem 1.25rem",background:"rgba(90,171,223,.07)",border:"1px solid #3a7aaa",borderLeft:"3px solid #5aabdf",fontSize:"1rem",lineHeight:1.7,color:"#e8d4a0"}}>
               <strong style={{color:"#f0ddb0"}}>{T("prices_intro")}</strong> {T("prices_conv")} {nisPerUsd}.
             </div>
@@ -2006,7 +2331,45 @@ export default function korbanosCalculator() {
       </div>
 
       {/* ── Print Modal ─────────────────────────────────────────────────── */}
-      
+      {showTodayPrint&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setShowTodayPrint(false)}>
+          <div onClick={e=>e.stopPropagation()} style={{background:"#fff",color:"#111",maxWidth:620,width:"100%",maxHeight:"90vh",overflowY:"auto",padding:"2.5rem",fontFamily:"Georgia,serif",fontSize:"14px",lineHeight:1.7}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem",borderBottom:"2px solid #111",paddingBottom:"1rem"}}>
+              <div>
+                <div style={{fontSize:"20px",fontWeight:700,fontFamily:"'Cinzel',serif",letterSpacing:"0.05em"}}>KORBANOS CALCULATOR</div>
+                <div style={{fontSize:"13px",color:"#555"}}>Today's Communal Costs — korbancalculator.com</div>
+              </div>
+              <div style={{textAlign:"right",fontSize:"12px",color:"#777"}}>
+                <div>{hebrewStr}</div>
+                <div>{gregDate}</div>
+                <div>Shiur: {shiur.labelShort}</div>
+              </div>
+            </div>
+            {blocks.map((b,bi)=>(
+              <div key={bi} style={{marginBottom:"1rem"}}>
+                <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #ccc",paddingBottom:"0.2rem",marginBottom:"0.3rem"}}>
+                  <strong style={{fontSize:"12px",letterSpacing:"0.06em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>{b.title}</strong>
+                  <strong>{fmtC(bTotal(b))}</strong>
+                </div>
+                {b.offerings.map((o,oi)=>(
+                  <div key={oi} style={{display:"flex",justifyContent:"space-between",padding:"0.1rem 0",color:"#444",fontSize:"13px"}}>
+                    <span>{o.label}{o.count>1?" × "+o.count:""}</span>
+                    <span>{fmtC(compCost(o.key,o.count,P))}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+            <div style={{borderTop:"2px solid #111",paddingTop:"0.75rem",display:"flex",justifyContent:"space-between",fontSize:"17px",fontWeight:700,fontFamily:"'Cinzel',serif",marginBottom:"1rem"}}>
+              <span>Total</span><span>{fmtC(dayTotal)}</span>
+            </div>
+            <div style={{fontSize:"11px",color:"#888",borderTop:"1px solid #ddd",paddingTop:"0.6rem",lineHeight:1.6}}>For educational purposes only. All prices are Jerusalem market rates. Shiur: {shiur.labelShort}.</div>
+            <div style={{display:"flex",gap:"0.75rem",marginTop:"1rem",justifyContent:"flex-end"}}>
+              <button onClick={()=>window.print()} style={{padding:"0.5rem 1.25rem",background:"#111",color:"#fff",border:"none",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Print / Save PDF</button>
+              <button onClick={()=>setShowTodayPrint(false)} style={{padding:"0.5rem 1.25rem",background:"transparent",color:"#555",border:"1px solid #999",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"13px"}}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
       {showPrint&&(
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setShowPrint(false)}>
           <div onClick={e=>e.stopPropagation()} style={{background:"#fff",color:"#111",maxWidth:680,width:"100%",maxHeight:"90vh",overflowY:"auto",padding:"2.5rem",fontFamily:"Georgia,serif",fontSize:"14px",lineHeight:1.7}}>
@@ -2060,9 +2423,9 @@ export default function korbanosCalculator() {
 }
 
 function GlossaryTerm({term, children}){
-  const [show, setShow] = useState(false);
-  const [pos, setPos] = useState({top:0,left:0});
-  const ref = useRef(null);
+  const [show, setShow] = React.useState(false);
+  const [pos, setPos] = React.useState({top:0,left:0});
+  const ref = React.useRef(null);
   const def = GLOSSARY[term.toLowerCase()];
   if(!def) return children;
   const handleEnter = ()=>{
