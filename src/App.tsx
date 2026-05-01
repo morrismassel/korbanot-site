@@ -95,6 +95,7 @@ const CATALOG = [
   {id:"reiyah_ram",korbanType:"olah",fixedTiming:false,nesachim_en:"2 issaron flour · ⅓ hin oil (4 log) · ⅓ hin wine (4 log)",nesachim_he:"2 עשרון קמח · ⅓ הין שמן · ⅓ הין יין",communal:false,obligatory:true,kkk:true,semichah:true,group:"Individual Offerings",hebrew:"עוֹלַת רְאִיָּה - אַיִל",name:"Olas Re'iyah - Ram (Wealthy)",subtitle:"Premium olas re'iyah for the wealthy",description:"A ram as the olas re'iyah, as brought by those of means.",description_he:"איל כעולת ראייה, כפי שמביאים בעלי אמצעים.",description_es:"Un carnero como olas re'iyah, como traen los de medios.",components:[{label:"1 ram (olah) with nesachim",key:"ram_olah",count:1}],slaughter:"Courtyard North",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Hides only",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"Ram-grade olas re\'iyah brought by those of means. Same procedure as standard re\'iyah."},
   {id:"chagigah_bull",korbanType:"shelamim",fixedTiming:false,nesachim_en:"3 issaron flour · ½ hin oil (6 log) · ½ hin wine (6 log)",nesachim_he:"3 עשרון קמח · ½ הין שמן · ½ הין יין",communal:false,obligatory:true,kkk:false,semichah:true,group:"Individual Offerings",hebrew:"חֲגִיגָה - פַּר",name:"Chagigah - Bull (Wealthy)",subtitle:"Premium chagigah for the wealthy",description:"A bull as the chagigah, as brought by those of means.",description_he:"שור כחגיגה, כפי שמביאים בעלי אמצעים.",description_es:"Un novillo como chagigah, como traen los de medios.",components:[{label:"1 bull (olah) with nesachim",key:"bull_olah",count:1}],slaughter:"Anywhere in the Courtyard",blood:"Throwing — NE & SW corners, lower",kohen_gets:"Breast + right thigh",owner_gets:"Remaining meat",proc_eaten:"Two days and the night between",proc_where:"Within Yerushalayim",proc_note:"Bull-grade chagigah brought by the wealthy. The hide of a bull is significant economic value for the Kohen."},
   {id:"yoledet",korbanType:"mixed",fixedTiming:false,communal:false,obligatory:true,kkk:true,semichah:false, group:"Individual Offerings",hebrew:"יוֹלֶדֶת",name:"Yoledet - After Childbirth",subtitle:"Purification offering of a new mother",description:"A yearling male lamb as olah + a bird as chatas, after the days of purification.",description_he:"כבש זכר בן שנה כעולה + עוף כחטאת, לאחר ימי טהרה.",description_es:"Un cordero macho de un año como olá + un ave como chatat, tras los días de purificación.",components:[{label:"1 lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 bird (chatas)",key:"bird",count:1}],slaughter:"Courtyard North (olah) / Near SE corner (bird chatas)",blood:"Olah: throwing on corners; Bird: squeezed on wall",kohen_gets:"Hides (olah); remaining meat (bird chatas)",owner_gets:"None",proc_eaten:"Bird chatas: day and following night",proc_where:"Azarah",proc_note:"If she cannot afford a lamb, two birds replace the package (one olah, one chatas). One of the few korbanos with an explicit sliding-scale alternative in the Torah itself."},
+  {id:"yoledet_poor",korbanType:"mixed",fixedTiming:false,communal:false,obligatory:true,kkk:true,semichah:false, group:"Individual Offerings",hebrew:"יוֹלֶדֶת עֲנִיָּה",name:"Yoledet - Poor (Two Birds)",subtitle:"Sliding-scale substitute for a mother who cannot afford a lamb",description:"When a yoledet cannot afford a lamb, she brings two birds: one as olah and one as chatas. This is the explicit Torah sliding-scale (Vayikra 12:8) — the only korban in the Torah where the text itself provides an alternative for the poor.",description_he:"כאשר יולדת אינה יכולה לרכוש כבש, היא מביאה שתי צפרים: אחת כעולה ואחת כחטאת. זוהי המדרגה היורדת של התורה (ויקרא יב:ח) — הקרבן היחיד בתורה שבו הטקסט עצמו מספק חלופה לענייה.",description_es:"Cuando una yoledet no puede costear un cordero, trae dos aves: una como olá y una como chatat. Esta es la escala móvil explícita de la Torá (Vayikra 12:8) — el único korban en el que el texto mismo provee una alternativa para los pobres.",components:[{label:"1 bird (olah)",key:"bird",count:1},{label:"1 bird (chatas)",key:"bird",count:1}],slaughter:"Bird olah: near SE corner; Bird chatas: near SW corner",blood:"Olah: squeezed above red line; Chatas: squeezed below red line",kohen_gets:"None",owner_gets:"None",proc_eaten:"Not eaten",proc_where:"Not eaten",proc_note:"The two birds replace the entire wealthy-tier package (lamb olah + bird chatas). The milikah for each differs: olah has separation (hibdel), chatas does not. Despite being the poverty substitute, the Talmud (Kerisos 8a) records that the price of birds once skyrocketed so severely that Rabban Shimon ben Gamliel ruled to relax requirements — causing the price to immediately collapse."},
   {id:"nazir",korbanType:"mixed",fixedTiming:false,nesachim_en:"Varies by animal (see component breakdown below)",nesachim_he:"משתנה לפי הבהמה",communal:false,obligatory:false,kkk:false,semichah:true, sefaria:"https://www.sefaria.org/Numbers.6.13",group:"Individual Offerings",hebrew:"נָזִיר",name:"Korbanos Nazir - End of Nazirite Vow",subtitle:"At the completion of the vow",source:"Bamidbar 6:13-20",description:"1 male lamb (olah), 1 ewe-lamb (chatas), 1 ram (shelamim), basket of matzos.",description_he:"כבש זכר 1 (עולה), כבשה 1 (חטאת), איל 1 (שלמים), סל מצות.",description_es:"1 cordero macho (olá), 1 cordera (chatat), 1 carnero (shelamim), canasta de matzot.",components:[{label:"1 male lamb (olah) with nesachim",key:"lamb_olah",count:1},{label:"1 ewe-lamb (chatas)",key:"lamb",count:1},{label:"1 ram (shelamim) with nesachim",key:"ram_olah",count:1},{label:"Basket of matzos (~6 issaron)",key:"issaron_flour",count:6},{label:"Oil (~2 log)",key:"log_oil",count:2}],slaughter:"North (olah + asham) / Anywhere (shelamim)",blood:"Olah/asham: throwing on corners; shelamim: throwing on corners",kohen_gets:"Asham: meat + hides; Shelamim: breast + thigh + cooked shoulder + waived loaves",owner_gets:"Remaining meat + remaining loaves",proc_eaten:"Day and following night",proc_where:"Within Yerushalayim",proc_note:"The juice of the shelamim is poured on the Nazir\'s head. The cut hair is placed under the fire of the shelamim\'s cooking pot. The cooked shoulder is a unique Kohen portion found only in the Nazir\'s shelamim."},
 ];
 const GROUPS = [{id:"Daily & Weekly",tkey:"grp_daily"},{id:"Pilgrimage Festivals",tkey:"grp_pilgrimage"},{id:"Individual Offerings",tkey:"grp_individual"}];
@@ -134,7 +135,7 @@ const V = {
       {act:"Wrote a note, forgetting it was Shabbos",act_he:"כתב פתק, שכח שהיה שבת",act_es:"Escribió una nota olvidando que era Shabat",detail:"Kotev — shogeg Shabbos, classic kareis case",detail_he:"כותב — שגגת שבת, מקרה כרת קלאסי",detail_es:"Kotev — shogeg Shabat, caso clásico de karet"},
       {act:"Lit a candle on Shabbos, momentarily forgetting the day",act_he:"הדליק נר בשבת, שכח לרגע את היום",act_es:"Encendió una vela en Shabat olvidando momentáneamente el día",detail:"Mav'ir — kindling fire; d'oraisa melacha carrying kareis. No electricity controversy — this is the classic case.",detail_he:"מבעיר — הבערת אש; מלאכה דאורייתא הנושאת כרת. ללא מחלוקת חשמל — זהו המקרה הקלאסי.",detail_es:"Mav'ir — encender fuego; melacha de la Torá con karet. Sin controversia de electricidad — este es el caso clásico."},
       {act:"Sorted items on Shabbos not knowing borer applies",act_he:"מיין חפצים בשבת מבלי לדעת שבורר חל",act_es:"Clasificó objetos en Shabat sin saber que aplica borer",detail:"Borer — taking pesoles from ochel without immediate use; d'oraisa, commonly unknown",detail_he:"בורר — הוצאת פסולת מאוכל שלא לצורך מיידי; דאורייתא, לרוב לא ידוע",detail_es:"Borer — separar desechos del alimento sin uso inmediato; de la Torá, comúnmente desconocido"},
-      {act:"Smeared ointment on Shabbos not knowing memareiach applies",act_he:"מרח משחה בשבת מבלי לדעת שממרח חל",act_es:"Aplicó ungüento en Shabat sin saber que aplica memareiach",detail:"Toladah of memachek; d'oraisa, often unknown",detail_he:"תולדה של ממחק; דאורייתא, לרוב לא ידוע",detail_es:"Toladá de memachek; de la Torá, frecuentemente desconocido"},
+      {act:"Wrote two or more letters on Shabbos (e.g. signing a form, filling out a label)",act_he:"כתב שתי אותיות או יותר בשבת (למשל חתימה על טופס)",act_es:"Escribió dos o más letras en Shabat (p.ej. firmando un formulario)",detail:"Kotev — writing is one of the 39 melachos; two letters trigger d'oraisa liability. Common inadvertent case.",detail_he:"כותב — כתיבה היא אחת מ-39 מלאכות; שתי אותיות מחייבות דאורייתא. מקרה שגגה נפוץ.",detail_es:"Kotev — escribir es una de las 39 melachos; dos letras activan responsabilidad d'oraita."},
       {act:"Relations with wife not knowing she had become niddah",act_he:"קיים יחסים עם אשתו מבלי לדעת שנעשתה נידה",act_es:"Tuvo relaciones con su esposa sin saber que ella se había vuelto niddah",detail:"Niddah carries kareis; lo yada — didn't know her status had changed",detail_he:"נידה נושאת כרת; לא ידע — לא ידע שמעמדה השתנה",detail_es:"Niddah lleva karet; lo yada — no sabía que su estado había cambiado"},
       {act:"Ate a dish of meat cooked in butter b'shogeg, thinking it was pareve",act_he:"אכל תבשיל בשר שבושל בחמאה בשגגה, חשב שהיה פרווה",act_es:"Comió un plato de carne cocinada en mantequilla b'shogeg, pensando que era pareve",detail:"D'oraisa basar b'chalav. Whether eating (as opposed to cooking) carries kareis is disputed among Rishonim — the Rambam holds it does (Hilchos Maachalos Asurot 9:1); others disagree. Included here per the Rambam's position.",detail_he:"בשר בחלב דאורייתא. האם אכילה (להבדיל מבישול) נושאת כרת שנוי במחלוקת ראשונים — הרמב\"ם פוסק שכן (הל. מאכלות אסורות ט:א); אחרים חולקים. נכלל כאן לפי שיטת הרמב\"ם.",detail_es:"Basar b'chalav de la Torá. Si comer (a diferencia de cocinar) lleva karet está en disputa entre los Rishonim — el Rambam sostiene que sí (Hil. Maachalot Asurot 9:1); otros discrepan. Incluido aquí según la posición del Rambam."},
       {act:"Had relations mistaking a woman for his wife who was in fact an ervah",act_he:"קיים יחסים בטעות עם אישה שחשב שהיא אשתו, והיא היתה עריה",act_es:"Tuvo relaciones confundiendo a una mujer con su esposa siendo en realidad una ervah",detail:"Ta'us — mistaken identity; arayos carries kareis (Kerisus 2a)",detail_he:"טעות — זיהוי שגוי; עריות נושאות כרת (כריתות ב:א)",detail_es:"Ta'us — identidad equivocada; arayot lleva karet (Kerisut 2a)"},
@@ -149,6 +150,7 @@ const V = {
       {act:"Ate chicken with dairy",act_he:"אכל עוף עם חלב",act_es:"Comió pollo con lácteos",detail:"Rabbinic extension of basar b'chalav - no chatas",detail_he:"הרחבה רבנית של בשר בחלב — אין חטאת",detail_es:"Extensión rabínica de basar b'chalav — no hay chatat"},
       {act:"Did not wait the full time between meat and dairy",act_he:"לא המתין זמן מלא בין בשר לחלב",act_es:"No esperó el tiempo completo entre carne y lácteos",detail:"Waiting period is minhag/d'rabbanan - no korban",detail_he:"זמן ההמתנה הוא מנהג/דרבנן — אין קרבן",detail_es:"El período de espera es minhag/d'rabbanan — no hay korban"},
       {act:"Handshake with a woman",act_he:"לחיצת יד עם אישה",act_es:"Apretón de manos con una mujer",detail:"Negiah - rabbinic according to most; no chatas",detail_he:"נגיעה — דרבנן לפי רוב הפוסקים; אין חטאת",detail_es:"Negiyá — rabínico según la mayoría; no hay chatat"},
+      {act:"Smeared ointment or lotion on Shabbos",act_he:"מרח משחה או קרם בשבת",act_es:"Aplicó ungüento en Shabat",detail:"Memareiach — smoothing is a toladah of memachek. The d'oraisa vs. d'rabanan status depends on surface and intent; most poskim hold standard cosmetic application is d'rabanan. No chatas.",detail_he:"ממרח — החלקה היא תולדה של ממחק. המעמד דאורייתא/דרבנן תלוי במשטח ובכוונה; רוב הפוסקים מחשיבים מריחה קוסמטית כדרבנן. אין חטאת.",detail_es:"Memareiach — alisar es toladá de memachek. El estatus d'oraita vs. d'rabbanan depende de la superficie; la mayoría lo considera d'rabbanan. No hay chatat."},
       {act:"Yichud itself",act_he:"ייחוד עצמו",act_es:"El yijud en sí",detail:"D'rabbanan - does not trigger a chatas directly",detail_he:"דרבנן — אינו מחייב חטאת ישירות",detail_es:"D'rabbanan — no genera chatat directamente"},
     ],
   },
@@ -252,6 +254,10 @@ const TR = {
   set_rate:      {en:"USD / NIS Exchange Rate", he:"שער דולר / שקל", es:"Tipo de Cambio USD/NIS", fr:"Taux de Change USD/NIS", ru:"Курс USD/NIS"},
   set_travel:    {en:"Travel Assumptions", he:"הגדרות נסיעה", es:"Supuestos de Viaje", fr:"Hypothèses de Voyage", ru:"Настройки Поездки"},
   set_include_travel:{en:"Include travel in total", he:"כלול נסיעות בסכום", es:"Incluir viaje en total", fr:"Inclure le voyage", ru:"Включить поездку"},
+  set_gender:    {en:"Gender",              he:"מין",            es:"Género",            fr:"Genre",              ru:"Пол"},
+  gender_male:   {en:"Male",               he:"זכר",            es:"Masculino",         fr:"Masculin",           ru:"Мужской"},
+  gender_female: {en:"Female",             he:"נקבה",            es:"Femenino",          fr:"Féminin",            ru:"Женский"},
+  gender_female_note:{en:"Female users are exempt from re'iyah, chagigah, and shalmei simcha. Machatzis hashekel is voluntary, not obligatory. Yoledet defaults to 1.",he:"נשים פטורות מעולת ראייה, חגיגה ושלמי שמחה. מחצית השקל רשות, לא חובה. יולדת: ברירת מחדל 1.",es:"Las mujeres están exentas de re'iyah, chagigah y shalmei simcha. Machatzit hashekel es voluntaria. Yoledet: valor predeterminado 1."},
   set_reset:     {en:"Reset Defaults", he:"אפס",  es:"Restablecer",  fr:"Réinitialiser", ru:"Сбросить"},
   regalim_q:     {en:"Which of the Shalosh Regalim are you ascending to Yerushalayim?", he:"לאילו מן השלוש רגלים אתה עולה לירושלים?", es:"¿A cuáles de los tres regalim asciende a Jerusalén?", fr:"Auxquels des trois Regalim montez-vous à Jérusalem?", ru:"На какие из трёх Регалим вы восходите в Иерусалим?"},
   regalim_all:   {en:"All three regalim — travel and korbanos included.", he:"שלושת הרגלים — נסיעות וקרבנות כלולים.", es:"Los tres regalim — viaje y korbanot incluidos.", fr:"Les trois regalim — voyages et korbanot inclus.", ru:"Все три Регалим — поездки и корбанот включены."},
@@ -269,7 +275,7 @@ const TR = {
   sample_violations:{en:"sample violations", he:"דוגמאות לעבירות", es:"ejemplos de violaciones", fr:"exemples de violations", ru:"примеры нарушений"},
   hide_examples: {en:"hide examples",   he:"הסתר דוגמאות",  es:"ocultar ejemplos",   fr:"masquer les exemples",  ru:"скрыть примеры"},
   set_by_regalim:{en:"set by regalim",  he:"נקבע לפי הרגל", es:"según los regalim",  fr:"selon les regalim",     ru:"по регалим"},
-  scrutiny_lbl:  {en:"Level of Self-Scrutiny", he:"רמת בדיקה עצמית", es:"Nivel de Autoexamen", fr:"Niveau d'Examen", ru:"Уровень Самопроверки"},
+  scrutiny_lbl:  {en:"Observance & Self-Scrutiny", he:"רמת שמירה ובדיקה עצמית", es:"Nivel de Autoexamen", fr:"Niveau d'Examen", ru:"Уровень Самопроверки"},
   scrutiny_min:  {en:"Minimal",   he:"מינימלי", es:"Mínimo",    fr:"Minimal",    ru:"Минимальный"},
   scrutiny_avg:  {en:"Average",   he:"ממוצע",   es:"Promedio",  fr:"Moyen",      ru:"Средний"},
   scrutiny_careful:{en:"Careful", he:"זהיר",    es:"Cuidadoso", fr:"Prudent",    ru:"Осторожный"},
@@ -358,7 +364,7 @@ const TR = {
   bitul_note:    {en:"The person who violated a Shabbos prohibition and brings a chatas has a cleaner ledger at year's end than the person who stayed home and saved the airfare, which generally cannot be fixed.", he:"מי שעבר על איסור שבת ומביא חטאת, חשבונו נקי יותר בסוף השנה ממי שנשאר בבית וחסך בדמי הטיסה, שבדרך כלל לא ניתן לתקנם.", es:"La persona que violó una prohibición de Shabat y trae una chatas tiene un registro más limpio al final del año que la persona que se quedó en casa y ahorró el pasaje aéreo, que generalmente no se puede corregir.", fr:"La personne qui a violé une interdiction de Chabbat et apporte une 'hatat a un registre plus propre en fin d'année que celle qui est restée chez elle et a économisé le billet d'avion, ce qui en général ne peut être réparé.", ru:"Человек, нарушивший запрет Шаббата и принёсший хатат, имеет более чистый счёт в конце года, чем тот, кто остался дома и сэкономил на билете, — ведь это, как правило, нельзя исправить."},
   lodging_lbl:   {en:"lodging", he:"לינה", es:"alojamiento", fr:"hébergement", ru:"проживание"},
   nights_lbl:    {en:"nights",  he:"לילות", es:"noches",     fr:"nuits",        ru:"ночей"},
-  slider_desc:   {en:"Slider sets the starting quantities below. Adjust freely with +/- after.", he:"המחוון קובע את הכמויות ההתחלתיות למטה. ניתן לשנות בחופשיות עם +/-.", es:"El control deslizante establece las cantidades iniciales. Ajuste libremente con +/-.", fr:"Le curseur définit les quantités initiales. Ajustez librement avec +/-.", ru:"Ползунок задаёт начальные количества. Корректируйте свободно с помощью +/-."},
+  slider_desc:   {en:"Higher observance → fewer inadvertent violations. A yarei shamayim sins less, not more. Adjust freely with +/-.", he:"שמירה גבוהה יותר = פחות עבירות שגגה. ירא שמים חוטא פחות, לא יותר. ניתן לשנות עם +/-.", es:"El control deslizante establece las cantidades iniciales. Ajuste libremente con +/-.", fr:"Le curseur définit les quantités initiales. Ajustez librement avec +/-.", ru:"Ползунок задаёт начальные количества. Корректируйте свободно с помощью +/-."},
   travel_excl:   {en:"Travel costs not included —", he:"עלויות נסיעה לא כלולות —", es:"Costos de viaje no incluidos —", fr:"Frais de voyage non inclus —", ru:"Расходы на поездку не включены —"},
   excl_suffix:   {en:"excluded", he:"לא כלול", es:"excluidos", fr:"exclus", ru:"исключено"},
   set_in_assumptions: {en:"set in assumptions", he:"מוגדר בהנחות",    es:"definido en supuestos",   fr:"défini dans les hypothèses", ru:"задано в настройках"},
@@ -534,9 +540,9 @@ const STRICTNESS_LEVELS = [
   {level:5,label:"Exceptional Scrutiny",label_he:"בדיקה יסודית",label_es:"Escrutinio excepcional",desc:"Examines every doubtful situation; Shimon HaTzaddik standard",desc_he:"בודק כל מצב מפוקפק; סטנדרט של שמעון הצדיק",desc_es:"Examina cada situación dudosa; estándar de Shimon HaTzaddik",  qtys:{chatas_total:16,asham_talui:15}},
 ];
 const FINANCIAL_TIERS = {
-  poor:    {id:"poor",    label:"Poor (Ani)",     hebrew:"עָנִי",     desc:"Bird substitutions for olas re'iyah and chagigah.",desc_he:"תחליפי עוף לעולת ראייה ולחגיגה",desc_es:"Sustituciones de ave para olas re'iyah y chagigah",  reiyahId:"olah_bird",  chagigahId:"olah_bird"},
-  average: {id:"average", label:"Average",        hebrew:"בֵּינוֹנִי", desc:"Standard animals. Lamb for re'iyah, ram for chagigah.",desc_he:"בהמות רגילות. כבש לראייה, איל לחגיגה",desc_es:"Animales estándar. Cordero para re'iyah, carnero para chagigah",reiyahId:"reiyah",    chagigahId:"chagigah"},
-  wealthy: {id:"wealthy", label:"Wealthy (Ashir)",hebrew:"עָשִׁיר",   desc:"Premium animals. Ram for re'iyah, bull for chagigah.",desc_he:"בהמות משובחות. איל לראייה, שור לחגיגה",desc_es:"Animales premium. Carnero para re'iyah, toro para chagigah",reiyahId:"reiyah_ram",chagigahId:"chagigah_bull"},
+  poor:    {id:"poor",    label:"Poor (Ani)",     hebrew:"עָנִי",     desc:"Bird substitutions for olas re'iyah, chagigah, and yoledet.",desc_he:"תחליפי עוף לעולת ראייה, לחגיגה ולקרבן יולדת",desc_es:"Sustituciones de ave para olas re'iyah y chagigah",  reiyahId:"olah_bird",  chagigahId:"olah_bird",  yoledetId:"yoledet_poor"},
+  average: {id:"average", label:"Average",        hebrew:"בֵּינוֹנִי", desc:"Standard animals. Lamb for re'iyah, ram for chagigah.",desc_he:"בהמות רגילות. כבש לראייה, איל לחגיגה",desc_es:"Animales estándar. Cordero para re'iyah, carnero para chagigah",reiyahId:"reiyah",    chagigahId:"chagigah",  yoledetId:"yoledet"},
+  wealthy: {id:"wealthy", label:"Wealthy (Ashir)",hebrew:"עָשִׁיר",   desc:"Premium animals. Ram for re'iyah, bull for chagigah.",desc_he:"בהמות משובחות. איל לראייה, שור לחגיגה",desc_es:"Animales premium. Carnero para re'iyah, toro para chagigah",reiyahId:"reiyah_ram",chagigahId:"chagigah_bull",yoledetId:"yoledet"},
 };
 const TRAVEL_ITEMS = [
   {id:"travel_pesach",  label:"Pesach",  hebrew:"פֶּסַח",   nightsKey:"pesachNights"},
@@ -919,6 +925,7 @@ export default function korbanosCalculator() {
   const [showPrint,        setShowPrint]        = useState<boolean>(false);
   const [showTodayPrint,   setShowTodayPrint]   = useState<boolean>(false);
   const [dykIndex,         setDykIndex]         = useState(0);
+  const [gender,           setGender]           = useState<"male"|"female">("male");
 
   // Helper: fetch silver from fawazahmed0 metals API
   // Response: { xag: { usd: <USD_per_troy_oz> } }
@@ -985,6 +992,7 @@ export default function korbanosCalculator() {
       if(cfg.to!=null) setTodahOverride(cfg.to);
       if(cfg.so!=null) setShalmeiOverride(cfg.so);
       if(cfg.co!=null) setChagigah14Override(cfg.co);
+      if(cfg.g==="male"||cfg.g==="female") setGender(cfg.g);
     }catch(e){}
   },[]);
 
@@ -1072,6 +1080,7 @@ export default function korbanosCalculator() {
   const resolveCatalogId = id=>{
     if(id==="reiyah")   return tier.reiyahId;
     if(id==="chagigah") return tier.chagigahId;
+    if(id==="yoledet")  return (isFemale ? (tier.yoledetId||"yoledet") : (tier.yoledetId||"yoledet"));
     return (ANNUAL_ASSUMPTIONS.find(a=>a.id===id)||{}).catalogId;
   };
   const resolveUnitCost=(id,P)=>{
@@ -1080,15 +1089,17 @@ export default function korbanosCalculator() {
     const entry=catId?CATALOG.find(c=>c.id===catId):null;
     return entry?offeringTotal(entry,P):0;
   };
+  const isFemale = gender==="female";
   const getQty=id=>{
     if(id==="pesach_korban") return regalimAttending.pesach?1:0;
-    if(id==="reiyah")        return regalimCount;
-    if(id==="chagigah")      return regalimCount;
-    if(id==="shalmei_simcha") return shalmeiOverride !== null ? shalmeiOverride : regalimCount;
+    if(id==="reiyah")        return isFemale ? 0 : regalimCount;
+    if(id==="chagigah")      return isFemale ? 0 : regalimCount;
+    if(id==="shalmei_simcha") return isFemale ? 0 : (shalmeiOverride !== null ? shalmeiOverride : regalimCount);
     if(id==="chagigah_14_nissan") return chagigah14Override !== null ? chagigah14Override : (regalimAttending.pesach?1:0);
     if(id==="chatzi_shekel") return 1;
     if(id==="todah")         return todahTotal;
     if(id==="bikkurim")      return isLandowner?1:0;
+    if(id==="yoledet")       { const stored=profileQtys[id]; return stored!=null?stored:(isFemale?1:0); }
     if(id==="chatas_total")  return personalQtys.chatas_total!=null?personalQtys.chatas_total:currentLevel.qtys.chatas_total;
     if(id==="asham_talui")   return personalQtys.asham_talui!=null?personalQtys.asham_talui:currentLevel.qtys.asham_talui;
     return profileQtys[id]!=null?profileQtys[id]:0;
@@ -1136,17 +1147,17 @@ export default function korbanosCalculator() {
     setStrictness(2);setPersonalQtys(STRICTNESS_LEVELS[1].qtys);
     setFinancialTier("average");setTravelCfg(DEFAULT_TRAVEL);setTravelUserEdited({});setShiurId("naeh");setIncludeTravel(true);
     setIncludeTravelTodah(true);setTodahOverride(null);setShalmeiOverride(null);setChagigah14Override(null);
-    setLivesInEY(false);setIsLandowner(false);
+    setLivesInEY(false);setIsLandowner(false);setGender("male");
     setSilverUsdPerGram(SILVER_USD_PER_GRAM_FALLBACK);setSilverInputVal((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));setSilverStatus("idle");
   };
 
   const disclaimer=(
     <div style={{padding:"1.1rem 1.4rem",background:"rgba(139,0,0,.15)",border:"1px solid #aa3030",borderLeft:"4px solid #e04040",fontSize:"1rem",lineHeight:1.8,color:"#f0c0a0",marginTop:"1.5rem"}}>
       <div style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.1em",color:"#e04040",marginBottom:"0.75rem",fontWeight:700}}>{T("disclaimer_title")}</div>
-      <div style={{marginBottom:"0.75rem",paddingBottom:"0.75rem",borderBottom:"1px solid rgba(170,48,48,0.4)"}}>
-        Halachic analysis authored by <a href="http://bit.ly/korbonos" target="_blank" rel="noopener noreferrer" style={{color:"#f0c060",textDecoration:"underline",textUnderlineOffset:"3px"}}>Naftoli Willner</a>, reviewed by R' Hillel Novetsky and Rabbi Yaakov Jaffe · לע"נ יהושע בן צבי ז"ל
+      <div style={{marginBottom:"0.75rem",paddingBottom:"0.75rem",borderBottom:"1px solid rgba(170,48,48,0.4)",fontSize:"0.88rem",lineHeight:1.7,fontStyle:"italic",color:"#f0c060"}}>
+        Built by Jeremy Spier and Morris Massel with Claude.ai · Includes content compiled by <a href="https://docs.google.com/spreadsheets/d/1ZLnj_LQuq3Fv8I26GUwcbOW7EeHXbToQKBVQIAj2TRM/edit?gid=2007868934#gid=2007868934" target="_blank" rel="noopener noreferrer" style={{color:"#f0c060",textDecoration:"underline",textUnderlineOffset:"3px"}}>Naftoli Willner</a> in his Korbonos Spreadsheet, dedicated לע"נ יהושע בן צבי ז"ל
         <br/>
-        <span style={{fontStyle:"italic"}}>KorbanCalculator gratefully acknowledges the tremendous work and scholarship contributed by R' Willner to the halachic taxonomy and analysis throughout this site.</span>
+        <span style={{color:"#c9a45a"}}>For additional details and specifics of the korbonos, see the <a href="https://docs.google.com/spreadsheets/d/1ZLnj_LQuq3Fv8I26GUwcbOW7EeHXbToQKBVQIAj2TRM/edit?gid=2007868934#gid=2007868934" target="_blank" rel="noopener noreferrer" style={{color:"#f0c060",textDecoration:"underline",textUnderlineOffset:"3px"}}>Korbonos Spreadsheet</a>.</span>
       </div>
       {T("disclaimer_body")}
     </div>
@@ -1274,6 +1285,22 @@ export default function korbanosCalculator() {
                   </div>
                 )}
               </div>
+              {/* Gender */}
+              <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
+                <div style={lbl}>{T("set_gender")}</div>
+                <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",marginBottom:"0.6rem"}}>
+                  {(["male","female"] as const).map(g=>(
+                    <button key={g} onClick={()=>setGender(g)} style={{padding:"0.45rem 0.9rem",background:gender===g?"rgba(240,192,96,.15)":"transparent",color:gender===g?"#f0c060":"#c9a45a",border:"1px solid "+(gender===g?"#f0c060":"#5a3a1a"),cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
+                      <span style={{fontFamily:"'Cinzel',serif",fontWeight:600}}>{T("gender_"+g)}</span>
+                    </button>
+                  ))}
+                </div>
+                {gender==="female"&&(
+                  <div style={{padding:"0.5rem 0.75rem",background:"rgba(212,83,126,0.07)",border:"1px solid #7a4090",borderLeft:"3px solid #c07ad8",fontSize:"0.88rem",color:"#c9a45a",lineHeight:1.6}}>
+                    {T("gender_female_note")}
+                  </div>
+                )}
+              </div>
               {/* Financial Standing */}
               <div style={{marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
                 <div style={lbl}>{T("set_standing")}</div>
@@ -1360,6 +1387,7 @@ export default function korbanosCalculator() {
               {/* Travel — hidden for EY residents */}
               {!livesInEY&&(
               <div style={{paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
+                <div style={{fontSize:"0.82rem",color:"#5a3a1a",fontStyle:"italic",marginBottom:"0.75rem",lineHeight:1.5}}>Modeling today's diaspora. Note: classical sources (Yoma 12a) indicate Jerusalem lodging had unique status — standard market rates may not apply. Disable or reduce lodging for Moshiach-era scenarios. Also note: anyone traveling from outside Eretz Yisrael is halachically tamei and requires a full 7-day purification with para adumah before entering the Mikdash — consider budgeting an extra week for this.</div>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"0.75rem"}}>
                   <div style={{fontSize:"0.82rem",color:"#5aabdf",letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>{T("set_travel")}</div>
                   <label style={{display:"flex",alignItems:"center",gap:"0.5rem",cursor:"pointer",fontSize:"0.9rem",color:"#c9a45a"}}>
@@ -1410,7 +1438,7 @@ export default function korbanosCalculator() {
                   </button>);
                 })}
               </div>
-              {Object.values(regalimAttending).some(v=>!v)&&(
+              {Object.values(regalimAttending).some(v=>!v)&&!isFemale&&(
                 <div style={{padding:"1rem 1.1rem",background:"rgba(160,40,40,.12)",border:"1px solid #aa3030",borderLeft:"4px solid #e04040",lineHeight:1.75,color:"#f0a0a0"}}>
                   <div style={{fontFamily:"'Cinzel',serif",fontSize:"1rem",letterSpacing:"0.08em",color:"#e04040",marginBottom:"0.6rem",fontWeight:700}}>{T("bitul_title")}</div>
                   {[{id:"pesach",tkey:"rgl_pesach"},{id:"shavuot",tkey:"rgl_shavuos"},{id:"sukkot",tkey:"rgl_sukkos"}].filter(r=>!regalimAttending[r.id]).map(r=>(
@@ -1422,7 +1450,7 @@ export default function korbanosCalculator() {
                   <div style={{marginTop:"0.7rem",fontSize:"0.95rem",color:"#d4a060",fontStyle:"italic",borderTop:"1px dashed #aa3030",paddingTop:"0.6rem",lineHeight:1.7}}>{T("bitul_note")}</div>
                 </div>
               )}
-              {Object.values(regalimAttending).every(v=>v)&&<div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic"}}>{T("regalim_all")}</div>}
+              {Object.values(regalimAttending).every(v=>v)&&!isFemale&&<div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic"}}>{T("regalim_all")}</div>}{isFemale&&<div style={{fontSize:"0.9rem",color:"#c07ad8",fontStyle:"italic"}}>{isHe?"נשים פטורות מעליה לרגל לדעת רוב הפוסקים":"Women are exempt from aliyah l'regel (most poskim)."}</div>}
             </div>
 
             {byCategory.map(({cat,items,subtotal,isTravel})=>{
@@ -1552,7 +1580,7 @@ export default function korbanosCalculator() {
                           {isRegalimLock
                             ? <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #5a3a1a",color:"#c9a45a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>{qty+" — "+T("set_by_regalim")}</div>
                             : isChatziFixed
-                              ? <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #5a3a1a",color:"#c9a45a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>fixed</div>
+                              ? <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid #5a3a1a",color:"#c9a45a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>{isFemale?"voluntary":"fixed"}</div>
                             : isBikkurim
                               ? <div style={{textAlign:"right"}}>
                                   <div style={{padding:"0.4rem 0.75rem",background:"#1a0c04",border:"1px solid "+(isLandowner?"#7a4090":"#5a3a1a"),color:isLandowner?"#c07ad8":"#5a3a1a",fontFamily:"'Cinzel',serif",fontSize:"0.82rem",whiteSpace:"nowrap"}}>
@@ -1632,13 +1660,14 @@ export default function korbanosCalculator() {
             <div style={{padding:"1.4rem 1.6rem",background:"linear-gradient(135deg,#6a3010,#4a2008,#2a1004)",border:"2px solid #f0c060",boxShadow:"0 8px 40px rgba(240,192,96,.2)",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"1rem"}}>
               <div>
                 <div style={{fontSize:"0.9rem",color:"#f0ddb0",letterSpacing:"0.15em",textTransform:"uppercase",opacity:.85,marginBottom:"0.15rem"}}>{T("estimated_total")}</div>
+                <div style={{fontSize:"0.8rem",color:"#7a5030",fontStyle:"italic"}}>{T("at_jlm_prices")} · <button onClick={()=>setActiveTab("prices")} style={{background:"none",border:"none",color:"#5aabdf",cursor:"pointer",fontSize:"0.8rem",textDecoration:"underline",textUnderlineOffset:"2px",fontFamily:"inherit",padding:0}}>View sources →</button></div>
                 <div className="df" style={{fontSize:"2.8rem",color:"#f0c060",fontWeight:900,textShadow:"0 2px 12px rgba(240,192,96,.4)"}}>{fmtC(annualTotal)}</div>
                 {(!includeTravel||livesInEY)&&travelSubtotal>0&&<div style={{fontSize:"0.9rem",color:"#5aabdf",marginTop:"0.25rem",fontStyle:"italic"}}>{T("travel_excl")} {fmtC(travelSubtotal)} {T("excl_suffix")}</div>}
               </div>
               <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap"}}>
                 <button onClick={()=>setShowPrint(true)} style={{background:"transparent",border:"1px solid #c9a45a",color:"#c9a45a",padding:"0.45rem 0.9rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.8rem",letterSpacing:"0.08em"}}>🖨 {T("print_summary")}</button>
                 <button onClick={()=>{
-                  const cfg={s:shiurId,t:financialTier,st:strictness,r:regalimAttending,ey:livesInEY,lo:isLandowner,it:includeTravel,itt:includeTravelTodah,tc:travelCfg,pq:personalQtys,to:todahOverride,so:shalmeiOverride,co:chagigah14Override};
+                  const cfg={s:shiurId,t:financialTier,st:strictness,r:regalimAttending,ey:livesInEY,lo:isLandowner,it:includeTravel,itt:includeTravelTodah,tc:travelCfg,pq:personalQtys,to:todahOverride,so:shalmeiOverride,co:chagigah14Override,g:gender};
                   const url=window.location.origin+window.location.pathname+"?bill="+encodeURIComponent(btoa(JSON.stringify(cfg)));
                   navigator.clipboard.writeText(url).then(()=>alert(T("link_copied"))).catch(()=>prompt(T("copy_link"),url));
                 }} style={{background:"transparent",border:"1px solid #c9a45a",color:"#c9a45a",padding:"0.45rem 0.9rem",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:"0.8rem",letterSpacing:"0.08em"}}>🔗 {T("share_bill")}</button>
@@ -1752,7 +1781,7 @@ export default function korbanosCalculator() {
             })}
 
             <div style={{marginTop:"1.5rem",padding:"1rem 1.25rem",background:"rgba(240,192,96,.04)",border:"1px solid #5a3a1a",fontSize:"0.9rem",color:"#c9a45a",lineHeight:1.7,fontStyle:"italic"}}>
-              Note: The Kohen Gadol's personal bull on Yom Kippur was not funded by the communal pool — he brought it at his own expense. The 12 Rosh Chodesh mussafim assume a standard year; a leap year adds one additional Rosh Chodesh mussaf. Population assumption adjustable via slider in this tab; default 600,000 follows the Bamidbar census. Second Temple era estimates range from 600k to several million.
+              Note: The Kohen Gadol's personal bull on Yom Kippur was not funded by the communal pool — he brought it at his own expense. Similarly, the Chavitei Kohen Gadol (the daily flour offering of the Kohen Gadol, Vayikra 6:13–15) was brought and funded personally, half in the morning and half in the afternoon, every day of his tenure. The 12 Rosh Chodesh mussafim assume a standard year; a leap year adds one additional Rosh Chodesh mussaf. Population assumption adjustable via slider in this tab; default 600,000 follows the Bamidbar census. Second Temple era estimates range from 600k to several million.
             </div>
             {disclaimer}
           </div>
@@ -2259,7 +2288,7 @@ export default function korbanosCalculator() {
             </div>
 
             {[
-              {tkey:"livestock",   keys:["bull","ram","lamb","goat","bird"],                              isAgr:false},
+              {tkey:"livestock",   keys:["bull","ram","lamb","ewe","goat","bird"],                        isAgr:false},
               {tkey:"agricultural",keys:["issaron_flour","log_oil","log_wine","frankincense","ketores","wood","salt"],isAgr:true},
             ].map(({tkey,keys,isAgr})=>(
               <div key={tkey} style={{marginBottom:"2rem"}}>
