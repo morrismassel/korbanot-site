@@ -2293,7 +2293,7 @@ export default function korbanosCalculator() {
                 </div>
                 {keys.map(key=>{
                   const isFixed=key==="ketores"||key==="frankincense"||key==="wood"||key==="salt";
-                  const baseNIS=JLM_NIS[key];const m=(isAgr&&!isFixed)?shiur.multiplier:1;const adjNIS=baseNIS*m;const usdPrice=adjNIS*usdPerNis;
+                  const baseNIS=jlmNis[key];const m=(isAgr&&!isFixed)?shiur.multiplier:1;const adjNIS=baseNIS*m;const usdPrice=adjNIS*usdPerNis;
                   const isExp=expandedPrice[key];const {src,url,note}=JLM_SOURCES[key];
                   return(<div key={key} style={{background:"rgba(24,12,4,.7)",border:"1px solid #5a3a1a",borderLeft:"4px solid "+(isAgr?"#b070e0":"#7a4f20"),padding:"0.9rem 1rem",marginBottom:"0.55rem"}}>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"1rem",flexWrap:"wrap"}}>
