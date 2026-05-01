@@ -2,7 +2,7 @@
 
 **A modern-day price calculator for the sacrificial offerings of the Beis HaMikdash.**
 
-Built by Morris Massel and Jeremy Spier with a lot of help from Claude.ai.
+Built by Morris Massel and Jeremy Spier with a lot of help from Claude.ai. Includes content compiled by [Naftoli Willner](https://docs.google.com/spreadsheets/d/1ZLnj_LQuq3Fv8I26GUwcbOW7EeHXbToQKBVQIAj2TRM/edit?gid=2007868934#gid=2007868934) in his Korbonos Spreadsheet, dedicated לע"נ יהושע בן צבי ז"ל.
 
 ---
 
@@ -47,7 +47,66 @@ We owe a special debt of gratitude to **Meir Bar-David**, whose assistance, cons
 
 ---
 
+## The Willner Collaboration
+
+The halachic taxonomy, procedural detail, and korban classification in this version draw heavily from the comprehensive spreadsheet analysis of all 116 korban-bearing occasions compiled by **Naftoli Willner**. His contribution covers:
+
+- Complete halachic classification of all 116 entries, including korban type, holiness level (Kodshei Kodashim vs. Kodshei Kalim), semichah requirements, and timing classification (fixed vs. anytime)
+- Procedural detail for each korban: slaughter location, blood application, altar/Kohen/owner/bringer allocations, eating restrictions
+- Nesachim breakdown by animal type (flour, oil, and wine quantities per issaron and hin, from Bamidbar 28–29)
+- Animal gender distinctions critical for accurate pricing — the female lamb (כַּבְשָׂה/ewe) used for chataot is priced separately from the male lamb used for olot
+- The 14 poverty-tier bird substitutes enabling the sliding-scale financial tier logic
+
+For additional details and specifics of the korbonos, see the [Korbonos Spreadsheet](https://docs.google.com/spreadsheets/d/1ZLnj_LQuq3Fv8I26GUwcbOW7EeHXbToQKBVQIAj2TRM/edit?gid=2007868934#gid=2007868934).
+
+---
+
+## Halachic Scope and Coverage
+
+Of the 116 korban-bearing occasions in the Willner Spreadsheet:
+
+| Status | Count |
+|--------|-------|
+| Fully priced in catalog | 28 |
+| Priced via scenario tool or annual bill | ~20 |
+| Priceable — pending implementation | ~40 |
+| Genuinely unpriceable (Lechem HaPanim) | 1 |
+
+The remaining ~40 entries include the 14 bird poverty-tier substitutes, the Kohen Gadol's personal YK offerings, the three distinct ashamot, voluntary mincha variants, and various flour offerings.
+
+---
+
 ## Version History
+
+### V5.0 — Willner Collaborative Edition (April 2026)
+
+**Halachic taxonomy overhaul:** The Full Catalog now carries Naftoli Willner's complete classification for all 28 entries — korban type badges (Olah / Chatas / Asham / Shelamim / Mixed), holiness level (Kodshei Kodashim / Kodshei Kalim), semichah requirement, fixed vs. anytime timing. Every entry displays a procedural "How it was brought" section: slaughter location, blood application, what goes to altar / Kohen / owner, eating rules, and proc notes drawn from Willner's spreadsheet.
+
+**Nesachim breakdown:** All catalog entries with libation requirements now show the exact flour/oil/wine quantities (1 issaron flour · ¼ hin oil · ¼ hin wine for lamb; 2/3 for ram; 3/6 for bull).
+
+**KorbanPopover component:** A small amber `i` badge inline next to korban names throughout the app (Annual Bill, Communal Budget, Today tab, Scenario tool) opens a viewport-aware popover with full halachic detail — badges, altar/kohen/owner boxes, slaughter, blood, eating, and proc notes.
+
+**"What Do I Bring?" scenario tab:** Six life-situation scenarios with live pricing and halachic detail: Nazir completion, Metzora purification, Yoledet after childbirth, Attending Pesach, Voluntary olah, Nazir interrupted by tumah.
+
+**Ewe pricing:** Female lamb (כַּבְשָׂה) added as a separate price point (₪620, ~11% below male lamb). All individual chataot now correctly use ewe pricing rather than goat as a proxy.
+
+**Gender selection:** Male / Female toggle in Assumptions. Female users: re'iyah, chagigah, and shalmei simcha zero out; bittul asei warning suppressed; machatzis hashekel labeled voluntary; yoledet defaults to 1.
+
+**Yoledet poverty tier:** Poor financial tier now correctly applies the 2-bird substitute (Vayikra 12:8) rather than the standard lamb package.
+
+**Scrutiny slider corrected:** Higher observance now correctly produces *fewer* violations. Level 5 uses the Bava ben Buta standard (asham taluy daily). Previously the slider was inverted.
+
+**Shabbos violation examples corrected:** Eruv/stroller example replaced with a proper reshus harabim d'oraisa carrying case, with a caveat about karmelis and chai nosei es atzmo. Ointment/memareiach moved from the kareis list to nonKareis with correct d'rabbanan classification.
+
+**Travel tumah note:** Added note that travelers from outside Eretz Yisrael require a full 7-day purification with para adumah before entering the Mikdash.
+
+**Chavitei Kohen Gadol:** The communal budget note about the KG's personal YK bull now also mentions the Chavitei KG — his daily flour offering (Vayikra 6:13–15), also personally funded.
+
+**Two-level catalog navigation:** Top-level group (Daily & Weekly / Pilgrimage Festivals / Individual Offerings) plus type filter strip (All / Olah / Chatas / Asham / Shelamim). Korban 101 summary panel drops in when a type is selected, bilingual EN/HE.
+
+**Price sourcing:** Ewe added to the Prices tab livestock display. "View sources →" link added under the annual total.
+
+---
 
 ### V4.2 — Educational Depth Update (April 22, 2026)
 
@@ -74,8 +133,6 @@ The Today's Communal Costs tab now has Print Summary and Share buttons matching 
 #### Full Catalog Sources
 
 All 22 Full Catalog entries now display their source citation as a hyperlink in the expanded detail panel. Clicking opens the primary source on Sefaria.
-
-#### Printable Source Sheets for the Classroom
 
 ---
 
@@ -155,3 +212,9 @@ Key architectural notes:
 - `GlossaryTerm` component — uses `useRef` + `getBoundingClientRect()` for viewport-clamped tooltip positioning with `position:fixed`.
 - `SHIURIM` — four shiur opinions each with multiplier, source string, notes, and Sefaria URL.
 - Hebrew calendar: `gregToAbs`, `absToHebrew`, `hebrewToAbs` with H_EPOCH = -1373427.
+
+---
+
+## Disclaimer
+
+For educational purposes only. Do not rely on anything here for any halachic decision. All halachic questions must be directed to a qualified posek.
