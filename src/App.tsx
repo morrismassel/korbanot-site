@@ -1177,6 +1177,35 @@ export default function korbanosCalculator() {
     </div>);
   };
 
+
+  // ── Fetch prices.json ──────────────────────────────────────────────────────
+  useEffect(()=>{
+    fetch(PRICES_URL)
+      .then(r=>{ if(!r.ok) throw new Error("prices fetch failed"); return r.json(); })
+      .then((data:any)=>{
+        const a = data.animals || {};
+        const c = data.commodities || {};
+        setJlmNis(prev => ({
+          ...prev,
+          ...(a.bull           && {bull:           a.bull.nis}),
+          ...(a.ram            && {ram:            a.ram.nis}),
+          ...(a.lamb           && {lamb:           a.lamb.nis}),
+          ...(a.ewe            && {ewe:            a.ewe.nis}),
+          ...(a.goat           && {goat:           a.goat.nis}),
+          ...(a.bird           && {bird:           a.bird.nis}),
+          ...(c.issaron_flour  && {issaron_flour:  c.issaron_flour.nis}),
+          ...(c.log_oil        && {log_oil:        c.log_oil.nis}),
+          ...(c.log_wine       && {log_wine:       c.log_wine.nis}),
+          ...(c.frankincense   && {frankincense:   c.frankincense.nis}),
+          ...(c.salt           && {salt:           c.salt.nis}),
+          ...(c.wood           && {wood:           c.wood.nis}),
+          ...(c.ketores        && {ketores:        c.ketores.nis}),
+        }));
+        if(data._meta?.last_updated) setPricesLastUpdated(data._meta.last_updated);
+      })
+      .catch(()=>{ /* silently fall back to hardcoded JLM_NIS defaults */ });
+  }, []);
+
   return(
     <div dir={dir} style={{minHeight:"100vh",background:"radial-gradient(ellipse at top,#1e0e06 0%,#120a04 50%,#080402 100%)",color:"#f0ddb0",fontFamily:"'EB Garamond',Georgia,serif",padding:"2rem 1rem",fontSize:"17px",lineHeight:1.6}}>
       <style>{`
@@ -2443,31 +2472,3 @@ function GlossaryTerm({term, children}){
 }
 
 function qBtn(e){return{width:38,height:38,background:e?"#7a4f20":"#2a1a08",border:"1px solid "+(e?"#c9a45a":"#5a3a1a"),color:e?"#f0ddb0":"#5a3a1a",cursor:e?"pointer":"not-allowed",fontSize:"1.2rem",fontFamily:"inherit",opacity:e?1:0.4};}
-
-  // ── Fetch prices.json ──────────────────────────────────────────────────────
-  useEffect(()=>{
-    fetch(PRICES_URL)
-      .then(r=>{ if(!r.ok) throw new Error("prices fetch failed"); return r.json(); })
-      .then((data:any)=>{
-        const a = data.animals || {};
-        const c = data.commodities || {};
-        setJlmNis(prev => ({
-          ...prev,
-          ...(a.bull           && {bull:           a.bull.nis}),
-          ...(a.ram            && {ram:            a.ram.nis}),
-          ...(a.lamb           && {lamb:           a.lamb.nis}),
-          ...(a.ewe            && {ewe:            a.ewe.nis}),
-          ...(a.goat           && {goat:           a.goat.nis}),
-          ...(a.bird           && {bird:           a.bird.nis}),
-          ...(c.issaron_flour  && {issaron_flour:  c.issaron_flour.nis}),
-          ...(c.log_oil        && {log_oil:        c.log_oil.nis}),
-          ...(c.log_wine       && {log_wine:       c.log_wine.nis}),
-          ...(c.frankincense   && {frankincense:   c.frankincense.nis}),
-          ...(c.salt           && {salt:           c.salt.nis}),
-          ...(c.wood           && {wood:           c.wood.nis}),
-          ...(c.ketores        && {ketores:        c.ketores.nis}),
-        }));
-        if(data._meta?.last_updated) setPricesLastUpdated(data._meta.last_updated);
-      })
-      .catch(()=>{ /* silently fall back to hardcoded JLM_NIS defaults */ });
-  }, []);
