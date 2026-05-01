@@ -15,7 +15,7 @@
     "lamb":  { "nis": 700,  "source": "Central Sheep & Goat Market, Israel",      "url": "https://www.moag.gov.il", "note": "Male yearling lamb at Israeli auction. High domestic consumption; robust supply." },
     "ewe":   { "nis": 620,  "source": "Central Sheep & Goat Market, Israel",      "url": "https://www.moag.gov.il", "note": "Female lamb (כַּבְשָׂה). ~10% below male lamb due to lighter carcass weight. Used for chatat and female-specific offerings." },
     "goat":  { "nis": 650,  "source": "Central Sheep & Goat Market, Israel",      "url": "https://www.moag.gov.il", "note": "Widely raised domestically. Used for communal Mussaf chataot." },
-    "bird":  { "nis": 3000000,   "source": "Israeli poultry wholesale market",          "url": "https://www.moag.gov.il", "note": "Squab/turtledove equivalent. Poverty-tier substitute for chatas and olah." }
+    "bird":  { "nis": 30,   "source": "Israeli poultry wholesale market",          "url": "https://www.moag.gov.il", "note": "Squab/turtledove equivalent. Poverty-tier substitute for chatas and olah." }
   },
 
   "commodities": {
