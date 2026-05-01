@@ -10,7 +10,7 @@ const SHIURIM = {
 };
 
 // ── Jerusalem prices (NIS) ────────────────────────────────────────────────────
-const JLM_NIS = {
+const JLM_NIS_DEFAULTS = {
   bull:9000, ram:1200, lamb:700, ewe:620, goat:650, bird:30,
   issaron_flour:28, log_oil:12, log_wine:15, frankincense:25, salt:2, wood:45,
   ketores:1072,
@@ -33,16 +33,16 @@ const JLM_SOURCES = {
 
 const LIBATION = { lamb:{flour:1,oil:3,wine:3}, ram:{flour:2,oil:4,wine:4}, bull:{flour:3,oil:6,wine:6} };
 
-function buildPrices(shiurId, usdPerNis) {
+function buildPrices(shiurId, usdPerNis, nis=JLM_NIS_DEFAULTS) {
   const m = SHIURIM[shiurId].multiplier;
   const c = v => v * usdPerNis;
   return {
-    bull:c(JLM_NIS.bull), ram:c(JLM_NIS.ram), lamb:c(JLM_NIS.lamb),
-    ewe:c(JLM_NIS.ewe), goat:c(JLM_NIS.goat), bird:c(JLM_NIS.bird),
-    issaron_flour:c(JLM_NIS.issaron_flour*m), log_oil:c(JLM_NIS.log_oil*m),
-    log_wine:c(JLM_NIS.log_wine*m), frankincense:c(JLM_NIS.frankincense),
-    salt:c(JLM_NIS.salt), wood:c(JLM_NIS.wood),
-    ketores:c(JLM_NIS.ketores),
+    bull:c(nis.bull), ram:c(nis.ram), lamb:c(nis.lamb),
+    ewe:c(nis.ewe), goat:c(nis.goat), bird:c(nis.bird),
+    issaron_flour:c(nis.issaron_flour*m), log_oil:c(nis.log_oil*m),
+    log_wine:c(nis.log_wine*m), frankincense:c(nis.frankincense),
+    salt:c(nis.salt), wood:c(nis.wood),
+    ketores:c(nis.ketores),
   };
 }
 function libCost(a,P){const l=LIBATION[a];if(!l)return 0;return l.flour*P.issaron_flour+l.oil*P.log_oil+l.wine*P.log_wine;}
@@ -879,6 +879,8 @@ const SCENARIOS = [
 const PRICES_LAST_UPDATED = "April 2026";
 const PRICES_REVIEW_NOTE = "Jerusalem wholesale market rates. Updated quarterly.";
 
+const PRICES_URL = "/prices.json";
+
 export default function korbanosCalculator() {
   const [activeTab,        setActiveTab]        = useState("annual");
   const [lang,             setLang]             = useState("en");
@@ -900,6 +902,8 @@ export default function korbanosCalculator() {
   const [shiurId,          setShiurId]          = useState("naeh");
   const [usdPerNis,        setUsdPerNis]        = useState(1/2.96);
   const [rateStatus,       setRateStatus]       = useState<"idle"|"loading"|"live"|"error">("idle");
+  const [pricesLastUpdated, setPricesLastUpdated] = useState<string>(PRICES_LAST_UPDATED);
+  const [jlmNis,           setJlmNis]           = useState<typeof JLM_NIS_DEFAULTS>(JLM_NIS_DEFAULTS);
   const [silverUsdPerGram, setSilverUsdPerGram] = useState(SILVER_USD_PER_GRAM_FALLBACK);
   const [silverStatus,     setSilverStatus]     = useState<"idle"|"loading"|"live"|"error">("idle");
   const [silverInputVal,   setSilverInputVal]   = useState((SILVER_USD_PER_GRAM_FALLBACK*31.1035).toFixed(2));
@@ -1031,7 +1035,7 @@ export default function korbanosCalculator() {
   const tier         = FINANCIAL_TIERS[financialTier];
   const currentLevel = STRICTNESS_LEVELS[strictness-1];
   const nisPerUsd    = usdPerNis>0?(1/usdPerNis).toFixed(2):"–";
-  const P            = useMemo(()=>buildPrices(shiurId,usdPerNis),[shiurId,usdPerNis]);
+  const P            = useMemo(()=>buildPrices(shiurId,usdPerNis,jlmNis),[shiurId,usdPerNis,jlmNis]);
 
   // Dynamic rationale for shiur-sensitive items
   const getRationale=(item)=>{
@@ -1254,8 +1258,8 @@ export default function korbanosCalculator() {
               <div style={{marginBottom:"1.25rem"}}>
                 <div style={lbl}>{T("set_location")}</div>
                 <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",marginBottom:"0.6rem"}}>
-                  {[["ey",true],["cla",false]].map(([key,val])=>(
-                    <button key={String(key)} onClick={()=>{setLivesInEY(val as boolean);if(!val) setIsLandowner(false);}} style={{padding:"0.45rem 0.9rem",background:livesInEY===(val as boolean)?"rgba(240,192,96,.15)":"transparent",color:livesInEY===(val as boolean)?"#f0c060":"#c9a45a",border:"1px solid "+(livesInEY===(val as boolean)?"#f0c060":"#5a3a1a"),cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
+                  {[{key:"ey",val:true},{key:"cla",val:false}].map(({key,val})=>(
+                    <button key={String(key)} onClick={()=>{setLivesInEY(val===true);if(!val) setIsLandowner(false);}} style={{padding:"0.45rem 0.9rem",background:livesInEY===(val===true)?"rgba(240,192,96,.15)":"transparent",color:livesInEY===(val===true)?"#f0c060":"#c9a45a",border:"1px solid "+(livesInEY===(val===true)?"#f0c060":"#5a3a1a"),cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
                       <span style={{fontFamily:"'Cinzel',serif",fontWeight:600}}>{T("set_"+key)}</span>
                     </button>
                   ))}
@@ -2262,7 +2266,7 @@ export default function korbanosCalculator() {
         {activeTab==="prices"&&(
           <div className="fi">
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1rem",padding:"0.6rem 1rem",background:"rgba(30,14,6,0.6)",border:"1px solid #5a3a1a",fontSize:"0.82rem"}}>
-              <span style={{color:"#a08050"}}>Livestock prices last reviewed: <span style={{color:"#f0ddb0",fontWeight:600}}>{PRICES_LAST_UPDATED}</span></span>
+              <span style={{color:"#a08050"}}>Livestock prices last reviewed: <span style={{color:"#f0ddb0",fontWeight:600}}>{pricesLastUpdated}</span></span>
               <span style={{color:"#7a5030",fontStyle:"italic",fontSize:"0.75rem"}}>{PRICES_REVIEW_NOTE}</span>
             </div>
             <div style={{marginBottom:"1.5rem",padding:"1rem 1.25rem",background:"rgba(90,171,223,.07)",border:"1px solid #3a7aaa",borderLeft:"3px solid #5aabdf",fontSize:"1rem",lineHeight:1.7,color:"#e8d4a0"}}>
@@ -2439,3 +2443,31 @@ function GlossaryTerm({term, children}){
 }
 
 function qBtn(e){return{width:38,height:38,background:e?"#7a4f20":"#2a1a08",border:"1px solid "+(e?"#c9a45a":"#5a3a1a"),color:e?"#f0ddb0":"#5a3a1a",cursor:e?"pointer":"not-allowed",fontSize:"1.2rem",fontFamily:"inherit",opacity:e?1:0.4};}
+
+  // ── Fetch prices.json ──────────────────────────────────────────────────────
+  useEffect(()=>{
+    fetch(PRICES_URL)
+      .then(r=>{ if(!r.ok) throw new Error("prices fetch failed"); return r.json(); })
+      .then((data:any)=>{
+        const a = data.animals || {};
+        const c = data.commodities || {};
+        setJlmNis(prev => ({
+          ...prev,
+          ...(a.bull           && {bull:           a.bull.nis}),
+          ...(a.ram            && {ram:            a.ram.nis}),
+          ...(a.lamb           && {lamb:           a.lamb.nis}),
+          ...(a.ewe            && {ewe:            a.ewe.nis}),
+          ...(a.goat           && {goat:           a.goat.nis}),
+          ...(a.bird           && {bird:           a.bird.nis}),
+          ...(c.issaron_flour  && {issaron_flour:  c.issaron_flour.nis}),
+          ...(c.log_oil        && {log_oil:        c.log_oil.nis}),
+          ...(c.log_wine       && {log_wine:       c.log_wine.nis}),
+          ...(c.frankincense   && {frankincense:   c.frankincense.nis}),
+          ...(c.salt           && {salt:           c.salt.nis}),
+          ...(c.wood           && {wood:           c.wood.nis}),
+          ...(c.ketores        && {ketores:        c.ketores.nis}),
+        }));
+        if(data._meta?.last_updated) setPricesLastUpdated(data._meta.last_updated);
+      })
+      .catch(()=>{ /* silently fall back to hardcoded JLM_NIS defaults */ });
+  }, []);
