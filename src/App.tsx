@@ -733,9 +733,9 @@ function KorbanPopover({catalogId, lang="en", fmtC, P, compCost}:{catalogId:stri
   };
 
   const hTag = ktype?.holiness==="kkk"
-    ? <span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 6px",background:"rgba(127,119,221,0.25)",color:"#afa9ec",border:"1px solid rgba(127,119,221,0.4)"}}>קדשי קדשים</span>
+    ? <span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 6px",background:"rgba(127,119,221,0.25)",color:"#afa9ec",border:"1px solid rgba(127,119,221,0.4)"}}>{isHe?"קדשי קדשים":"Kodshei Kodashim"}</span>
     : ktype?.holiness==="kk"
-    ? <span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 6px",background:"rgba(212,83,126,0.25)",color:"#ed93b1",border:"1px solid rgba(212,83,126,0.4)"}}>קדשי קלים</span>
+    ? <span style={{fontSize:"0.68rem",fontWeight:600,padding:"2px 6px",background:"rgba(212,83,126,0.25)",color:"#ed93b1",border:"1px solid rgba(212,83,126,0.4)"}}>{isHe?"קדשי קלים":"Kodshei Kalim"}</span>
     : null;
 
   return (
@@ -2162,7 +2162,7 @@ export default function korbanosCalculator() {
                 <div style={{background:"rgba(20,10,2,0.9)",border:"1px solid #7a4f20",borderLeft:"4px solid #daa520",padding:"1rem 1.25rem",marginBottom:"1rem"}}>
                   <div style={{display:"flex",alignItems:"baseline",gap:"0.6rem",marginBottom:"0.5rem",flexWrap:"wrap"}}>
                     <span style={{fontSize:"1.1rem",fontWeight:700,color:"#f0ddb0",fontFamily:"'Cinzel',serif"}}>{isHe?t.name_he:t.name}</span>
-                    {isKKK?<span style={{fontSize:"0.72rem",background:"rgba(127,119,221,0.2)",color:"#afa9ec",border:"1px solid #7f77dd",padding:"2px 8px"}}>קדשי קדשים</span>:<span style={{fontSize:"0.72rem",background:"rgba(212,83,126,0.2)",color:"#ed93b1",border:"1px solid #d4537e",padding:"2px 8px"}}>קדשי קלים</span>}
+                    {isKKK?<span style={{fontSize:"0.72rem",background:"rgba(127,119,221,0.2)",color:"#afa9ec",border:"1px solid #7f77dd",padding:"2px 8px"}}>{isHe?"קדשי קדשים":"Kodshei Kodashim"}</span>:<span style={{fontSize:"0.72rem",background:"rgba(212,83,126,0.2)",color:"#ed93b1",border:"1px solid #d4537e",padding:"2px 8px"}}>{isHe?"קדשי קלים":"Kodshei Kalim"}</span>}
                   </div>
                   <div style={{fontSize:"0.88rem",color:"#e8d4a0",lineHeight:1.6,marginBottom:"0.75rem"}}>{isHe?t.purpose_he:t.purpose}</div>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"0.5rem",marginBottom:"0.75rem"}}>
