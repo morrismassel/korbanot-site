@@ -1,0 +1,65 @@
+{
+  "_meta": {
+    "last_updated": "May 2026",
+    "review_note": "Jerusalem wholesale market rates. Reviewed quarterly.",
+    "reviewer": "Updated by Claude.ai research — verify against moag.gov.il and Jerusalem market sources before deploying.",
+    "changelog": [
+      { "date": "April 2026", "note": "Initial structured extraction from App.tsx. Added ewe (female lamb) as separate price point." },
+      { "date": "May 2026",   "note": "Migrated to standalone prices.json. No price changes." }
+    ]
+  },
+
+  "animals": {
+    "bull":  { "nis": 9000, "source": "Central Cattle Market, Moshav Beit Dagan", "url": "https://www.moag.gov.il", "note": "Israeli cattle market average. Adult male, ~500kg." },
+    "ram":   { "nis": 1200, "source": "Central Sheep & Goat Market, Israel",      "url": "https://www.moag.gov.il", "note": "Domestic production keeps prices lower than comparable US animals." },
+    "lamb":  { "nis": 700,  "source": "Central Sheep & Goat Market, Israel",      "url": "https://www.moag.gov.il", "note": "Male yearling lamb at Israeli auction. High domestic consumption; robust supply." },
+    "ewe":   { "nis": 620,  "source": "Central Sheep & Goat Market, Israel",      "url": "https://www.moag.gov.il", "note": "Female lamb (כַּבְשָׂה). ~10% below male lamb due to lighter carcass weight. Used for chatat and female-specific offerings." },
+    "goat":  { "nis": 650,  "source": "Central Sheep & Goat Market, Israel",      "url": "https://www.moag.gov.il", "note": "Widely raised domestically. Used for communal Mussaf chataot." },
+    "bird":  { "nis": 30,   "source": "Israeli poultry wholesale market",          "url": "https://www.moag.gov.il", "note": "Squab/turtledove equivalent. Poverty-tier substitute for chatas and olah." }
+  },
+
+  "commodities": {
+    "issaron_flour": {
+      "nis": 28,
+      "source": "Solet — semolina-grade wheat flour; Israeli supermarket retail (Sugat/Osem semolina)",
+      "url": "https://www.osem.co.il",
+      "note": "Solet is properly semolina-grade wheat, coarsely ground and sifted — not fine flour (Menachos 27a, Rashi s.v. Solet=Geres; Avos 5:15). Price per kg. R' Naeh baseline: ~2.4kg per issaron."
+    },
+    "log_oil": {
+      "nis": 12,
+      "source": "Domestic Israeli extra-virgin olive oil; Galilee production",
+      "url": "https://www.zait.co.il",
+      "note": "Significantly cheaper than US kosher imports. Mikdash required first-pressing quality. Price per log (~0.31L by R' Naeh)."
+    },
+    "log_wine": {
+      "nis": 15,
+      "source": "Israeli table wine; Golan Heights Winery, Carmel",
+      "url": "https://www.golanwines.co.il",
+      "note": "No import markup. Must be aged 40+ days (Menachos 87a). Price per log."
+    },
+    "frankincense": {
+      "nis": 25,
+      "source": "Machane Yehuda spice market; imported Omani frankincense",
+      "url": "https://www.mahane-yehuda.com",
+      "note": "Boswellia sacra resin. Komatz approx 1-2 oz per offering."
+    },
+    "salt": {
+      "nis": 2,
+      "source": "Israeli commodity pricing",
+      "url": "",
+      "note": "Obligatory on all offerings. Negligible cost."
+    },
+    "wood": {
+      "nis": 45,
+      "source": "Jerusalem lumber market",
+      "url": "",
+      "note": "Nine acceptable species (Tamid 29b). Nominal per-offering estimate for wood consumed on the altar."
+    },
+    "ketores": {
+      "nis": 1072,
+      "source": "Composite calculation — 11 spices per Kerisos 6a",
+      "url": "https://www.mahane-yehuda.com",
+      "note": "Annual batch: 368 maneh (~184kg) of 11 spices. Dominant costs: saffron (16 maneh × ~NIS 50/g), onycha (70 maneh × ~NIS 4/g), stacte (70 maneh × ~NIS 3/g), plus galbanum, spikenard, myrrh, cassia, costus, cinnamon, aromatic bark, frankincense. Annual total ~NIS 782,000 ÷ 730 offerings = NIS 1,072 per offering. Saffron alone >50% of cost."
+    }
+  }
+}
