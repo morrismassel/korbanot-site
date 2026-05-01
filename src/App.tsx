@@ -1,4 +1,4 @@
-// Korbanos Calculator — V4 build 1776860187
+// Korbanos Calculator — V5 build 1776860187
 import React, { useState, useMemo, useEffect, useRef } from "react";
 
 // ── Shiurim ───────────────────────────────────────────────────────────────────
@@ -101,14 +101,13 @@ const CATALOG = [
 const GROUPS = [{id:"Daily & Weekly",tkey:"grp_daily"},{id:"Pilgrimage Festivals",tkey:"grp_pilgrimage"},{id:"Individual Offerings",tkey:"grp_individual"}];
 
 const KORBAN_TYPES = {
-  olah:    {key:"olah",    name:"Olah",     name_he:"עוֹלָה",  holiness:"kkk", gender:"Male (זכר)",      semichah_req:false, altar:"Everything — entirely consumed",  kohen:"Hides only (עורות)",              owner:"None",                  eaten:"Not eaten",             where:"Not eaten",               purpose:"Pure elevation and devotion — entirely consumed on the altar. No trigger required.", purpose_he:"הקרבה ועליה גמורה — כולה למזבח. אינה מחייבת טריגר.", note:"The only korban where nothing goes to the owner. Represents total dedication.",       note_he:"הקרבן היחיד שכולו כליל למזבח. מבטאת מסירה מוחלטת."},
-  chatas:  {key:"chatas",  name:"Chatas",   name_he:"חַטָּאת", holiness:"kkk", gender:"Female (most)",    semichah_req:true,  altar:"Sacrificial portions (אימורים)",  kohen:"Remaining meat + hides",          owner:"None",                  eaten:"Day and following night", where:"Within the Azarah",       purpose:"Atonement for inadvertent violation of a kareis prohibition.",                      purpose_he:"כפרה על שגגת איסור כרת.",                              note:"Always female for individual sins. Inner chataot are burned outside — meat not eaten.", note_he:"חטאת יחיד תמיד נקבה. חטאות פנימיות נשרפות מחוץ למקדש."},
-  asham:   {key:"asham",   name:"Asham",    name_he:"אָשָׁם",  holiness:"kkk", gender:"Male (זכר)",      semichah_req:true,  altar:"Sacrificial portions (אימורים)",  kohen:"Remaining meat + hides",          owner:"None",                  eaten:"Day and following night", where:"Within the Azarah",       purpose:"Guilt offering: misuse of Temple property, false oath, or kareis doubt (asham taluy).", purpose_he:"קרבן על מעילה, שבועת הפקדון, או ספק בעבירת כרת.",   note:"Always an individual offering — no communal asham. Always a ram.",                    note_he:"קרבן יחיד בלבד. תמיד איל."},
-  shelamim:{key:"shelamim",name:"Shelamim", name_he:"שְׁלָמִים",holiness:"kk",  gender:"Either (זכר/נקבה)",semichah_req:true,  altar:"Sacrificial portions — chelev",   kohen:"Breast (חזה) + right thigh (שוק)",owner:"All remaining meat",  eaten:"Two days and the night",  where:"Within Yerushalayim",     purpose:"Peace and relationship — celebration, vow, or free-will gift.",                     purpose_he:"שלום וקשר — חגיגה, קיום נדר, או מנחת נדבה.",         note:"The only korban where the owner receives a substantial share — hence its association with simchah.", note_he:"הקרבן היחיד שהבעלים מקבלים חלק נכבד מהבשר — לכן קשור לשמחה."},
+  olah:    {key:"olah",    name:"Olah",     name_he:"עוֹלָה",  holiness:"kkk", gender:"Male (זכר)",      semichah_req:false, altar:"Everything — entirely consumed",  altar_he:"הכל — כליל למזבח", kohen:"Hides only (עורות)",              kohen_he:"עורות בלבד", owner:"None",                  owner_he:"אין", eaten:"Not eaten",             eaten_he:"לא נאכל", where:"Not eaten",               where_he:"לא נאכל",               purpose:"Pure elevation and devotion — entirely consumed on the altar. No trigger required.", purpose_he:"הקרבה ועליה גמורה — כולה למזבח. אינה מחייבת טריגר.", note:"The only korban where nothing goes to the owner. Represents total dedication.",       note_he:"הקרבן היחיד שכולו כליל למזבח. מבטאת מסירה מוחלטת."},
+  chatas:  {key:"chatas",  name:"Chatas",   name_he:"חַטָּאת", holiness:"kkk", gender:"Female (most)",    semichah_req:true,  altar:"Sacrificial portions (אימורים)",  altar_he:"אימורים", kohen:"Remaining meat + hides",          kohen_he:"בשר ועורות לכהן", owner:"None",                  owner_he:"אין", eaten:"Day and following night", eaten_he:"יום ולילה", where:"Within the Azarah",               where_he:"בתוך העזרה",       purpose:"Atonement for inadvertent violation of a kareis prohibition.",                      purpose_he:"כפרה על שגגת איסור כרת.",                              note:"Always female for individual sins. Inner chataot are burned outside — meat not eaten.", note_he:"חטאת יחיד תמיד נקבה. חטאות פנימיות נשרפות מחוץ למקדש."},
+  asham:   {key:"asham",   name:"Asham",    name_he:"אָשָׁם",  holiness:"kkk", gender:"Male (זכר)",      semichah_req:true,  altar:"Sacrificial portions (אימורים)",  altar_he:"אימורים", kohen:"Remaining meat + hides",          kohen_he:"בשר ועורות לכהן", owner:"None",                  owner_he:"אין", eaten:"Day and following night", eaten_he:"יום ולילה", where:"Within the Azarah",               where_he:"בתוך העזרה",       purpose:"Guilt offering: misuse of Temple property, false oath, or kareis doubt (asham taluy).", purpose_he:"קרבן על מעילה, שבועת הפקדון, או ספק בעבירת כרת.",   note:"Always an individual offering — no communal asham. Always a ram.",                    note_he:"קרבן יחיד בלבד. תמיד איל."},
+  shelamim:{key:"shelamim",name:"Shelamim", name_he:"שְׁלָמִים",holiness:"kk",  gender:"Either (זכר/נקבה)",semichah_req:true,  altar:"Sacrificial portions — chelev",   altar_he:"אימורים וחלב", kohen:"Breast (חזה) + right thigh (שוק)",kohen_he:"חזה ושוק לכהן", owner:"All remaining meat",  owner_he:"שאר הבשר לבעלים",  eaten:"Two days and the night",  where:"Within Yerushalayim",     purpose:"Peace and relationship — celebration, vow, or free-will gift.",                     purpose_he:"שלום וקשר — חגיגה, קיום נדר, או מנחת נדבה.",         note:"The only korban where the owner receives a substantial share — hence its association with simchah.", note_he:"הקרבן היחיד שהבעלים מקבלים חלק נכבד מהבשר — לכן קשור לשמחה."},
   mixed:   {key:"mixed",   name:"Mixed",    name_he:"מורכב",   holiness:"",    gender:"Varies",          semichah_req:false, altar:"Varies by offering",              kohen:"Varies by offering",              owner:"Varies by offering",  eaten:"Varies",                  where:"Varies",                  purpose:"This occasion includes multiple korban types.",             purpose_he:"אירוע זה כולל סוגי קרבנות מרובים.",                   note:"", note_he:""},
   other:   {key:"other",   name:"Other",    name_he:"אחר",     holiness:"",    gender:"—",               semichah_req:false, altar:"None",                             kohen:"None",                               owner:"None",                  eaten:"Not eaten",                       where:"Not eaten",                       purpose:"Special communal obligations.",                             purpose_he:"חובות ציבוריות מיוחדות.",                             note:"", note_he:""},
 };
-
 
 // ── Communal offerings (funded by chatzi shekel pool) ─────────────────────────
 const COMMUNAL_OFFERINGS = [
@@ -130,15 +129,15 @@ const COMMUNAL_OFFERINGS = [
 const V = {
   chatas_total:{
     kareis:[
-      {act:"Pushed a stroller outside the valid eruv boundary on Shabbos",act_he:"דחף עגלת תינוק מחוץ לתחום העירוב בשבת",act_es:"Empujó un cochecito fuera del límite del eruv válido en Shabat",detail:"Hotzaah — carrying in a public domain; d'oraisa melacha carrying kareis",detail_he:"הוצאה — הוצאה לרשות הרבים; מלאכה דאורייתא הנושאת כרת",detail_es:"Hotzaá — acarrear en dominio público; melacha de la Torá con pena de karet"},
+      
       {act:"Picked an apple from a tree on Shabbos b'shogeg",act_he:"קטף תפוח מעץ בשבת בשגגה",act_es:"Tomó una manzana de un árbol en Shabat b'shogeg",detail:"Tolesh — detaching a fruit from its source is a toladah of Kotzer (reaping), a d'oraisa melacha carrying kareis",detail_he:"תולש — תלישת פרי ממקורו היא תולדה של קוצר, מלאכה דאורייתא הנושאת כרת",detail_es:"Tolesh — desprender un fruto de su fuente es toladá de Kotzer (siega), melacha de la Torá con karet"},
       {act:"Wrote a note, forgetting it was Shabbos",act_he:"כתב פתק, שכח שהיה שבת",act_es:"Escribió una nota olvidando que era Shabat",detail:"Kotev — shogeg Shabbos, classic kareis case",detail_he:"כותב — שגגת שבת, מקרה כרת קלאסי",detail_es:"Kotev — shogeg Shabat, caso clásico de karet"},
       {act:"Lit a candle on Shabbos, momentarily forgetting the day",act_he:"הדליק נר בשבת, שכח לרגע את היום",act_es:"Encendió una vela en Shabat olvidando momentáneamente el día",detail:"Mav'ir — kindling fire; d'oraisa melacha carrying kareis. No electricity controversy — this is the classic case.",detail_he:"מבעיר — הבערת אש; מלאכה דאורייתא הנושאת כרת. ללא מחלוקת חשמל — זהו המקרה הקלאסי.",detail_es:"Mav'ir — encender fuego; melacha de la Torá con karet. Sin controversia de electricidad — este es el caso clásico."},
       {act:"Sorted items on Shabbos not knowing borer applies",act_he:"מיין חפצים בשבת מבלי לדעת שבורר חל",act_es:"Clasificó objetos en Shabat sin saber que aplica borer",detail:"Borer — taking pesoles from ochel without immediate use; d'oraisa, commonly unknown",detail_he:"בורר — הוצאת פסולת מאוכל שלא לצורך מיידי; דאורייתא, לרוב לא ידוע",detail_es:"Borer — separar desechos del alimento sin uso inmediato; de la Torá, comúnmente desconocido"},
       {act:"Wrote two or more letters on Shabbos (e.g. signing a form, filling out a label)",act_he:"כתב שתי אותיות או יותר בשבת (למשל חתימה על טופס)",act_es:"Escribió dos o más letras en Shabat (p.ej. firmando un formulario)",detail:"Kotev — writing is one of the 39 melachos; two letters trigger d'oraisa liability. Common inadvertent case.",detail_he:"כותב — כתיבה היא אחת מ-39 מלאכות; שתי אותיות מחייבות דאורייתא. מקרה שגגה נפוץ.",detail_es:"Kotev — escribir es una de las 39 melachos; dos letras activan responsabilidad d'oraita."},
-      {act:"Relations with wife not knowing she had become niddah",act_he:"קיים יחסים עם אשתו מבלי לדעת שנעשתה נידה",act_es:"Tuvo relaciones con su esposa sin saber que ella se había vuelto niddah",detail:"Niddah carries kareis; lo yada — didn't know her status had changed",detail_he:"נידה נושאת כרת; לא ידע — לא ידע שמעמדה השתנה",detail_es:"Niddah lleva karet; lo yada — no sabía que su estado había cambiado"},
+      {act:"Relations with wife not knowing she had become niddah",act_female:"Had relations with husband while not knowing she had become niddah",act_he:"קיים יחסים עם אשתו מבלי לדעת שנעשתה נידה",act_he_female:"קיימה יחסים עם בעלה מבלי לדעת שנעשתה נידה",act_es:"Tuvo relaciones con su esposa sin saber que ella se había vuelto niddah",detail:"Niddah carries kareis; lo yada — didn't know her status had changed",detail_he:"נידה נושאת כרת; לא ידע — לא ידע שמעמדה השתנה",detail_es:"Niddah lleva karet; lo yada — no sabía que su estado había cambiado"},
       {act:"Ate a dish of meat cooked in butter b'shogeg, thinking it was pareve",act_he:"אכל תבשיל בשר שבושל בחמאה בשגגה, חשב שהיה פרווה",act_es:"Comió un plato de carne cocinada en mantequilla b'shogeg, pensando que era pareve",detail:"D'oraisa basar b'chalav. Whether eating (as opposed to cooking) carries kareis is disputed among Rishonim — the Rambam holds it does (Hilchos Maachalos Asurot 9:1); others disagree. Included here per the Rambam's position.",detail_he:"בשר בחלב דאורייתא. האם אכילה (להבדיל מבישול) נושאת כרת שנוי במחלוקת ראשונים — הרמב\"ם פוסק שכן (הל. מאכלות אסורות ט:א); אחרים חולקים. נכלל כאן לפי שיטת הרמב\"ם.",detail_es:"Basar b'chalav de la Torá. Si comer (a diferencia de cocinar) lleva karet está en disputa entre los Rishonim — el Rambam sostiene que sí (Hil. Maachalot Asurot 9:1); otros discrepan. Incluido aquí según la posición del Rambam."},
-      {act:"Had relations mistaking a woman for his wife who was in fact an ervah",act_he:"קיים יחסים בטעות עם אישה שחשב שהיא אשתו, והיא היתה עריה",act_es:"Tuvo relaciones confundiendo a una mujer con su esposa siendo en realidad una ervah",detail:"Ta'us — mistaken identity; arayos carries kareis (Kerisus 2a)",detail_he:"טעות — זיהוי שגוי; עריות נושאות כרת (כריתות ב:א)",detail_es:"Ta'us — identidad equivocada; arayot lleva karet (Kerisut 2a)"},
+      {act:"Had relations mistaking a woman for his wife, who was in fact an ervah",act_female:"Had relations mistaking a man for her husband, who was in fact an ervah",act_he:"קיים יחסים בטעות עם אישה שחשב שהיא אשתו, והיא היתה עריה",act_he_female:"קיימה יחסים בטעות עם איש שחשבה שהוא בעלה, והוא היה ערוה",act_es:"Tuvo relaciones confundiendo a una mujer con su esposa siendo en realidad una ervah",detail:"Ta'us — mistaken identity; arayos carries kareis (Kerisus 2a)",detail_he:"טעות — זיהוי שגוי; עריות נושאות כרת (כריתות ב:א)",detail_es:"Ta'us — identidad equivocada; arayot lleva karet (Kerisut 2a)"},
       {act:"Ate chelev (forbidden fat) thinking it was permitted",act_he:"אכל חֵלֶב (שומן אסור) בחשבו שהותר",act_es:"Comió chelev (grasa prohibida) pensando que estaba permitido",detail:"Chelev carries kareis; confused it with permitted fat (Vayikra 4:27)",detail_he:"חלב נושא כרת; בלבל אותו עם שומן מותר (ויקרא ד:כז)",detail_es:"Chelev lleva karet; lo confundió con grasa permitida (Vayikra 4:27)"},
       {act:"Ate chametz on Pesach thinking it was kosher l'Pesach",act_he:"אכל חמץ בפסח בחשבו שהיה כשר לפסח",act_es:"Comió chametz en Pésaj pensando que era kosher l'Pésaj",detail:"Chametz on Pesach carries kareis (Shemos 12:15); common inadvertent violation",detail_he:"חמץ בפסח נושא כרת (שמות יב:טו); הפרה בשגגה נפוצה",detail_es:"Chametz en Pésaj lleva karet (Shemot 12:15); violación involuntaria común"},
       {act:"Ate blood in a dish unknowingly",act_he:"אכל דם בתבשיל מבלי לדעת",act_es:"Comió sangre en un plato sin saberlo",detail:"Dam carries kareis (Vayikra 7:27); often concealed in cooked dishes",detail_he:"דם נושא כרת (ויקרא ז:כז); לרוב מוסתר בתבשילים מבושלים",detail_es:"Dam lleva karet (Vayikra 7:27); frecuentemente oculto en platos cocidos"},
@@ -149,7 +148,7 @@ const V = {
       {act:"Spoke about weekday business on Shabbos",act_he:"דיבר על עסקים חולין בשבת",act_es:"Habló sobre negocios cotidianos en Shabat",detail:"Uvdin d'chol - rabbinic prohibition only",detail_he:"אובדין דחול — איסור דרבנן בלבד",detail_es:"Uvdin d'chol — prohibición rabínica solamente"},
       {act:"Ate chicken with dairy",act_he:"אכל עוף עם חלב",act_es:"Comió pollo con lácteos",detail:"Rabbinic extension of basar b'chalav - no chatas",detail_he:"הרחבה רבנית של בשר בחלב — אין חטאת",detail_es:"Extensión rabínica de basar b'chalav — no hay chatat"},
       {act:"Did not wait the full time between meat and dairy",act_he:"לא המתין זמן מלא בין בשר לחלב",act_es:"No esperó el tiempo completo entre carne y lácteos",detail:"Waiting period is minhag/d'rabbanan - no korban",detail_he:"זמן ההמתנה הוא מנהג/דרבנן — אין קרבן",detail_es:"El período de espera es minhag/d'rabbanan — no hay korban"},
-      {act:"Handshake with a woman",act_he:"לחיצת יד עם אישה",act_es:"Apretón de manos con una mujer",detail:"Negiah - rabbinic according to most; no chatas",detail_he:"נגיעה — דרבנן לפי רוב הפוסקים; אין חטאת",detail_es:"Negiyá — rabínico según la mayoría; no hay chatat"},
+      {act:"Handshake with a woman",act_he:"לחיצת יד עם אישה",act_es:"Apretón de manos con una mujer",detail:"Negiah - rabbinic according to most; no chatas",detail_he:"נגיעה — דרבנן לפי רוב הפוסקים; אין חטאת",detail_es:"Negiyá — rabínico según la mayoría; no hay chatat",maleOnly:true},
       {act:"Smeared ointment or lotion on Shabbos",act_he:"מרח משחה או קרם בשבת",act_es:"Aplicó ungüento en Shabat",detail:"Memareiach — smoothing is a toladah of memachek. The d'oraisa vs. d'rabanan status depends on surface and intent; most poskim hold standard cosmetic application is d'rabanan. No chatas.",detail_he:"ממרח — החלקה היא תולדה של ממחק. המעמד דאורייתא/דרבנן תלוי במשטח ובכוונה; רוב הפוסקים מחשיבים מריחה קוסמטית כדרבנן. אין חטאת.",detail_es:"Memareiach — alisar es toladá de memachek. El estatus d'oraita vs. d'rabbanan depende de la superficie; la mayoría lo considera d'rabbanan. No hay chatat."},
       {act:"Yichud itself",act_he:"ייחוד עצמו",act_es:"El yijud en sí",detail:"D'rabbanan - does not trigger a chatas directly",detail_he:"דרבנן — אינו מחייב חטאת ישירות",detail_es:"D'rabbanan — no genera chatat directamente"},
     ],
@@ -238,6 +237,7 @@ const TR = {
   strip_live:    {en:"Live:",    he:"מיקום:",      es:"En vivo:",   fr:"En direct:",  ru:"Онлайн:"},
   strip_ey:      {en:"Eretz Yisroel", he:"ארץ ישראל",  es:"Eretz Yisroel", fr:"Eretz Yisroel", ru:"Эрец Исраэль"},
   strip_cla:     {en:"Chutz L'Aretz", he:"חוץ לארץ",  es:"Diáspora",       fr:"Diaspora",       ru:"Диаспора"},
+  strip_gender:  {en:"Gender",    he:"מין",      es:"Género",     fr:"Genre",       ru:"Пол"},
   strip_standing:{en:"Standing:", he:"מעמד:",    es:"Nivel:",     fr:"Niveau:",     ru:"Уровень:"},
   strip_shiur:   {en:"Shiur:",   he:"שיעור:",    es:"Shiur:",     fr:"Shiur:",      ru:"Шиур:"},
   strip_silver:  {en:"Silver:",  he:"כסף:",      es:"Plata:",     fr:"Argent:",     ru:"Серебро:"},
@@ -245,6 +245,8 @@ const TR = {
   strip_close:   {en:"Close",   he:"סגור",       es:"Cerrar",     fr:"Fermer",      ru:"Закрыть"},
   strip_assumptions:{en:"Assumptions", he:"הגדרות",  es:"Supuestos",  fr:"Hypothèses",  ru:"Настройки"},
   set_location:  {en:"Location",      he:"מיקום",    es:"Ubicación",  fr:"Localisation",ru:"Местоположение"},
+  set_ey:        {en:"Eretz Yisroel", he:"ארץ ישראל",  es:"Eretz Yisroel", fr:"Eretz Yisroel", ru:"Эрец Исраэль"},
+  set_cla:       {en:"Chutz L'Aretz", he:"חוץ לארץ",   es:"Fuera de Israel",fr:"Hors d'Israël",ru:"За пределами"},
   set_ey_check:  {en:"I live in Eretz Yisroel", he:"אני גר בארץ ישראל", es:"Vivo en Eretz Yisroel", fr:"Je vis en Eretz Yisroel", ru:"Я живу в Эрец Исраэль"},
   set_ey_note:   {en:"Travel costs and travel-related todaos removed.", he:"עלויות נסיעה ותודות הוסרו.", es:"Costos de viaje eliminados.", fr:"Frais de voyage supprimés.", ru:"Транспортные расходы удалены."},
   set_landowner: {en:"I own agricultural land (obligated in Bikkurim)", he:"יש לי שדות חקלאיים (חייב בביכורים)", es:"Tengo tierras agrícolas (obligado en Bikkurim)", fr:"Je possède des terres agricoles (Bikkourim)", ru:"Я владею сельскохозяйственными землями (Бикурим)"},
@@ -275,7 +277,7 @@ const TR = {
   sample_violations:{en:"sample violations", he:"דוגמאות לעבירות", es:"ejemplos de violaciones", fr:"exemples de violations", ru:"примеры нарушений"},
   hide_examples: {en:"hide examples",   he:"הסתר דוגמאות",  es:"ocultar ejemplos",   fr:"masquer les exemples",  ru:"скрыть примеры"},
   set_by_regalim:{en:"set by regalim",  he:"נקבע לפי הרגל", es:"según los regalim",  fr:"selon les regalim",     ru:"по регалим"},
-  scrutiny_lbl:  {en:"Observance & Self-Scrutiny", he:"רמת שמירה ובדיקה עצמית", es:"Nivel de Autoexamen", fr:"Niveau d'Examen", ru:"Уровень Самопроверки"},
+  scrutiny_lbl:  {en:"Number of Violations", he:"מספר הפרות", es:"Nivel de Autoexamen", fr:"Niveau d'Examen", ru:"Уровень Самопроверки"},
   scrutiny_min:  {en:"Minimal",   he:"מינימלי", es:"Mínimo",    fr:"Minimal",    ru:"Минимальный"},
   scrutiny_avg:  {en:"Average",   he:"ממוצע",   es:"Promedio",  fr:"Moyen",      ru:"Средний"},
   scrutiny_careful:{en:"Careful", he:"זהיר",    es:"Cuidadoso", fr:"Prudent",    ru:"Осторожный"},
@@ -329,16 +331,12 @@ const TR = {
   grp_pilgrimage:{en:"Pilgrimage Festivals",   he:"שלוש רגלים",        es:"Festividades de Peregrinación", fr:"Fêtes de Pèlerinage",  ru:"Праздники Паломничества"},
   grp_individual:{en:"Individual Offerings",   he:"קרבנות יחיד",       es:"Ofrendas Individuales",   fr:"Offrandes Individuelles",   ru:"Индивидуальные Жертвы"},
 
-
   chatzi_lbl:    {en:"Chatzi shekel:", he:"מחצית השקל:", es:"Chatzi shekel:", fr:"Chatzi shekel:", ru:"Чаци-шекель:"},
   pidyon_lbl:    {en:"Pidyon haben:",  he:"פדיון הבן:",  es:"Pidyon haben:",  fr:"Pidyon haben:",  ru:"Пидьон а-бен:"},
-
-
 
   live_rate:     {en:"live rate",   he:"מחיר חי",   es:"tasa en vivo",  fr:"taux en direct", ru:"онлайн курс"},
   fetching:      {en:"fetching...", he:"טוען...",    es:"cargando...",   fr:"chargement...",  ru:"загрузка..."},
   at_jlm_prices: {en:"at current Jerusalem prices", he:"במחירי ירושלים עדכניים", es:"a precios actuales de Jerusalén", fr:"aux prix actuels de Jérusalem", ru:"по текущим ценам Иерусалима"},
-
 
   dyk_title:  {en:"Did You Know?", he:"האם ידעת?", es:"¿Sabías que...?", fr:"Le Saviez-vous?", ru:"Знаете ли вы?"},
 
@@ -364,7 +362,6 @@ const TR = {
   bitul_note:    {en:"The person who violated a Shabbos prohibition and brings a chatas has a cleaner ledger at year's end than the person who stayed home and saved the airfare, which generally cannot be fixed.", he:"מי שעבר על איסור שבת ומביא חטאת, חשבונו נקי יותר בסוף השנה ממי שנשאר בבית וחסך בדמי הטיסה, שבדרך כלל לא ניתן לתקנם.", es:"La persona que violó una prohibición de Shabat y trae una chatas tiene un registro más limpio al final del año que la persona que se quedó en casa y ahorró el pasaje aéreo, que generalmente no se puede corregir.", fr:"La personne qui a violé une interdiction de Chabbat et apporte une 'hatat a un registre plus propre en fin d'année que celle qui est restée chez elle et a économisé le billet d'avion, ce qui en général ne peut être réparé.", ru:"Человек, нарушивший запрет Шаббата и принёсший хатат, имеет более чистый счёт в конце года, чем тот, кто остался дома и сэкономил на билете, — ведь это, как правило, нельзя исправить."},
   lodging_lbl:   {en:"lodging", he:"לינה", es:"alojamiento", fr:"hébergement", ru:"проживание"},
   nights_lbl:    {en:"nights",  he:"לילות", es:"noches",     fr:"nuits",        ru:"ночей"},
-  slider_desc:   {en:"Higher observance → fewer inadvertent violations. A yarei shamayim sins less, not more. Adjust freely with +/-.", he:"שמירה גבוהה יותר = פחות עבירות שגגה. ירא שמים חוטא פחות, לא יותר. ניתן לשנות עם +/-.", es:"El control deslizante establece las cantidades iniciales. Ajuste libremente con +/-.", fr:"Le curseur définit les quantités initiales. Ajustez librement avec +/-.", ru:"Ползунок задаёт начальные количества. Корректируйте свободно с помощью +/-."},
   travel_excl:   {en:"Travel costs not included —", he:"עלויות נסיעה לא כלולות —", es:"Costos de viaje no incluidos —", fr:"Frais de voyage non inclus —", ru:"Расходы на поездку не включены —"},
   excl_suffix:   {en:"excluded", he:"לא כלול", es:"excluidos", fr:"exclus", ru:"исключено"},
   set_in_assumptions: {en:"set in assumptions", he:"מוגדר בהנחות",    es:"definido en supuestos",   fr:"défini dans les hypothèses", ru:"задано в настройках"},
@@ -533,11 +530,9 @@ const LIFE_IDS       = ["yoledet","olah_vol","shelamim_vol","nazir_vol","metzora
 const FIXED_PRICE_IDS= ["chatzi_shekel","bikkurim","pidyon_haben"]; // non-catalog fixed prices
 
 const STRICTNESS_LEVELS = [
-  {level:1,label:"Minimally Observant",label_he:"מינימלי",label_es:"Mínimamente observante",desc:"Shabbos and issur violations occur regularly; limited self-monitoring",desc_he:"הפרות שבת ואיסורים מתרחשות באופן קבוע; בדיקה עצמית מועטה",desc_es:"Las violaciones de Shabat ocurren regularmente; poca autovigilancia",              qtys:{chatas_total:16,asham_talui:2}},
-  {level:2,label:"Average Observant",label_he:"בינוני",label_es:"Observante promedio",desc:"Typical shomer Shabbos in a city — some inadvertent violations annually",desc_he:"שומר שבת טיפוסי בעיר — כמה הפרות שגגה בשנה",desc_es:"Shomer Shabat típico en una ciudad — algunas violaciones inadvertidas",        qtys:{chatas_total:7,asham_talui:3}},
-  {level:3,label:"Careful",label_he:"זהיר",label_es:"Cuidadoso",desc:"Actively reviews conduct; rare inadvertent violations",desc_he:"בודק התנהגות באופן פעיל; הפרות שגגה נדירות",desc_es:"Revisa activamente su conducta; violaciones inadvertidas raras",              qtys:{chatas_total:3,asham_talui:2}},
-  {level:4,label:"Yerei Shomayim",label_he:"ירא שמיים",label_es:"Yerei Shomayim",desc:"Highly scrupulous; brings asham taluy proactively for genuine doubts",desc_he:"זהיר מאוד; מביא אשם תלוי ביוזמתו לספקות אמיתיים",desc_es:"Muy escrupuloso; trae asham taluy proactivamente por dudas genuinas",    qtys:{chatas_total:1,asham_talui:4}},
-  {level:5,label:"Exceptional",label_he:"יוצא מן הכלל",label_es:"Excepcional",desc:"Bava ben Buta standard — asham taluy daily out of abundant caution; zero inadvertent chataot",desc_he:"סטנדרט בבא בן בוטא — אשם תלוי יומי מחשש; אפס חטאות שגגה",desc_es:"Estándar de Bava ben Buta — asham taluy diario; cero chataot inadvertidas",  qtys:{chatas_total:0,asham_talui:365}},
+  {level:1,label:"Minimal", label_he:"מינימלי", label_es:"Mínimo",   qtys:{chatas_total:3, asham_talui:3}},
+  {level:2,label:"Average", label_he:"ממוצע",   label_es:"Promedio", qtys:{chatas_total:5, asham_talui:5}},
+  {level:3,label:"High",    label_he:"גבוה",    label_es:"Alto",     qtys:{chatas_total:7, asham_talui:7}},
 ];
 const FINANCIAL_TIERS = {
   poor:    {id:"poor",    label:"Poor (Ani)",     hebrew:"עָנִי",     desc:"Bird substitutions for olas re'iyah, chagigah, and yoledet.",desc_he:"תחליפי עוף לעולת ראייה, לחגיגה ולקרבן יולדת",desc_es:"Sustituciones de ave para olas re'iyah y chagigah",  reiyahId:"olah_bird",  chagigahId:"olah_bird",  yoledetId:"yoledet_poor"},
@@ -748,7 +743,7 @@ function KorbanPopover({catalogId, lang="en", fmtC, P, compCost}:{catalogId:stri
       <span ref={ref} onClick={toggle} style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:14,height:14,borderRadius:"50%",background:"rgba(192,122,55,0.2)",border:"1px solid rgba(192,122,55,0.4)",color:"#c9a45a",fontSize:"0.65rem",fontWeight:700,cursor:"pointer",marginLeft:"0.3rem",verticalAlign:"middle",flexShrink:0,userSelect:"none"}} title="Halachic details">i</span>
       {open&&(
         <div style={{position:"fixed",inset:0,zIndex:998}} onClick={()=>setOpen(false)}>
-          <div style={{position:"fixed",top:pos.fromBottom?undefined:pos.top,bottom:pos.fromBottom?(window.innerHeight-pos.top+8):undefined,left:pos.left,right:pos.right,width:300,background:"#1a0c04",border:"1px solid #7a4f20",padding:"0.85rem",zIndex:999,boxShadow:"0 8px 24px rgba(0,0,0,0.6)"}} onClick={e=>e.stopPropagation()}>
+          <div style={{position:"fixed",top:pos.fromBottom?undefined:pos.top,bottom:pos.fromBottom?(window.innerHeight-pos.top+8):undefined,left:pos.left,right:pos.right,width:300,background:"#0e0704",border:"1px solid #9a6f40",padding:"0.85rem",zIndex:9999,boxShadow:"0 8px 32px rgba(0,0,0,0.97)",isolation:"isolate",opacity:1}} onClick={e=>e.stopPropagation()}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"0.5rem"}}>
               <div>
                 <div style={{fontSize:"0.95rem",fontWeight:700,color:"#f0ddb0",fontFamily:"'Cinzel',serif"}}>{isHe?(entry.hebrew||entry.name):entry.name}</div>
@@ -791,7 +786,6 @@ function KorbanPopover({catalogId, lang="en", fmtC, P, compCost}:{catalogId:stri
   );
 }
 
-
 const SCENARIOS = [
   {
     key:"nazir",
@@ -826,8 +820,8 @@ const SCENARIOS = [
     proc_he:"הטקס המפורט ביותר בקרבנות. מתן השמן מחקה את מתן הדם — אוזן ימין, אגודל יד, בוהן רגל. תנופת חי עם לוג השמן — ייחודית בכל הקודשים.",
   },
   {
-    key:"yoledet",
-    title_en:"I gave birth",
+    key:"yoledet",femaleOnly:true,
+    title_en:"I gave birth (Yoledes)",
     title_he:"ילדתי",
     sub_en:"After the days of purification (33 or 66 days)",
     sub_he:"לאחר ימי טהרה (33 או 66 יום)",
@@ -836,7 +830,7 @@ const SCENARIOS = [
       {name_en:"Male lamb, 1 year old (olah)",name_he:"כבש זכר בן שנה (עולה)",badge:"ob",catalogId:"olah_animal",price_key:"lamb_olah",count:1,note_en:"Slaughtered in the north; hides to the Kohen",note_he:"נשחט בצפון; עורות לכהן"},
       {name_en:"Young bird (chatat)",name_he:"עוף (חטאת)",badge:"ob",catalogId:"chatat_individual",price_key:"bird",count:1,note_en:"Milikah near SE corner of altar, lower portion",note_he:"מליקה ליד קרן מזרח צפונית, מטה מן החוט"},
     ],
-    proc_en:"One of the few korbanos with a built-in sliding scale: if she cannot afford a lamb, two birds replace the entire package. Every birth triggers this obligation.",
+    proc_en:"One of the few korbanos with a built-in sliding scale (Vayikra 12:8): if she cannot afford a lamb, two birds replace the entire package. The package shown reflects your financial tier setting.",
     proc_he:"אחד מקרבנות מעטים עם סולם יורד: אם אינה יכולה להרשות לעצמה כבש, שתי צפרים מחליפות את כל הקרבן. כל לידה מחייבת.",
   },
   {
@@ -1080,7 +1074,7 @@ export default function korbanosCalculator() {
   const resolveCatalogId = id=>{
     if(id==="reiyah")   return tier.reiyahId;
     if(id==="chagigah") return tier.chagigahId;
-    if(id==="yoledet")  return (isFemale ? (tier.yoledetId||"yoledet") : (tier.yoledetId||"yoledet"));
+    if(id==="yoledet")  return isFemale ? (tier.yoledetId||"yoledet") : null;
     return (ANNUAL_ASSUMPTIONS.find(a=>a.id===id)||{}).catalogId;
   };
   const resolveUnitCost=(id,P)=>{
@@ -1096,10 +1090,10 @@ export default function korbanosCalculator() {
     if(id==="chagigah")      return isFemale ? 0 : regalimCount;
     if(id==="shalmei_simcha") return isFemale ? 0 : (shalmeiOverride !== null ? shalmeiOverride : regalimCount);
     if(id==="chagigah_14_nissan") return chagigah14Override !== null ? chagigah14Override : (regalimAttending.pesach?1:0);
-    if(id==="chatzi_shekel") return 1;
+    if(id==="chatzi_shekel") return isFemale ? 0 : 1;
     if(id==="todah")         return todahTotal;
     if(id==="bikkurim")      return isLandowner?1:0;
-    if(id==="yoledet")       { const stored=profileQtys[id]; return stored!=null?stored:(isFemale?1:0); }
+    if(id==="yoledet")       { if(!isFemale) return 0; const stored=profileQtys[id]; return stored!=null?stored:1; }
     if(id==="chatas_total")  return personalQtys.chatas_total!=null?personalQtys.chatas_total:currentLevel.qtys.chatas_total;
     if(id==="asham_talui")   return personalQtys.asham_talui!=null?personalQtys.asham_talui:currentLevel.qtys.asham_talui;
     return profileQtys[id]!=null?profileQtys[id]:0;
@@ -1154,11 +1148,7 @@ export default function korbanosCalculator() {
   const disclaimer=(
     <div style={{padding:"1.1rem 1.4rem",background:"rgba(139,0,0,.15)",border:"1px solid #aa3030",borderLeft:"4px solid #e04040",fontSize:"1rem",lineHeight:1.8,color:"#f0c0a0",marginTop:"1.5rem"}}>
       <div style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",letterSpacing:"0.1em",color:"#e04040",marginBottom:"0.75rem",fontWeight:700}}>{T("disclaimer_title")}</div>
-      <div style={{marginBottom:"0.75rem",paddingBottom:"0.75rem",borderBottom:"1px solid rgba(170,48,48,0.4)",fontSize:"0.88rem",lineHeight:1.7,fontStyle:"italic",color:"#f0c060"}}>
-        Built by Jeremy Spier and Morris Massel with Claude.ai · Includes content compiled by <a href="https://docs.google.com/spreadsheets/d/1ZLnj_LQuq3Fv8I26GUwcbOW7EeHXbToQKBVQIAj2TRM/edit?gid=2007868934#gid=2007868934" target="_blank" rel="noopener noreferrer" style={{color:"#f0c060",textDecoration:"underline",textUnderlineOffset:"3px"}}>Naftoli Willner</a> in his Korbonos Spreadsheet, dedicated לע"נ יהושע בן צבי ז"ל
-        <br/>
-        <span style={{color:"#c9a45a"}}>For additional details and specifics of the korbonos, see the <a href="https://docs.google.com/spreadsheets/d/1ZLnj_LQuq3Fv8I26GUwcbOW7EeHXbToQKBVQIAj2TRM/edit?gid=2007868934#gid=2007868934" target="_blank" rel="noopener noreferrer" style={{color:"#f0c060",textDecoration:"underline",textUnderlineOffset:"3px"}}>Korbonos Spreadsheet</a>.</span>
-      </div>
+
       {T("disclaimer_body")}
     </div>
   );
@@ -1246,6 +1236,8 @@ export default function korbanosCalculator() {
               <span style={{color:"#5a3a1a"}}>|</span>
               <span><span style={{color:"#8a6030"}}>{T("strip_standing")} </span><span style={{color:"#f0ddb0"}}>{T("tier_"+financialTier)}</span></span>
               <span style={{color:"#5a3a1a"}}>|</span>
+              <span><span style={{color:"#8a6030"}}>{T("strip_gender")} </span><span style={{color:"#f0ddb0"}}>{T("gender_"+gender)}</span></span>
+              <span style={{color:"#5a3a1a"}}>|</span>
               <span><span style={{color:"#8a6030"}}>{T("strip_shiur")} </span><span style={{color:"#f0ddb0"}}>{shiur.labelShort}</span>{shiurId!=="naeh"&&<span style={{color:"#b070e0",marginLeft:"0.3rem"}}>x{shiur.multiplier}</span>}</span>
               <span style={{color:"#5a3a1a"}}>|</span>
               <span><span style={{color:"#8a6030"}}>{T("strip_silver")} </span><span style={{color:"#f0ddb0"}}>${silverInputVal}/oz</span>{silverStatus==="live"&&<span style={{color:"#4ec98a",marginLeft:"0.3rem"}}>{T("live_lbl")}</span>}{silverStatus==="error"&&<span style={{color:"#e05050",marginLeft:"0.3rem"}}>{T("manual_lbl")}</span>}</span>
@@ -1261,10 +1253,13 @@ export default function korbanosCalculator() {
               {/* Location / Eretz Yisroel */}
               <div style={{marginBottom:"1.25rem"}}>
                 <div style={lbl}>{T("set_location")}</div>
-                <label style={{display:"flex",alignItems:"center",gap:"0.6rem",cursor:"pointer",fontSize:"0.95rem",color:"#f0ddb0",marginBottom:"0.6rem"}}>
-                  <input type="checkbox" checked={livesInEY} onChange={e=>{setLivesInEY(e.target.checked);if(!e.target.checked) setIsLandowner(false);}} style={{width:16,height:16,accentColor:"#f0c060",cursor:"pointer"}}/>
-                  {T("set_ey_check")}
-                </label>
+                <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",marginBottom:"0.6rem"}}>
+                  {[["ey",true],["cla",false]].map(([key,val])=>(
+                    <button key={String(key)} onClick={()=>{setLivesInEY(val as boolean);if(!val) setIsLandowner(false);}} style={{padding:"0.45rem 0.9rem",background:livesInEY===(val as boolean)?"rgba(240,192,96,.15)":"transparent",color:livesInEY===(val as boolean)?"#f0c060":"#c9a45a",border:"1px solid "+(livesInEY===(val as boolean)?"#f0c060":"#5a3a1a"),cursor:"pointer",fontFamily:"inherit",fontSize:"0.9rem"}}>
+                      <span style={{fontFamily:"'Cinzel',serif",fontWeight:600}}>{T("set_"+key)}</span>
+                    </button>
+                  ))}
+                </div>
                 {livesInEY&&(
                   <div className="fi">
                     <div style={{fontSize:"0.9rem",color:"#4ec98a",fontStyle:"italic",marginBottom:"0.75rem",lineHeight:1.6}}>{T("set_ey_note")}</div>
@@ -1387,7 +1382,7 @@ export default function korbanosCalculator() {
               {/* Travel — hidden for EY residents */}
               {!livesInEY&&(
               <div style={{paddingTop:"1rem",borderTop:"1px solid #5a3a1a"}}>
-                <div style={{fontSize:"0.82rem",color:"#c9a45a",fontStyle:"italic",marginBottom:"0.75rem",lineHeight:1.5}}>Modeling today's diaspora. Note: classical sources (Yoma 12a) indicate Jerusalem lodging had unique status — standard market rates may not apply. Disable or reduce lodging for Moshiach-era scenarios. Also note: anyone traveling from outside Eretz Yisrael is halachically tamei and requires a full 7-day purification with para adumah before entering the Mikdash — consider budgeting an extra week for this.</div>
+                <div style={{fontSize:"0.82rem",color:"#c9a45a",fontStyle:"italic",marginBottom:"0.75rem",lineHeight:1.5}}>{isHe?"מודל לגלות של היום. הערה: מקורות קלאסיים (יומא יב.) מלמדים שלינה בירושלים היתה במעמד מיוחד. לתרחיש ימות המשיח — בטל את הנסיעה או הפחת את הלינה. בנוסף: כל הנוסע מחוץ לארץ ישראל טמא ונדרשת שבוע טהרה עם פרה אדומה לפני כניסה למקדש.":"Modeling today's diaspora. Classical sources (Yoma 12a) indicate Jerusalem lodging had unique status. Disable travel/lodging for Moshiach-era scenarios. Also: anyone from outside Eretz Yisrael is tamei — budget 7 days for para adumah purification before entering the Mikdash."}</div>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"0.75rem"}}>
                   <div style={{fontSize:"0.82rem",color:"#5aabdf",letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',serif"}}>{T("set_travel")}</div>
                   <label style={{display:"flex",alignItems:"center",gap:"0.5rem",cursor:"pointer",fontSize:"0.9rem",color:"#c9a45a"}}>
@@ -1472,10 +1467,10 @@ export default function korbanosCalculator() {
                       <div style={lbl}>{T("scrutiny_lbl")}</div>
                       <div style={{fontFamily:"'Cinzel',serif",fontSize:"0.9rem",color:"#d4884a",fontWeight:700}}>{lang==="he"&&currentLevel.label_he?currentLevel.label_he:lang==="es"&&currentLevel.label_es?currentLevel.label_es:currentLevel.label}</div>
                     </div>
-                    <input type="range" min="1" max="5" value={strictness} onChange={e=>handleStrictnessChange(parseInt(e.target.value))} style={{cursor:"pointer",marginBottom:"0.4rem",width:"100%"}}/>
+                    <input type="range" min="1" max="3" value={strictness} onChange={e=>handleStrictnessChange(parseInt(e.target.value))} style={{cursor:"pointer",marginBottom:"0.4rem",width:"100%"}}/>
                     <div style={{position:"relative",height:"1.2rem",marginBottom:"0.5rem"}}>
-                      {[T("scrutiny_min"),T("scrutiny_avg"),T("scrutiny_careful"),T("scrutiny_yerei"),T("scrutiny_exc")].map((label,i)=>{
-                        const pct = i / 4; // 0, 0.25, 0.5, 0.75, 1
+                      {[T("scrutiny_min"),T("scrutiny_avg"),T("scrutiny_high")].map((label,i)=>{
+                        const pct = i / 2; // 0, 0.5, 1
                         const thumbW = 40;
                         const offset = thumbW * (0.5 - pct);
                         return(
@@ -1492,8 +1487,6 @@ export default function korbanosCalculator() {
                         );
                       })}
                     </div>
-                    <div style={{fontSize:"1rem",color:"#e8d4a0",fontStyle:"italic",lineHeight:1.6}}>{lang==="he"&&currentLevel.desc_he?currentLevel.desc_he:lang==="es"&&currentLevel.desc_es?currentLevel.desc_es:currentLevel.desc}</div>
-                    <div style={{marginTop:"0.4rem",fontSize:"0.92rem",color:"#c9a45a",lineHeight:1.6}}>{T("slider_desc")}</div>
                   </div>
                 )}
 
@@ -1551,7 +1544,7 @@ export default function korbanosCalculator() {
                                 <div style={{fontSize:"0.82rem",color:"#e05050",letterSpacing:"0.08em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.4rem",display:"flex",alignItems:"center",gap:"0.4rem"}}>
                                   <div style={{width:7,height:7,borderRadius:"50%",background:"#e05050"}}/>{T("kareis_label")}
                                 </div>
-                                {item.violations.kareis.map((v,i)=>(
+                                {item.violations.kareis.filter(v=>!v.maleOnly||!isFemale).map((v,i)=>(
                                   <div key={i} style={{padding:"0.45rem 0.75rem",marginBottom:"0.3rem",background:"rgba(192,57,43,.06)",border:"1px solid rgba(192,57,43,.2)",borderLeft:"2px solid rgba(192,57,43,.4)",fontSize:"0.9rem"}}>
                                     <div style={{color:"#f0ddb0",fontWeight:600,marginBottom:"0.15rem"}}>{lang==="he"&&v.act_he?v.act_he:lang==="es"&&v.act_es?v.act_es:v.act}</div>
                                     <div style={{color:"#a08050",fontStyle:"italic",fontSize:"0.85rem",lineHeight:1.5}}>{lang==="he"&&v.detail_he?v.detail_he:lang==="es"&&v.detail_es?v.detail_es:v.detail}</div>
@@ -1562,7 +1555,7 @@ export default function korbanosCalculator() {
                                 <div style={{fontSize:"0.82rem",color:"#8a6030",letterSpacing:"0.08em",textTransform:"uppercase",fontFamily:"'Cinzel',serif",marginBottom:"0.4rem",display:"flex",alignItems:"center",gap:"0.4rem"}}>
                                   <div style={{width:7,height:7,borderRadius:"50%",background:"#8a6030"}}/>{T("rabbinic_label")}
                                 </div>
-                                {item.violations.nonKareis.map((v,i)=>(
+                                {item.violations.nonKareis.filter(v=>!v.maleOnly||!isFemale).map((v,i)=>(
                                   <div key={i} style={{padding:"0.45rem 0.75rem",marginBottom:"0.3rem",background:"rgba(42,24,16,.4)",border:"1px solid #5a3a1a",borderLeft:"2px solid #8a6030",fontSize:"0.9rem"}}>
                                     <div style={{color:"#c9a45a",fontWeight:600,marginBottom:"0.15rem"}}>{lang==="he"&&v.act_he?v.act_he:lang==="es"&&v.act_es?v.act_es:v.act}</div>
                                     <div style={{color:"#7a5030",fontStyle:"italic",fontSize:"0.85rem",lineHeight:1.5}}>{lang==="he"&&v.detail_he?v.detail_he:lang==="es"&&v.detail_es?v.detail_es:v.detail}</div>
@@ -1637,9 +1630,9 @@ export default function korbanosCalculator() {
                   );
                 })}
               </div>
+
               );
             })}
-
             {/* Breakdown bar */}
             <div style={{marginBottom:"1.5rem"}}>
               <div style={{fontSize:"0.82rem",color:"#c9a45a",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:"0.5rem",fontFamily:"'Cinzel',serif"}}>{T("cost_breakdown")}</div>
@@ -1833,7 +1826,6 @@ export default function korbanosCalculator() {
             return T("day_weekday");
           };
 
-          
           const blocks=[];
 
           const tamidMorning=[
@@ -2087,7 +2079,7 @@ export default function korbanosCalculator() {
           <div className="fi">
             <div style={{fontSize:"0.82rem",color:"#a08050",marginBottom:"1.25rem",lineHeight:1.6}}>{isHe?"בחר את המצב שלך כדי לראות את קרבנותיך:":"Select your situation to see your required korbanos:"}</div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:"0.75rem",marginBottom:"1.5rem"}}>
-              {SCENARIOS.map(sc=>{
+              {SCENARIOS.filter(sc=>(!sc.femaleOnly||isFemale)&&(!sc.maleOnly||!isFemale)).map(sc=>{
                 const isActive=activeScenario===sc.key;
                 return(<button key={sc.key} onClick={()=>setActiveScenario(isActive?null:sc.key)} style={{textAlign:"left",padding:"0.85rem 1rem",background:isActive?"rgba(218,165,32,0.15)":"rgba(24,12,4,0.7)",border:"1px solid "+(isActive?"#daa520":"#5a3a1a"),borderLeft:"4px solid "+(isActive?"#daa520":"#3a2010"),cursor:"pointer",transition:"border-color 0.15s"}}>
                   <div style={{fontSize:"0.95rem",fontWeight:700,color:isActive?"#f0c060":"#f0ddb0",fontFamily:"'Cinzel',serif",marginBottom:"0.2rem"}}>{isHe?sc.title_he:sc.title_en}</div>
@@ -2096,7 +2088,7 @@ export default function korbanosCalculator() {
               })}
             </div>
             {activeScenario&&(()=>{
-              const sc=SCENARIOS.find(s=>s.key===activeScenario);
+              const sc=SCENARIOS.find(s=>s.key===activeScenario&&(!s.femaleOnly||isFemale)&&(!s.maleOnly||!isFemale));
               if(!sc) return null;
               const total=sc.items.reduce((sum,item)=>{
                 const base=item.price_key?compCost(item.price_key,item.count,P):0;
@@ -2174,7 +2166,7 @@ export default function korbanosCalculator() {
                   </div>
                   <div style={{fontSize:"0.88rem",color:"#e8d4a0",lineHeight:1.6,marginBottom:"0.75rem"}}>{isHe?t.purpose_he:t.purpose}</div>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"0.5rem",marginBottom:"0.75rem"}}>
-                    {[{label:isHe?"מזבח":"Altar",val:t.altar,bg:"rgba(127,119,221,0.15)",c:"#afa9ec"},{label:isHe?"כהן":"Kohen",val:t.kohen,bg:"rgba(29,158,117,0.15)",c:"#5dcaa5"},{label:isHe?"בעלים":"Owner",val:t.owner,bg:"rgba(186,117,23,0.15)",c:"#ef9f27"}].map(d=>(
+                    {[{label:isHe?"מזבח":"Altar",val:isHe&&t.altar_he?t.altar_he:t.altar,bg:"rgba(127,119,221,0.15)",c:"#afa9ec"},{label:isHe?"כהן":"Kohen",val:isHe&&t.kohen_he?t.kohen_he:t.kohen,bg:"rgba(29,158,117,0.15)",c:"#5dcaa5"},{label:isHe?"בעלים":"Owner",val:t.owner,bg:"rgba(186,117,23,0.15)",c:"#ef9f27"}].map(d=>(
                       <div key={d.label} style={{background:d.bg,padding:"0.5rem 0.6rem",textAlign:"center"}}>
                         <div style={{fontSize:"0.68rem",fontWeight:700,color:d.c,letterSpacing:"0.05em",textTransform:"uppercase",marginBottom:"0.25rem"}}>{d.label}</div>
                         <div style={{fontSize:"0.78rem",color:"#f0ddb0",lineHeight:1.3}}>{d.val}</div>
@@ -2353,7 +2345,7 @@ export default function korbanosCalculator() {
         )}
       </div>
       <div style={{textAlign:"center",marginTop:"2.5rem",paddingTop:"1.5rem",borderTop:"1px solid #3a2010",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
-        Created by Jeremy Spier and Morris Massel with a lot of help from Claude.ai. Send questions and comments to info@korbancalculator.com
+        Created by Jeremy Spier and Morris Massel with a lot of help from Claude.ai. Includes content compiled by <a href="https://docs.google.com/spreadsheets/d/1ZLnj_LQuq3Fv8I26GUwcbOW7EeHXbToQKBVQIAj2TRM/edit?gid=2007868934#gid=2007868934" target="_blank" rel="noopener noreferrer" style={{color:"#a08050",textDecoration:"underline",textUnderlineOffset:"2px"}}>Naftoli Willner</a> in his Korbonos Spreadsheet, dedicated לע"נ יהושע בן צבי ז"ל. For additional details and specifics of the korbonos, see the <a href="https://docs.google.com/spreadsheets/d/1ZLnj_LQuq3Fv8I26GUwcbOW7EeHXbToQKBVQIAj2TRM/edit?gid=2007868934#gid=2007868934" target="_blank" rel="noopener noreferrer" style={{color:"#a08050",textDecoration:"underline",textUnderlineOffset:"2px"}}>Korbonos Spreadsheet</a>.. Send questions and comments to info@korbancalculator.com
       </div>
       <div style={{textAlign:"center",marginTop:"0.5rem",color:"#ffffff",fontSize:"0.82rem",opacity:0.7}}>
         Code available at <a href="https://github.com/morrismassel/korbanos-site" target="_blank" rel="noopener noreferrer" style={{color:"#c9a45a",textDecoration:"underline",textUnderlineOffset:"3px"}}>github.com/morrismassel/korbanos-site</a>
