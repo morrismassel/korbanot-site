@@ -2079,7 +2079,7 @@ export default function korbanosCalculator() {
           <div className="fi">
             <div style={{fontSize:"0.82rem",color:"#a08050",marginBottom:"1.25rem",lineHeight:1.6}}>{isHe?"בחר את המצב שלך כדי לראות את קרבנותיך:":"Select your situation to see your required korbanos:"}</div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:"0.75rem",marginBottom:"1.5rem"}}>
-              {SCENARIOS.filter(sc=>(!sc.femaleOnly||isFemale)&&(!sc.maleOnly||!isFemale)).map(sc=>{
+              {SCENARIOS.filter(sc=>(!sc.femaleOnly||isFemale)&&(!(sc as any).maleOnly||!isFemale)).map(sc=>{
                 const isActive=activeScenario===sc.key;
                 return(<button key={sc.key} onClick={()=>setActiveScenario(isActive?null:sc.key)} style={{textAlign:"left",padding:"0.85rem 1rem",background:isActive?"rgba(218,165,32,0.15)":"rgba(24,12,4,0.7)",border:"1px solid "+(isActive?"#daa520":"#5a3a1a"),borderLeft:"4px solid "+(isActive?"#daa520":"#3a2010"),cursor:"pointer",transition:"border-color 0.15s"}}>
                   <div style={{fontSize:"0.95rem",fontWeight:700,color:isActive?"#f0c060":"#f0ddb0",fontFamily:"'Cinzel',serif",marginBottom:"0.2rem"}}>{isHe?sc.title_he:sc.title_en}</div>
@@ -2088,12 +2088,12 @@ export default function korbanosCalculator() {
               })}
             </div>
             {activeScenario&&(()=>{
-              const sc=SCENARIOS.find(s=>s.key===activeScenario&&(!s.femaleOnly||isFemale)&&(!s.maleOnly||!isFemale));
+              const sc=SCENARIOS.find(s=>s.key===activeScenario&&(!s.femaleOnly||isFemale)&&(!(s as any).maleOnly||!isFemale));
               if(!sc) return null;
               const total=sc.items.reduce((sum,item)=>{
-                const base=item.price_key?compCost(item.price_key,item.count,P):0;
-                const extra=item.extra_key?compCost(item.extra_key,item.extra_count||1,P):0;
-                const custom=item.price_key_custom?item.price_key_custom.reduce((s,k)=>s+compCost(k,1,P),0):0;
+                const base=(item as any).price_key?compCost((item as any).price_key,(item as any).count,P):0;
+                const extra=(item as any).extra_key?compCost((item as any).extra_key,(item as any).extra_count||1,P):0;
+                const custom=(item as any).price_key_custom?(item as any).price_key_custom.reduce((s:number,k:string)=>s+compCost(k,1,P),0):0;
                 return sum+base+extra+custom;
               },0);
               return(
@@ -2107,9 +2107,9 @@ export default function korbanosCalculator() {
                   </div>
                   <div style={{display:"flex",flexDirection:"column",gap:"0.5rem",marginBottom:"0.9rem"}}>
                     {sc.items.map((item,i)=>{
-                      const base=item.price_key?compCost(item.price_key,item.count,P):0;
-                      const extra=item.extra_key?compCost(item.extra_key,item.extra_count||1,P):0;
-                      const custom=item.price_key_custom?item.price_key_custom.reduce((s,k)=>s+compCost(k,1,P),0):0;
+                      const base=(item as any).price_key?compCost((item as any).price_key,(item as any).count,P):0;
+                      const extra=(item as any).extra_key?compCost((item as any).extra_key,(item as any).extra_count||1,P):0;
+                      const custom=(item as any).price_key_custom?(item as any).price_key_custom.reduce((s:number,k:string)=>s+compCost(k,1,P),0):0;
                       const itemTotal=base+extra+custom;
                       return(
                         <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",padding:"0.6rem 0.75rem",background:"rgba(30,14,6,0.6)",borderBottom:"1px dotted #3a2010",gap:"1rem"}}>
